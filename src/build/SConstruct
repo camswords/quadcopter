@@ -393,9 +393,9 @@ if local_sources:
 
 # Convert sketch(.pde) to cpp
 # envArduino.Processing('build/' + TARGET + '.cpp', 'build/' + TARGET + sketchExt)
-VariantDir('build', '.')
+# VariantDir('build', '.')
 
-# Add the Servo library
+# Add the Servo library header files
 envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', 'Servo', 'src'))
 envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', 'Servo', 'arch', 'avr'))
 
@@ -403,6 +403,8 @@ sources = ['src/main/' + TARGET + '.cpp']
 #sources += core_sources
 sources += local_sources
 sources += all_libs_sources
+
+# Add the Servo library source file
 sources += [path.join(ARDUINO_HOME, 'libraries', 'Servo', 'arch', 'avr', 'Servo.cpp')]
 
 # Finally Build!!
