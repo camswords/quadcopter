@@ -122,6 +122,8 @@ ARDUINO_BOARD   = resolve_var('ARDUINO_BOARD', 'atmega328')
 ARDUINO_VER     = resolve_var('ARDUINO_VER', 0) # Default to 0 if nothing is specified
 RST_TRIGGER     = resolve_var('RST_TRIGGER', None) # use built-in pulseDTR() by default
 EXTRA_LIB       = resolve_var('EXTRA_LIB', None) # handy for adding another arduino-lib dir
+ARDUINO_USERNAME = resolve_var('ARDUINO_USERNAME', '') # used for remote access of an Arduino Yun
+ARDUINO_HOSTNAME = resolve_var('ARDUINO_HOSTNAME', '') # used for remote access of an Arduino Yun
 
 if not ARDUINO_HOME:
     print 'ARDUINO_HOME must be defined.'
@@ -449,8 +451,10 @@ envArduino.Clean('all', 'build/')
 
 # deploy the quadcopter code
 def deployToMicrocontroller(target, source, env):
-    run("scp build/quadcopter.hex deploy@tw.quadcopter:~/quadcopter.hex ")
-    run("ssh deploy@tw.quadcopter 'bash -s' < ./scripts/deploy")
+    assert(path.exists(TARGET + '.hex'))
+    run(["scp", "scripts/deploy.sh", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME + ":~"])
+    run(["scp", "quadcopter.hex", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME + ":~"])
+    run(["ssh", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME, 'chmod 755 ~/deploy.sh; ~/deploy.sh'])
 
 deploy = envArduino.Alias('deploy', None, [deployToMicrocontroller])
 AlwaysBuild(deploy)

@@ -1,4 +1,6 @@
 { 
 	"ARDUINO_BOARD": "yun" ,
-	"ARSCONS_TARGET": "quadcopter"
+	"ARSCONS_TARGET": "quadcopter",
+	"ARDUINO_USERNAME": "root",
+	"ARDUINO_HOSTNAME": "tw.quadcopter"
 }
