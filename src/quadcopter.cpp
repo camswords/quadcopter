@@ -1,3 +1,6 @@
+#include "Arduino.h"
+void setup();
+void loop();
 /*
   Blink
   Turns on an LED on for one second, then off for one second, repeatedly.
@@ -18,7 +21,7 @@ void setup() {
 // the loop routine runs over and over again forever:
 void loop() {
   digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(400);               // wait for a second
+  delay(1000);               // wait for a second
   digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
-  delay(200);               // wait for a second
+  delay(1000);               // wait for a second
 }

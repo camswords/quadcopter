@@ -4,12 +4,12 @@ The ThoughtWorks Sydney Quadcopter
 
 Installation Instructions
 ------------
-1. Install the Arduino IDE from http://arduino.cc/en/Main/Software. This software has been tested using Arduino 1.5.4.
+1. Install the Arduino IDE from http://arduino.cc/en/Main/Software. This software has been tested using Arduino 1.5.5.
 2. Install the source code from github: 
 ```
 git clone git@github.com:camswords/quadcopter.git
 ```
-3. Open the makefile. Follow the instructions at the top of the file and make sure that INSTALL_DIR, ARDUINO, AVR_TOOLS_PATH, and AVRDUDE_PATH point to directories on your system where Arduino has installed its tools and libraries.
+3. Open the makefile. Follow the instructions at the top of the file and make sure that INSTALL_DIR, ARDUINO, AVR_TOOLS_PATH, AVRDUDE_FLAGS and AVRDUDE_PATH point to directories on your system where Arduino has installed its tools and libraries.
 
 4. Still in the makefile, change the PORT, MCU, and ARDUINO_VARIANTS to reflect the Arduino you are using and the port on which it is installed. You can find out more about configuration required for your specific Arduino by looking in the ```boards.txt``` file located in your Arduino installation folder. 
 
