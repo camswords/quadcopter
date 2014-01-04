@@ -396,6 +396,9 @@ if local_sources:
 envArduino.Processing('build/' + TARGET + '.cpp', 'build/' + TARGET + sketchExt)
 VariantDir('build', '.')
 
+# copy all source quadcopter files to the build directory
+run(['cp', '-R',  'src/', 'build'])
+
 sources = ['build/' + TARGET + '.cpp']
 #sources += core_sources
 sources += local_sources
