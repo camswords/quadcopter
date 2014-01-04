@@ -9,6 +9,10 @@ function fail_if_error {
     fi
 }
 
+# Recreate the build directory
+rm -rf build
+mkdir build
+
 # Run the scons compile script
 ARDUINO_BOARD=yun ARSCONS_TARGET=quadcopter scons -f src/build/SConstruct 
 fail_if_error "Compilation failed, aborting."
