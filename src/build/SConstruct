@@ -403,6 +403,7 @@ sources = ['src/main/' + TARGET + '.cpp']
 #sources += core_sources
 sources += local_sources
 sources += all_libs_sources
+sources += [path.join(ARDUINO_HOME, 'libraries', 'Servo', 'arch', 'avr', 'Servo.cpp')]
 
 # Finally Build!!
 core_objs = envArduino.Object(core_sources)
