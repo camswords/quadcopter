@@ -395,6 +395,10 @@ if local_sources:
 # envArduino.Processing('build/' + TARGET + '.cpp', 'build/' + TARGET + sketchExt)
 VariantDir('build', '.')
 
+# Add the Servo library
+envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', 'Servo', 'src'))
+envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', 'Servo', 'arch', 'avr'))
+
 sources = ['src/main/' + TARGET + '.cpp']
 #sources += core_sources
 sources += local_sources
