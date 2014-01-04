@@ -208,7 +208,7 @@ TARGET = resolve_var('ARSCONS_TARGET', None)
 if TARGET is None:
     TARGET = path.basename(path.realpath(os.curdir))
 
-assert(path.exists(TARGET + '.ino') or path.exists(TARGET + '.pde'))
+# assert(path.exists(TARGET + '.ino') or path.exists(TARGET + '.pde'))
 sketchExt = '.ino' if path.exists(TARGET + '.ino') else '.pde'
 
 cFlags = ['-ffunction-sections', '-fdata-sections', '-fno-exceptions',
@@ -350,16 +350,16 @@ core_sources = [x.replace(ARDUINO_CORE, 'build/core/') for x
 # add libraries
 libCandidates = []
 ptnLib = re.compile(r'^[ ]*#[ ]*include [<"](.*)\.h[>"]')
-for line in open(TARGET + sketchExt):
-    result = ptnLib.search(line)
-    if not result:
-        continue
-    # Look for the library directory that contains the header.
-    filename = result.group(1) + '.h'
-    for libdir in ARDUINO_LIBS:
-        for root, dirs, files in os.walk(libdir, followlinks=True):
-            if filename in files:
-                libCandidates.append(path.basename(root))
+# for line in open(TARGET + sketchExt):
+#     result = ptnLib.search(line)
+#     if not result:
+#         continue
+#     # Look for the library directory that contains the header.
+#     filename = result.group(1) + '.h'
+#     for libdir in ARDUINO_LIBS:
+#         for root, dirs, files in os.walk(libdir, followlinks=True):
+#             if filename in files:
+#                 libCandidates.append(path.basename(root))
 
 # Hack. In version 20 of the Arduino IDE, the Ethernet library depends
 # implicitly on the SPI library.

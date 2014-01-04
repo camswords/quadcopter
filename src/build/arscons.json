@@ -1,4 +1,0 @@
-{ 
-	"ARDUINO_BOARD": "yun" ,
-	"ARSCONS_TARGET": "quadcopter"
-}

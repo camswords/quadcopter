@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run the scons compile script
-scons -f src/build/SConstruct 
+ARDUINO_BOARD=yun ARSCONS_TARGET=quadcopter scons -f src/build/SConstruct 
 
 # deploy the code using the Arduino Yun linino
 scp scripts/deploy.sh root@tw.quadcopter:~
