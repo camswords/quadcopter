@@ -35,8 +35,8 @@
 # $Id$
 
 TARGET = $(notdir $(CURDIR))
-INSTALL_DIR = $(HOME)/arduino-0018
-PORT = /dev/ttyUSB*
+INSTALL_DIR = /Applications/Arduino.app/Contents/Resources/Java
+PORT = /dev/tty.usbserial*
 UPLOAD_RATE = 57600
 AVRDUDE_PROGRAMMER = stk500v1
 #MCU = atmega168
@@ -47,14 +47,14 @@ F_CPU = 16000000
 # Below here nothing should be changed...
 
 VERSION=18
-ARDUINO = $(INSTALL_DIR)/hardware/arduino/cores/arduino
+ARDUINO = $(INSTALL_DIR)/hardware/arduino/avr/cores/arduino
+ARDUINO_VARIANTS = $(INSTALL_DIR)/hardware/arduino/avr/variants/standard
 #AVR_TOOLS_PATH = $(INSTALL_DIR)/hardware/tools/avr/bin
-AVR_TOOLS_PATH = /usr/bin
-AVRDUDE_PATH = $(INSTALL_DIR)/hardware/tools
+AVR_TOOLS_PATH = $(INSTALL_DIR)/hardware/tools/avr/bin
+AVRDUDE_PATH = $(INSTALL_DIR)/hardware/tools/avr/bin
 C_MODULES =  \
 $(ARDUINO)/wiring_pulse.c \
 $(ARDUINO)/wiring_analog.c \
-$(ARDUINO)/pins_arduino.c \
 $(ARDUINO)/wiring.c \
 $(ARDUINO)/wiring_digital.c \
 $(ARDUINO)/WInterrupts.c \
@@ -92,8 +92,8 @@ CDEFS = -DF_CPU=$(F_CPU)L -DARDUINO=$(VERSION)
 CXXDEFS = -DF_CPU=$(F_CPU)L -DARDUINO=$(VERSION)
 
 # Place -I options here
-CINCS = -I$(ARDUINO)
-CXXINCS = -I$(ARDUINO)
+CINCS = -I$(ARDUINO) -I$(ARDUINO_VARIANTS)
+CXXINCS = -I$(ARDUINO) -I$(ARDUINO_VARIANTS)
 
 # Compiler flag to set the C Standard level.
 # c89   - "ANSI" C
@@ -122,7 +122,7 @@ AVRDUDE_WRITE_FLASH = -U flash:w:applet/$(TARGET).hex
 
 #AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avr/etc/avrdude.conf \
 
-AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
+AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avr/etc/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 -b $(UPLOAD_RATE)
 
@@ -160,18 +160,18 @@ build: elf hex
 
 #applet_files: $(TARGET).pde
 applet/$(TARGET).cpp: $(TARGET).pde
-      # Here is the "preprocessing".
-      # It creates a .cpp file based with the same name as the .pde file.
-      # On top of the new .cpp file comes the WProgram.h header.
-      # and prototypes for setup() and Loop()
-      # Then the .cpp file will be compiled. Errors during compile will
-      # refer to this new, automatically generated, file. 
-      # Not the original .pde file you actually edit...
-      test -d applet || mkdir applet
-      echo '#include "WProgram.h"' > applet/$(TARGET).cpp
-      echo 'void setup();' >> applet/$(TARGET).cpp
-      echo 'void loop();' >> applet/$(TARGET).cpp
-      cat $(TARGET).pde >> applet/$(TARGET).cpp
+	  # Here is the "preprocessing".
+	  # It creates a .cpp file based with the same name as the .pde file.
+	  # On top of the new .cpp file comes the Arduino.h header.
+	  # and prototypes for setup() and Loop()
+	  # Then the .cpp file will be compiled. Errors during compile will
+	  # refer to this new, automatically generated, file. 
+	  # Not the original .pde file you actually edit...
+	  test -d applet || mkdir applet
+	  echo '#include "Arduino.h"' > applet/$(TARGET).cpp
+	  echo 'void setup();' >> applet/$(TARGET).cpp
+	  echo 'void loop();' >> applet/$(TARGET).cpp
+	  cat $(TARGET).pde >> applet/$(TARGET).cpp
 
 elf: applet/$(TARGET).elf
 hex: applet/$(TARGET).hex
@@ -181,17 +181,17 @@ sym: applet/$(TARGET).sym
 
 # Program the device.  
 upload: applet/$(TARGET).hex
-      $(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
+	  $(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
 
 
-      # Display size of file.
+	  # Display size of file.
 HEXSIZE = $(SIZE) --target=$(FORMAT) applet/$(TARGET).hex
 ELFSIZE = $(SIZE)  applet/$(TARGET).elf
 sizebefore:
-      @if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(HEXSIZE); echo; fi
+	  @if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(HEXSIZE); echo; fi
 
 sizeafter:
-      @if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(HEXSIZE); echo; fi
+	  @if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(HEXSIZE); echo; fi
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
@@ -203,73 +203,73 @@ COFFCONVERT=$(OBJCOPY) --debugging \
 
 
 coff: applet/$(TARGET).elf
-      $(COFFCONVERT) -O coff-avr applet/$(TARGET).elf $(TARGET).cof
+	  $(COFFCONVERT) -O coff-avr applet/$(TARGET).elf $(TARGET).cof
 
 
 extcoff: $(TARGET).elf
-      $(COFFCONVERT) -O coff-ext-avr applet/$(TARGET).elf $(TARGET).cof
+	  $(COFFCONVERT) -O coff-ext-avr applet/$(TARGET).elf $(TARGET).cof
 
 
 .SUFFIXES: .elf .hex .eep .lss .sym
 
 .elf.hex:
-      $(OBJCOPY) -O $(FORMAT) -R .eeprom $< $@
+	  $(OBJCOPY) -O $(FORMAT) -R .eeprom $< $@
 
 .elf.eep:
-      $(OBJCOPY) -O $(FORMAT) -j .eeprom --set-section-flags=.eeprom="alloc,load" \
-      --no-change-warnings \
-      --change-section-lma .eeprom=0 $< $@
+	  $(OBJCOPY) -O $(FORMAT) -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	  --no-change-warnings \
+	  --change-section-lma .eeprom=0 $< $@
 
 # Create extended listing file from ELF output file.
 .elf.lss:
-      $(OBJDUMP) -h -S $< > $@
+	  $(OBJDUMP) -h -S $< > $@
 
 # Create a symbol table from ELF output file.
 .elf.sym:
-      $(NM) -n $< > $@
+	  $(NM) -n $< > $@
 
-      # Link: create ELF output file from library.
+	  # Link: create ELF output file from library.
 #applet/$(TARGET).elf: $(TARGET).pde applet/core.a 
 applet/$(TARGET).elf: applet/$(TARGET).o applet/core.a 
-      $(LD) $(ALL_LDFLAGS) -o $@ applet/$(TARGET).o applet/core.a
+	  $(LD) $(ALL_LDFLAGS) -o $@ applet/$(TARGET).o applet/core.a
 
 applet/core.a: $(OBJ_MODULES)
-      @for i in $(OBJ_MODULES); do echo $(AR) rcs applet/core.a $$i; $(AR) rcs applet/core.a $$i; done
+	  @for i in $(OBJ_MODULES); do echo $(AR) rcs applet/core.a $$i; $(AR) rcs applet/core.a $$i; done
 
 
 
 # Compile: create object files from C++ source files.
 .cpp.o:
-      $(CXX) -c $(ALL_CXXFLAGS) $< -o $@ 
+	  $(CXX) -c $(ALL_CXXFLAGS) $< -o $@ 
 
 # Compile: create object files from C source files.
 .c.o:
-      $(CC) -c $(ALL_CFLAGS) $< -o $@ 
+	  $(CC) -c $(ALL_CFLAGS) $< -o $@ 
 
 
 # Compile: create assembler files from C source files.
 .c.s:
-      $(CC) -S $(ALL_CFLAGS) $< -o $@
+	  $(CC) -S $(ALL_CFLAGS) $< -o $@
 
 
 # Assemble: create object files from assembler source files.
 .S.o:
-      $(CC) -c $(ALL_ASFLAGS) $< -o $@
+	  $(CC) -c $(ALL_ASFLAGS) $< -o $@
 
 
 # Automatic dependencies
 %.d: %.c
-      $(CC) -M $(ALL_CFLAGS) $< | sed "s;$(notdir $*).o:;$*.o $*.d:;" > $@
+	  $(CC) -M $(ALL_CFLAGS) $< | sed "s;$(notdir $*).o:;$*.o $*.d:;" > $@
 
 %.d: %.cpp
-      $(CXX) -M $(ALL_CXXFLAGS) $< | sed "s;$(notdir $*).o:;$*.o $*.d:;" > $@
+	  $(CXX) -M $(ALL_CXXFLAGS) $< | sed "s;$(notdir $*).o:;$*.o $*.d:;" > $@
 
 
 # Target: clean project.
 clean:
-      $(REMOVE) applet/$(TARGET).hex applet/$(TARGET).eep applet/$(TARGET).cof applet/$(TARGET).elf \
-      applet/$(TARGET).map applet/$(TARGET).sym applet/$(TARGET).lss applet/core.a \
-      $(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
+	  $(REMOVE) applet/$(TARGET).hex applet/$(TARGET).eep applet/$(TARGET).cof applet/$(TARGET).elf \
+	  applet/$(TARGET).map applet/$(TARGET).sym applet/$(TARGET).lss applet/core.a \
+	  $(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
 
 .PHONY:      all build elf hex eep lss sym program coff extcoff clean applet_files sizebefore sizeafter
 
