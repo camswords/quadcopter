@@ -323,7 +323,6 @@ def fnPrintInfo(target, source, env):
     # TODO: check binary size
     print "* maximum size for hex file: %s bytes" % getBoardConf('upload.maximum_size')
 
-
 bldProcessing = Builder(action = fnProcessing) #, suffix = '.cpp', src_suffix = sketchExt)
 bldCompressCore = Builder(action = fnCompressCore)
 bldELF = Builder(action = AVR_BIN_PREFIX + 'gcc -mmcu=%s ' % MCU +
@@ -393,13 +392,10 @@ if local_sources:
     envArduino.Append(CPPPATH = 'build/local')
 
 # Convert sketch(.pde) to cpp
-envArduino.Processing('build/' + TARGET + '.cpp', 'build/' + TARGET + sketchExt)
+# envArduino.Processing('build/' + TARGET + '.cpp', 'build/' + TARGET + sketchExt)
 VariantDir('build', '.')
 
-# copy all source quadcopter files to the build directory
-run(['cp', '-R',  'src/', 'build'])
-
-sources = ['build/' + TARGET + '.cpp']
+sources = ['src/main/' + TARGET + '.cpp']
 #sources += core_sources
 sources += local_sources
 sources += all_libs_sources
@@ -434,7 +430,6 @@ UPLOAD_SPEED = getBoardConf('upload.speed')
 if UPLOAD_PROTOCOL == 'stk500':
     UPLOAD_PROTOCOL = 'stk500v1'
 
-
 avrdudeOpts = ['-V', '-F', '-c %s' % UPLOAD_PROTOCOL, '-b %s' % UPLOAD_SPEED,
                '-p %s' % MCU, '-P %s' % ARDUINO_PORT, '-U flash:w:$SOURCES']
 if AVRDUDE_CONF:
@@ -451,13 +446,3 @@ AlwaysBuild(upload)
 
 # Clean build directory
 envArduino.Clean('all', 'build/')
-
-# deploy the quadcopter code
-def deployToMicrocontroller(target, source, env):
-    assert(path.exists(TARGET + '.hex'))
-    run(["scp", "scripts/deploy.sh", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME + ":~"])
-    run(["scp", "quadcopter.hex", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME + ":~"])
-    run(["ssh", ARDUINO_USERNAME + "@" + ARDUINO_HOSTNAME, 'chmod 755 ~/deploy.sh; ~/deploy.sh'])
-
-deploy = envArduino.Alias('deploy', None, [deployToMicrocontroller])
-AlwaysBuild(deploy)
