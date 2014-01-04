@@ -404,9 +404,9 @@ sources += all_libs_sources
 core_objs = envArduino.Object(core_sources)
 objs = envArduino.Object(sources) #, LIBS=libs, LIBPATH='.')
 objs = objs + envArduino.CompressCore('build/core.a', core_objs)
-envArduino.Elf(TARGET + '.elf', objs)
-envArduino.Hex(TARGET + '.hex', TARGET + '.elf')
-envArduino.BuildInfo(None, TARGET + '.hex')
+envArduino.Elf('build/' + TARGET + '.elf', objs)
+envArduino.Hex('build/' + TARGET + '.hex', 'build/' + TARGET + '.elf')
+envArduino.BuildInfo(None, 'build/' + TARGET + '.hex')
 
 # Reset
 def pulseDTR(target, source, env):
