@@ -13,6 +13,8 @@ int main(void) {
     Servo motorC;
     Servo motorD;
     
+    int iteration = 0;
+    
     // Input from the RC receiver (throttle channel)
     pinMode(A0, INPUT);
     
@@ -21,8 +23,12 @@ int main(void) {
     motorB.attach(A4);
     motorC.attach(A5);
     motorD.attach(A6);
-    
+
+    Serial.begin(9600);
+
     for (;;) {
+        iteration = iteration + 1;
+
         // Read the pulse width from the RC receiver
         int throttle = pulseIn(A0, HIGH, 25000); 
 
@@ -32,10 +38,11 @@ int main(void) {
         motorC.writeMicroseconds(throttle);
         motorD.writeMicroseconds(throttle);
         
-        // Wait a bit, just for kicks
+        // Wait a bit, to ensure that any serial connections get a chance to run
         delay(100);
 
-        if (serialEventRun) serialEventRun();
+        Serial.print("iteration: ");
+        Serial.println(iteration);
     }
         
     return 0;
