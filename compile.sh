@@ -14,7 +14,7 @@ rm -rf build
 mkdir build
 
 # Run the scons compile script
-ARDUINO_BOARD=yun ARSCONS_TARGET=quadcopter scons -f src/build/SConstruct 
+ARDUINO_BOARD=yun ARSCONS_TARGET=quadcopter INCLUDE_LIBRARIES=Servo,Bridge scons -f src/build/SConstruct 
 fail_if_error "Compilation failed, aborting."
 
 # remove all .o files that were (annoyingly) compiled into the src directory

@@ -4,4 +4,7 @@ Tasks:
 * Upload hex file to Arduino Yun (done)
 * Compile an Arduino library with the code (done, could be simpler)
 * Update readme file (needs doing)
-* Figure out how to print serial commands to command line (needs doing)
+* Allow the quadcopter to be made up of multiple files (needs doing) 
+* Figure out how to print serial commands to command line (done)
+* Figure out how i2c communication works with Wire and with the Yun
+* Look into compiler warning: ignoring packed attribute because of unpacked non-POD field (....) (needs doing)

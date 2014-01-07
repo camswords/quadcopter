@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
+#include <Process.h>
 
 int main(void) {
     init();
@@ -8,11 +9,14 @@ int main(void) {
         USBDevice.attach();
     #endif
 
+    Serial.begin(9600);
+    Bridge.begin();
+
     Servo motorA;
     Servo motorB;
     Servo motorC;
     Servo motorD;
-    
+
     int iteration = 0;
     
     // Input from the RC receiver (throttle channel)
@@ -23,8 +27,6 @@ int main(void) {
     motorB.attach(A4);
     motorC.attach(A5);
     motorD.attach(A6);
-
-    Serial.begin(9600);
 
     for (;;) {
         iteration = iteration + 1;
@@ -43,6 +45,18 @@ int main(void) {
 
         Serial.print("iteration: ");
         Serial.println(iteration);
+
+        Process p;        // Create a process and call it "p"
+        p.begin("curl");  // Process that launch the "curl" command
+        p.addParameter("http://arduino.cc/asciilogo.txt"); // Add the URL parameter to "curl"
+        p.run();      // Run the process and wait for its termination
+
+        while (p.available()>0) {
+            char c = p.read();
+            Serial.print(c);
+        }
+
+        Serial.flush();
     }
         
     return 0;
