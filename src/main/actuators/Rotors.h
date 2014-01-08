@@ -1,6 +1,6 @@
 
-#ifndef Rotors_H
-#define Rotors_H
+#ifndef Rotors_h
+#define Rotors_h
 
 #include <Servo.h>
 
@@ -16,4 +16,4 @@ public:
     void throttleTo(int pulseWidth);
 };
 
-#endif /* Rotors_H */
+#endif /* Rotors_h */
