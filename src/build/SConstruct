@@ -356,19 +356,33 @@ libCandidates = INCLUDE_LIBRARIES.split(',')
 if ARDUINO_VER >= 20 and 'Ethernet' in libCandidates:
     libCandidates.append('SPI')
 
-all_libs_sources = []
+
+# Ensure quadcopter header files are made  available at compile time
+for root, directories, files in os.walk('src/main'):
+    envArduino.Append(CPPPATH = root)
+
+# Ensure library header files are made available at compile time
 for libCandidate in libCandidates:
     envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', libCandidate, 'src'))
     envArduino.Append(CPPPATH = path.join(ARDUINO_HOME, 'libraries', libCandidate, 'arch', 'avr'))
 
+# source files will get compiled
+sources = []
+
+# Add all quadcopter class files to the sources list
+for root, directories, files in os.walk('src/main'):
+    for sourceFile in files:
+        isClassFile = re.compile('.*\.cpp$')
+        if isClassFile.match(sourceFile):
+            sources.append(path.join(root, sourceFile))
+
+# Add the libraries src / arch/avr paths for finding header files, register class files for compilation 
+for libCandidate in libCandidates:
     for sourceFile in glob(path.join(ARDUINO_HOME, 'libraries', libCandidate, 'arch', 'avr', '*.cpp')):
-        all_libs_sources.append(sourceFile)
+        sources.append(sourceFile)
 
     for sourceFile in glob(path.join(ARDUINO_HOME, 'libraries', libCandidate, 'src', '*.cpp')):
-        all_libs_sources.append(sourceFile)
-
-sources = ['src/main/' + TARGET + '.cpp']
-sources += all_libs_sources
+        sources.append(sourceFile)
 
 # Finally Build!!
 core_objs = envArduino.Object(core_sources)

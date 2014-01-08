@@ -18,7 +18,7 @@ ARDUINO_BOARD=yun ARSCONS_TARGET=quadcopter INCLUDE_LIBRARIES=Servo,Bridge scons
 fail_if_error "Compilation failed, aborting."
 
 # remove all .o files that were (annoyingly) compiled into the src directory
-rm -rf src/main/*.o
+find src/main -name *.o -exec rm {} ';'
 
 # remove the db for scons
 rm -f .sconsign.dblite

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
-#include <Process.h>
+#include <Rotors.h>
 
 int main(void) {
     init();
@@ -9,8 +9,9 @@ int main(void) {
         USBDevice.attach();
     #endif
 
+    Rotors::engage();
+
     Serial.begin(9600);
-    Bridge.begin();
 
     Servo motorA;
     Servo motorB;
@@ -45,18 +46,6 @@ int main(void) {
 
         Serial.print("iteration: ");
         Serial.println(iteration);
-
-        Process p;        // Create a process and call it "p"
-        p.begin("curl");  // Process that launch the "curl" command
-        p.addParameter("http://arduino.cc/asciilogo.txt"); // Add the URL parameter to "curl"
-        p.run();      // Run the process and wait for its termination
-
-        while (p.available()>0) {
-            char c = p.read();
-            Serial.print(c);
-        }
-
-        Serial.flush();
     }
         
     return 0;
