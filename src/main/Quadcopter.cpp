@@ -3,6 +3,7 @@
 #include <Throttle.h>
 #include <Quadcopter.h>
 #include <EventLoop.h>
+#include <EchoTickToSerialConnection.h>
 
 int main(void) {
     init();
@@ -26,8 +27,12 @@ void Quadcopter::fly() {
     Throttle* throttle = (Throttle*) malloc(sizeof(Throttle));
     throttle->attachToPin(A0);
 
+    EchoTickToSerialConnection* echoTickToSerialConnection = (EchoTickToSerialConnection*) malloc(sizeof(EchoTickToSerialConnection));
+
     EventLoop* eventLoop = (EventLoop*) malloc(sizeof(EventLoop));
+    eventLoop->everyTick(echoTickToSerialConnection);
     eventLoop->run();
+
 
     int iteration = 0;
     
@@ -48,6 +53,9 @@ void Quadcopter::fly() {
 
     free(throttle);
     throttle = 0;
+
+    free(echoTickToSerialConnection);
+    echoTickToSerialConnection = 0;
 
     free(eventLoop);
     eventLoop = 0;
