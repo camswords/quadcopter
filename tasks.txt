@@ -8,7 +8,9 @@ Tasks:
 * Figure out how to print serial commands to command line (done)
 * Figure out how i2c communication works with Wire and with the Yun
 * Look into compiler warning: ignoring packed attribute because of unpacked non-POD field (....) (needs doing)
-
+* Work out how to create an array (and safely destroy it)
+* Work out if it is actually a good idea to be mallocing on a microcontroller
+* Add the throttle sensor / motor acuators as event loop actions
 
 Nice to haves
 * Destroy the scons file: it would be nice to have one place that defines the build.
