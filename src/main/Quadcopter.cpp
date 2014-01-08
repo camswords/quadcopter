@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <Servo.h>
 #include <Rotors.h>
 #include <Throttle.h>
+#include <Quadcopter.h>
 
 int main(void) {
     init();
@@ -10,6 +10,13 @@ int main(void) {
         USBDevice.attach();
     #endif
 
+    Quadcopter::fly();
+        
+    return 0;
+}
+
+
+void Quadcopter::fly() {
     Rotors* rotors = (Rotors*) malloc(sizeof(Rotors));
     rotors->initialise(A3, A4, A5, A6);
 
@@ -37,6 +44,4 @@ int main(void) {
 
     free(throttle);
     throttle = 0;
-        
-    return 0;
 }
