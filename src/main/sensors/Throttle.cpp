@@ -1,9 +1,6 @@
 #include <Throttle.h>
 
-void Throttle() {
-}
-
-void Throttle::attachToPin(uint8_t pin) {
+Throttle::Throttle(uint8_t pin) {
     pinMode(pin, INPUT);
 }
 

@@ -7,7 +7,7 @@
 class Throttle {
 
 public:
-    void attachToPin(uint8_t pin);
+    Throttle(uint8_t pin);
     int read();
 };
 

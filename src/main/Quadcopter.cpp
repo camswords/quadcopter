@@ -1,9 +1,6 @@
 #include <Arduino.h>
-#include <Rotors.h>
 #include <Throttle.h>
 #include <Quadcopter.h>
-#include <EventLoop.h>
-#include <EchoTickToSerialConnection.h>
 
 int main(void) {
     init();
@@ -12,51 +9,21 @@ int main(void) {
         USBDevice.attach();
     #endif
 
-    Serial.begin(9600);
-
-    Quadcopter::fly();
+    Quadcopter *quadcopter = new Quadcopter();
+    quadcopter->fly();
         
     return 0;
 }
 
-
 void Quadcopter::fly() {
-    Rotors* rotors = (Rotors*) malloc(sizeof(Rotors));
-    rotors->initialise(A3, A4, A5, A6);
+    motorA.attach(A3);
 
-    Throttle* throttle = (Throttle*) malloc(sizeof(Throttle));
-    throttle->attachToPin(A0);
+    Throttle* throttle = new Throttle(A0);
 
-    EchoTickToSerialConnection* echoTickToSerialConnection = (EchoTickToSerialConnection*) malloc(sizeof(EchoTickToSerialConnection));
-
-    EventLoop* eventLoop = (EventLoop*) malloc(sizeof(EventLoop));
-    eventLoop->everyTick(echoTickToSerialConnection);
-    eventLoop->run();
-
-
-    int iteration = 0;
-    
     for (;;) {
-        iteration = iteration + 1;
+        motorA.writeMicroseconds(throttle->read());
 
-        rotors->throttleTo(throttle->read());
-
-        // Wait a bit, to ensure that any serial connections get a chance to run
+        // wait a bit
         delay(100);
-
-        Serial.print("iteration: ");
-        Serial.println(iteration);
     }
-
-    free(rotors);
-    rotors = 0;
-
-    free(throttle);
-    throttle = 0;
-
-    free(echoTickToSerialConnection);
-    echoTickToSerialConnection = 0;
-
-    free(eventLoop);
-    eventLoop = 0;
 }
