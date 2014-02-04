@@ -1,9 +1,10 @@
 #include <Throttle.h>
 
 Throttle::Throttle(uint8_t pin) {
-    pinMode(pin, INPUT);
+    throttlePin = pin;
+    pinMode(throttlePin, INPUT);
 }
 
 int Throttle::read() {
-    return pulseIn(A0, HIGH, 25000);
+    return pulseIn(throttlePin, HIGH, 25000);
 }

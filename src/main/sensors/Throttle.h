@@ -5,6 +5,8 @@
 #include <Arduino.h>
 
 class Throttle {
+private:
+    uint8_t throttlePin;
 
 public:
     Throttle(uint8_t pin);
