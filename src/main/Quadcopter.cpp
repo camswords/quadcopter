@@ -11,27 +11,28 @@ int main(void) {
         USBDevice.attach();
     #endif
 
-    Quadcopter *quadcopter = new Quadcopter();
+    Quadcopter* quadcopter = new Quadcopter();
     quadcopter->fly();
         
     return 0;
 }
 
 void Quadcopter::fly() {
-    Motor *motor = new Motor(A3);
+    Motor* motorA = new Motor(A2);
+    Motor* motorB = new Motor(A3);
+    Motor* motorC = new Motor(A4);
+    Motor* motorD = new Motor(A5);
+
     Throttle* throttle = new Throttle(A0);
-    GpioPin *pin13 = new GpioPin(13);
 
     for (;;) {
-        motor->accelerateTo(throttle->read());
-        pin13->writeHigh();
+        int speed = throttle->read();
 
-        // wait a bit
-        delay(200);
+        motorA->accelerateTo(speed);
+        motorB->accelerateTo(speed);
+        motorC->accelerateTo(speed);
+        motorD->accelerateTo(speed);
 
-        pin13->writeLow();
-
-        // wait a bit
         delay(200);
     }
 }
