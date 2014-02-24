@@ -3,6 +3,7 @@
 #include <Motor.h>
 #include <GpioPin.h>
 #include <Quadcopter.h>
+#include <NineDegreesOfFreedom.h>
 
 int main(void) {
     init();
@@ -13,7 +14,7 @@ int main(void) {
 
     Quadcopter* quadcopter = new Quadcopter();
     quadcopter->fly();
-        
+
     return 0;
 }
 
@@ -24,6 +25,16 @@ void Quadcopter::fly() {
     Motor* motorD = new Motor(A5);
 
     Throttle* throttle = new Throttle(A0);
+
+    NineDegreesOfFreedom* nineDegreesOfFreedom = new NineDegreesOfFreedom();
+    Orientation *orientation = nineDegreesOfFreedom->orientation();
+
+    orientation->yaw();
+    orientation->pitch();
+    orientation->roll();
+
+    delete orientation;
+    orientation = NULL;
 
     for (;;) {
         int speed = throttle->read();
