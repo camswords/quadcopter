@@ -1,0 +1,9 @@
+{
+  "version": "0.0.1",
+  "name": "thoughtworks-sydney-quadcopter",
+  "private": true,
+  "dependencies": {
+    "serialport": "*",
+    "q": "*"
+  }
+}
