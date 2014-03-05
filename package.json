@@ -3,6 +3,7 @@
   "name": "thoughtworks-sydney-quadcopter",
   "private": true,
   "dependencies": {
+    "coffee-script": "*",
     "serialport": "*",
     "q": "*"
   }
