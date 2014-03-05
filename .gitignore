@@ -1,5 +1,0 @@
-build/*
-.sconsign.dblite
-quadcopter.elf
-quadcopter.hex
-arduino
