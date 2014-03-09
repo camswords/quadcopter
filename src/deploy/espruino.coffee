@@ -26,7 +26,20 @@ sendToSerial = (message) ->
 
   written.promise
 
-module.exports =
+espruino =
   reset: -> sendToSerial('reset();\n')
-  send: (code) -> sendToSerial("{ #{code} }\n")
+  upload: (code) -> sendToSerial("{ #{code} }\n")
+
+module.exports =
+  deploy: (code) ->
+    deployed = Q.defer()
+    progress = setInterval((-> deployed.notify()), 100)
+
+    success = (output) -> deployed.resolve(output)
+    error = (output) -> deployed.reject(output)
+
+    espruino.reset().then(-> espruino.upload(code)).finally(-> clearInterval(progress)).done(success, error)
+    deployed.promise
+
+
 
