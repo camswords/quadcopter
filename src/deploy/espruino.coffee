@@ -1,5 +1,6 @@
 Q = require 'q'
 SerialPort = require('serialport').SerialPort
+config = require '../configuration'
 
 sendToSerial = (message) ->
   written = Q.defer()
@@ -9,7 +10,7 @@ sendToSerial = (message) ->
     written.resolve(read)
     serialPort.close()
 
-  serialPort = new SerialPort('/dev/tty.usbmodem1421', { baudrate: 9600 }, false)
+  serialPort = new SerialPort(config.espruino.serialPort, { baudrate: 9600 }, false)
 
   serialPort.on 'error', (error) -> written.reject(error)
 
