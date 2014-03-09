@@ -1,20 +1,19 @@
 espruino = require './espruino'
 printDots = require('./dot-printer')()
+Q = require('q')
 
-success = ->
+printWelcome = ->
+  console.log('deploying')
+  printDots.start()
+  Q()
+
+stopPrintingDots = ->
   printDots.stop()
-  console.log('\nsuccess!')
+  console.log()
 
-error = (error) ->
-  printDots.stop()
-  console.log("deploy failed!", error)
-
-console.log('deploying')
-printDots.start()
-
-
+reset = -> espruino.reset()
 deploy = -> espruino.send('{ digitalWrite(LED2, true); }\n')
+success = -> console.log('success!')
+error = (error) -> console.log('deploy failed!', error)
 
-
-
-espruino.reset().then(deploy).done(success, error)
+printWelcome().then(reset).then(deploy).finally(stopPrintingDots).done(success, error)
