@@ -28,5 +28,5 @@ sendToSerial = (message) ->
 
 module.exports =
   reset: -> sendToSerial('reset();\n')
-  send: (code) -> sendToSerial(code)
+  send: (code) -> sendToSerial("{ #{code} }\n")
 
