@@ -5,6 +5,7 @@
   "dependencies": {
     "coffee-script": "*",
     "serialport": "*",
-    "q": "*"
+    "q": "*",
+    "node-espruino": "*"
   }
 }

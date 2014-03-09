@@ -1,31 +1,41 @@
 
 SerialPort = require('serialport').SerialPort
 Q = require('q')
+wait = require './wait'
 
 serialPort = new SerialPort('/dev/tty.usbmodem1421', { baudrate: 9600 }, false)
 uploaded = Q.defer()
+resetted = Q.defer()
 
 serialPort.open ->
-  setTimeout((->
-    serialPort.write 'echo(0)\n reset() digitalWrite(LED1, false) echo(1)\n', (err) ->
-      if err
-        uploaded.reject(err)
-      else
-        serialPort.drain(-> uploaded.resolve() )
-  ), 5000)
+  wait.until -> !uploaded.promise.isPending()
+
+  serialPort.on 'data', (data) ->
+    console.log(data.toString())
+
+    if data.toString().match('G.Williams')
+      resetted.resolve()
+
+  serialPort.write 'reset()\n', (error) ->
+    if error
+      console.log('error', error)
+      uploaded.reject error
+    else
+      serialPort.drain ->
+        setTimeout((->
+          uploaded.resolve()
+        ), 200);
+
+serialPort.on 'error', (error) ->
+  console.log(error)
+
+success = ->
+  console.log('deploy successful')
+  serialPort.close()
+
+failure = ->
+  serialPort.close()
+
+resetted.promise.then(uploaded.promise).then(success, failure)
 
 
-uploaded.promise.then((->
-  serialPort.close(-> console.log('deploy successful.'))), ((err) ->
-    console.log('failed to deploy due to ', err)
-    serialPort.close()
-  ))
-
-waitForDeployToFinish = ->
-  setTimeout((->
-    if uploaded.promise.isPending()
-      process.stdout.write('.')
-      waitForDeployToFinish()
-  ), 1000)
-
-waitForDeployToFinish()

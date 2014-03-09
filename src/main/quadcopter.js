@@ -19,5 +19,3 @@ var interval = setInterval(function() {
   digitalPulse(C7, 1, 1 + E.clip(throttle / 100, 0, 1));
   digitalPulse(C6, 1, 1 + E.clip(throttle / 100, 0, 1));
 }, 50);
-
-save();
