@@ -8,36 +8,35 @@ uploaded = Q.defer()
 resetted = Q.defer()
 
 serialPort.open ->
+  console.log 'deploying'
   wait.until
     isSatisfied: -> !uploaded.promise.isPending()
     description: 'the deploy to upload'
 
   serialPort.on 'data', (data) ->
-    console.log(data.toString())
-
-    if data.toString().match('G.Williams')
-      resetted.resolve()
+    resetted.resolve() if data.toString().match('G.Williams')
 
   serialPort.write 'reset()\n', (error) ->
     if error
-      console.log('error', error)
       uploaded.reject error
     else
       serialPort.drain ->
         setTimeout((->
           uploaded.resolve()
-        ), 10000);
+        ), 4000);
 
 serialPort.on 'error', (error) ->
   console.log(error)
 
 success = ->
-  console.log('deploy successful')
+  console.log('\nsuccess!')
   serialPort.close()
 
 failure = ->
   serialPort.close()
 
-resetted.promise.then(uploaded.promise).then(success, failure)
+resetted.promise.then( ->
+  uploaded.promise.then(success, failure)
+)
 
 
