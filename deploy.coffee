@@ -1,23 +1,20 @@
-wait = require './wait'
 espruino = require './espruino'
-Q = require 'q'
+printDots = require('./dot-printer')()
 
-finished = Q.defer()
-
-success = (output) ->
+success = ->
+  printDots.stop()
   console.log('\nsuccess!')
-  finished.resolve()
 
 error = (error) ->
+  printDots.stop()
   console.log("deploy failed!", error)
-  finished.reject(error)
+
+console.log('deploying')
+printDots.start()
+
 
 deploy = -> espruino.send('{ digitalWrite(LED2, true); }\n')
 
 
-console.log('deploying')
-espruino.reset().then(deploy).done(success, error)
 
-wait.until
-  isSatisfied: -> !finished.promise.isPending()
-  description: 'the espruino to reset'
+espruino.reset().then(deploy).done(success, error)
