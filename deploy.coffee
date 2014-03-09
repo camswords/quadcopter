@@ -12,7 +12,7 @@ stopPrintingDots = ->
   console.log()
 
 reset = -> espruino.reset()
-deploy = -> espruino.send('{ digitalWrite(LED2, true); }\n')
+deploy = -> espruino.send('{ setTimeout(function() { digitalWrite(LED2, true); }, 10000); }\n')
 success = -> console.log('success!')
 error = (error) -> console.log('deploy failed!', error)
 
