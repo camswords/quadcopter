@@ -6,6 +6,10 @@
     "coffee-script": "*",
     "serialport": "*",
     "q": "*",
-    "node-espruino": "*"
+    "node-espruino": "*",
+    "gulp": "*",
+    "gulp-coffee": "*",
+    "gulp-concat": "*",
+    "gulp-util": "*"
   }
 }
