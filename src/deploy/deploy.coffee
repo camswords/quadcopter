@@ -1,7 +1,8 @@
 espruino = require './espruino'
+fs = require 'fs'
 
 console.log('deploying')
-code = 'setTimeout(function() { digitalWrite(LED2, false); }, 1000);'
+code = fs.readFileSync('./src/main/quadcopter.js', encoding: 'utf-8')
 
 success = -> console.log('\nsuccess!')
 error = (error) -> console.log('\ndeploy failed!', error)
