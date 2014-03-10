@@ -13,9 +13,7 @@ sendToSerial = (message) ->
   serialPort = new SerialPort(config.espruino.serialPort, { baudrate: 9600 }, false)
 
   serialPort.on 'error', (error) -> written.reject(error)
-
-  serialPort.on 'data', (data) ->
-    read += data.toString()
+  serialPort.on 'data', (data) -> read += data.toString()
 
   serialPort.open ->
     serialPort.write message, (error) ->
@@ -28,6 +26,7 @@ sendToSerial = (message) ->
 
 espruino =
   reset: -> sendToSerial('reset();\n')
+  save: -> sendToSerial('save();\n')
   upload: (code) -> sendToSerial("{ #{code} }\n")
 
 module.exports =
@@ -38,7 +37,12 @@ module.exports =
     success = (output) -> deployed.resolve(output)
     error = (output) -> deployed.reject(output)
 
-    espruino.reset().then(-> espruino.upload(code)).finally(-> clearInterval(progress)).done(success, error)
+    espruino.reset()
+        .then(-> espruino.upload(code))
+        .then(-> espruino.save())
+        .finally(-> clearInterval(progress))
+        .done(success, error)
+
     deployed.promise
 
 
