@@ -975,6 +975,14 @@
           }
         }
       }
+    },
+    "map-stream": {
+      "version": "0.1.0",
+      "from": "map-stream@"
+    },
+    "extend": {
+      "version": "1.2.1",
+      "from": "extend@"
     }
   }
 }

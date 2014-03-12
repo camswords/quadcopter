@@ -12,6 +12,7 @@
     "gulp-concat": "*",
     "gulp-util": "*",
     "gulp-uglify": "*",
-    "map-stream": "*"
+    "map-stream": "*",
+    "extend": "*"
   }
 }
