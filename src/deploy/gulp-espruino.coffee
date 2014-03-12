@@ -7,8 +7,12 @@ module.exports =
   deploy: (overrides) ->
     defaults =
       port: 'no-port-defined!'
-      waitTimeBeforeSocketClose: 1000
+      waitTimeBeforeSocketClose: 2000
 
     options = extend({}, defaults, overrides)
 
-    map (file, cb) -> espruino.deploy(file.contents.toString(), options).then(cb, cb)
+    map (file, callback) ->
+      success = (output) -> callback(null, output)
+      failure = (error) -> callback(error)
+
+      espruino.deploy(file.contents.toString(), options).then(success, failure)
