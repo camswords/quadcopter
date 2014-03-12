@@ -1,8 +1,7 @@
 Q = require 'q'
 SerialPort = require('serialport').SerialPort
-config = require '../configuration'
 
-sendToSerial = (message) ->
+sendToSerial = (message, port) ->
   written = Q.defer()
   read = ''
 
@@ -10,7 +9,7 @@ sendToSerial = (message) ->
     written.resolve(read)
     serialPort.close()
 
-  serialPort = new SerialPort(config.espruino.serialPort, { baudrate: 9600 }, false)
+  serialPort = new SerialPort(port, { baudrate: 9600 }, false)
 
   serialPort.on 'error', (error) -> written.reject(error)
   serialPort.on 'data', (data) -> read += data.toString()
@@ -25,21 +24,21 @@ sendToSerial = (message) ->
   written.promise
 
 espruino =
-  reset: -> sendToSerial('reset();\n')
-  save: -> sendToSerial('save();\n')
-  upload: (code) -> sendToSerial("{ #{code} }\n")
+  reset: (port) -> sendToSerial('reset();\n', port)
+  save: (port) -> sendToSerial('save();\n', port)
+  upload: (code, port) -> sendToSerial("{ #{code} }\n", port)
 
 module.exports =
-  deploy: (code) ->
+  deploy: (code, port) ->
     deployed = Q.defer()
     progress = setInterval((-> deployed.notify()), 100)
 
     success = (output) -> deployed.resolve(output)
     error = (output) -> deployed.reject(output)
 
-    espruino.reset()
-        .then(-> espruino.upload(code))
-        .then(-> espruino.save())
+    espruino.reset(port)
+        .then(-> espruino.upload(code, port))
+        .then(-> espruino.save(port))
         .finally(-> clearInterval(progress))
         .done(success, error)
 

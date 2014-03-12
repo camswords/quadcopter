@@ -11,6 +11,7 @@
     "gulp-coffee": "*",
     "gulp-concat": "*",
     "gulp-util": "*",
-    "gulp-uglify": "*"
+    "gulp-uglify": "*",
+    "map-stream": "*"
   }
 }

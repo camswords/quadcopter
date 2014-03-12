@@ -1,5 +1,0 @@
-{
-  "espruino": {
-    "serialPort": "/dev/tty.usbmodem1421"
-  }
-}
