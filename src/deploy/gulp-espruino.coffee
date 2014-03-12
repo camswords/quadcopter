@@ -11,5 +11,4 @@ module.exports =
 
     options = extend({}, defaults, overrides)
 
-    map (file, cb) ->
-      espruino.deploy(file.contents.toString(), options).then(cb, cb)
+    map (file, cb) -> espruino.deploy(file.contents.toString(), options).then(cb, cb)
