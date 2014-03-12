@@ -1,9 +1,15 @@
 map = require 'map-stream'
 espruino = require './espruino'
 fs = require 'fs'
+extend = require 'extend'
 
 module.exports =
-  deploy: (port, encoding = 'utf-8') ->
+  deploy: (overrides) ->
+    defaults =
+      port: 'no-port-defined!'
+      waitTimeBeforeSocketClose: 1000
+
+    options = extend({}, defaults, overrides)
+
     map (file, cb) ->
-      code = fs.readFileSync(file.path, encoding: encoding)
-      espruino.deploy(code, port).then(cb, cb)
+      espruino.deploy(file.contents.toString(), options).then(cb, cb)

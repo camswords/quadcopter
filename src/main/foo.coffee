@@ -1,1 +1,1 @@
-setTimeout (-> digitalWrite(LED2, true)), 2000
+setTimeout (-> digitalWrite(LED2, false)), 2

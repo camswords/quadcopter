@@ -8,7 +8,7 @@ espruino = require './src/deploy/gulp-espruino'
 gulp.task 'default', ->
   gulp.src('./src/main/**/*.coffee')
     .pipe(coffee(bare: true).on('error', gutil.log))
-    .pipe(concat('../../build/quadcopter.js'))
+    .pipe(concat('app.js'))
     .pipe(uglify())
-    .pipe(espruino.deploy('/dev/tty.usbmodem1421').on('error', gutil.log))
+    .pipe(espruino.deploy(port: '/dev/tty.usbmodem1421').on('error', gutil.log))
 
