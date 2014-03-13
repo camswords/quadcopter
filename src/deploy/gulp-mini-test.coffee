@@ -8,15 +8,16 @@ module.exports =
 
     gutil.log("Running tests...")
 
-    onChunk = (testOutput, encoding, callback) ->
-      numberOfTests++
+    onChunk = (content, encoding, callback) ->
 
-      if testOutput.match(/passed:/)
-        gutil.log('  ' + gutil.colors.green(testOutput))
-
-      if testOutput.match(/failed:/)
-        failedTests++
-        gutil.log('  ' + gutil.colors.red(testOutput))
+      for testOutput in content.split('\n')
+        if testOutput.match(/passed:/)
+          numberOfTests++
+          gutil.log('  ' + gutil.colors.green(testOutput))
+        if testOutput.match(/failed:/)
+          numberOfTests++
+          failedTests++
+          gutil.log('  ' + gutil.colors.red(testOutput))
 
       callback()
 
