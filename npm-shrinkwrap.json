@@ -976,13 +976,35 @@
         }
       }
     },
-    "map-stream": {
-      "version": "0.1.0",
-      "from": "map-stream@"
-    },
     "extend": {
       "version": "1.2.1",
       "from": "extend@"
+    },
+    "through2": {
+      "version": "0.4.1",
+      "from": "through2@",
+      "dependencies": {
+        "readable-stream": {
+          "version": "1.0.26-2",
+          "from": "readable-stream@~1.0.17",
+          "dependencies": {
+            "string_decoder": {
+              "version": "0.10.25-1",
+              "from": "string_decoder@~0.10.x"
+            }
+          }
+        },
+        "xtend": {
+          "version": "2.1.2",
+          "from": "xtend@~2.1.1",
+          "dependencies": {
+            "object-keys": {
+              "version": "0.4.0",
+              "from": "object-keys@~0.4.0"
+            }
+          }
+        }
+      }
     }
   }
 }
