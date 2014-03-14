@@ -62,7 +62,9 @@ module.exports =
 
       serialPort.open ->
         executor.execute("reset();\n")
+          .then(-> executor.execute("echo(0);\n"))
           .then(-> executor.execute("{ #{chunk.contents.toString()} }\n"))
+          .then(-> executor.execute("echo(1);\n"))
           .then(-> executor.execute("save();\n"))
           .then(-> publish.content(output.all() unless publish.published()))
 
