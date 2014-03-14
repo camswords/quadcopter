@@ -2,6 +2,14 @@ SerialPort = require('serialport').SerialPort
 fs = require 'fs'
 through = require 'through2'
 extend = require 'extend'
+Q = require 'q'
+
+output = (->
+  consumed = ''
+
+  append: (content) -> consumed += content
+  all: -> consumed
+)()
 
 module.exports =
   deploy: (port, overrides = {}) ->
@@ -29,22 +37,34 @@ module.exports =
         published: -> published
       )()
 
+      executor = (->
+        deferred = Q()
+
+        execute: (command) ->
+          deferred = Q.defer()
+          serialPort.write command, (error) -> publish.error(error) if error
+          deferred.promise
+
+        finished: -> deferred.resolve()
+      )()
+
       consume = (->
-        consumed = ''
         timeout = null
 
         (content) ->
-          consumed += content
+          output.append(content)
           clearTimeout(timeout)
-          timeout = setTimeout((-> publish.content(consumed) unless publish.published()), options.idleReadTimeBeforeClose)
+          timeout = setTimeout((-> executor.finished()), options.idleReadTimeBeforeClose)
       )()
 
       serialPort.on 'data', (data) -> consume(data.toString())
       serialPort.on 'error', (error) -> publish.error(null, error)
 
       serialPort.open ->
-        serialPort.write "reset();\n { #{chunk.contents.toString()} }\n save();\n", (error) ->
-          publish.error(error) if error
+        executor.execute("reset();\n")
+          .then(-> executor.execute("{ #{chunk.contents.toString()} }\n"))
+          .then(-> executor.execute("save();\n"))
+          .then(-> publish.content(output.all() unless publish.published()))
 
     onFinish = (callback) ->
       self = this
