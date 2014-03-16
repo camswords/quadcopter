@@ -10,7 +10,6 @@ createOutput = ->
   append: (content) -> consumed += content
   all: -> consumed
 
-
 createPublisher = (readableStream, readableStreamDone) ->
   published = false
 
@@ -76,10 +75,7 @@ module.exports =
          .then(-> publish.content(espruino.log()))
 
     onFlush = (callback) ->
-      self = this
-
-      espruino.close ->
-        self.push(null)
-        callback()
+      publish = createPublisher(@, callback)
+      espruino.close -> publish.content(null)
 
     through.obj(onTransform, onFlush)
