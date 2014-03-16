@@ -128,3 +128,13 @@ describe 'espruino', ->
         this.push(null)
         callback()
         done()
+
+  it 'should barf when there is no port supplied', ->
+    serialPort = serialPortBuilder().build()
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    try
+      espruino.deploy(null)
+      throw new Error('failed to barf when no port is specified')
+    catch error
+      expect(error.message).toBe('Espruino port is not specified. Barfing.')

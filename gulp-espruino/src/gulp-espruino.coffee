@@ -2,6 +2,7 @@ SerialPort = require('serialport').SerialPort
 through = require 'through2'
 extend = require 'extend'
 Q = require 'q'
+PluginError = require('gulp-util').PluginError;
 
 createOutput = ->
   consumed = ''
@@ -33,6 +34,7 @@ createTimer = (timeoutInMillis, done) ->
 
 createEspruino = (port, options) ->
   serialPort = new SerialPort(port, { baudrate: 9600 })
+
   output = createOutput()
   commandExecuted = Q.defer()
 
@@ -58,6 +60,9 @@ module.exports =
       idleReadTimeBeforeClose: 1000
       reset: true
       save: true
+
+    if !port
+      throw new PluginError('gulp-espruino', 'Espruino port is not specified. Barfing.');
 
     options = extend({}, defaults, overrides)
     espruino = createEspruino(port, options)
