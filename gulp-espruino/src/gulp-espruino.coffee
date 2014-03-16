@@ -26,16 +26,22 @@ createPublisher = (readableStream, readableStreamDone) ->
       readableStream.push(null)
       readableStreamDone(error)
 
-createExecutor = (serialPort, publish) ->
+createEspruinoCommand = (serialPort, onError) ->
   deferred = Q()
 
   execute: (command) ->
     deferred = Q.defer()
-    serialPort.write command, (error) -> publish.error(error) if error
+    serialPort.write command, (error) -> onError(error) if error
     deferred.promise
 
   finished: -> deferred.resolve()
 
+createTimer = (timeoutInMillis, done) ->
+  timeout = null
+
+  ->
+    clearTimeout(timeout)
+    timeout = setTimeout(done, timeoutInMillis)
 
 module.exports =
   deploy: (port, overrides = {}) ->
@@ -50,32 +56,23 @@ module.exports =
     serialPort = new SerialPort(port, { baudrate: 9600 })
 
     onSuccess = (chunk, encoding, callback) ->
-      self = this
-
-      publish = createPublisher(self, callback)
-      executor = createExecutor(serialPort, publish)
-
-      consume = (->
-        timeout = null
-
-        ->
-          clearTimeout(timeout)
-          timeout = setTimeout((-> executor.finished()), options.idleReadTimeBeforeClose)
-      )()
+      publish = createPublisher(@, callback)
+      espruinoCommand = createEspruinoCommand(serialPort, (error) -> publish.error(error))
+      finishCommand = createTimer(options.idleReadTimeBeforeClose, -> espruinoCommand.finished())
 
       serialPort.on 'data', (data) ->
         output.append(data.toString())
-        consume(data.toString())
+        finishCommand()
 
       serialPort.on 'error', (error) -> publish.error(error)
 
       serialPort.open ->
         Q()
-          .then(-> executor.execute("reset();\n") if options.reset)
-          .then(-> executor.execute("echo(0);\n") if options.echoOff)
-          .then(-> executor.execute("{ #{chunk.contents.toString()} }\n"))
-          .then(-> executor.execute("echo(1);\n") if options.echoOff)
-          .then(-> executor.execute("save();\n") if options.save)
+          .then(-> espruinoCommand.execute("reset();\n") if options.reset)
+          .then(-> espruinoCommand.execute("echo(0);\n") if options.echoOff)
+          .then(-> espruinoCommand.execute("{ #{chunk.contents.toString()} }\n"))
+          .then(-> espruinoCommand.execute("echo(1);\n") if options.echoOff)
+          .then(-> espruinoCommand.execute("save();\n") if options.save)
           .then(-> publish.content(output.all()))
 
     onFinish = (callback) ->
