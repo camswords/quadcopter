@@ -26,22 +26,27 @@ createPublisher = (readableStream, readableStreamDone) ->
       readableStream.push(null)
       readableStreamDone(error)
 
-createEspruinoCommand = (serialPort, onError) ->
-  deferred = Q()
-
-  execute: (command) ->
-    deferred = Q.defer()
-    serialPort.write command, (error) -> onError(error) if error
-    deferred.promise
-
-  finished: -> deferred.resolve()
-
 createTimer = (timeoutInMillis, done) ->
   timeout = null
 
   ->
     clearTimeout(timeout)
     timeout = setTimeout(done, timeoutInMillis)
+
+createEspruino = (port) ->
+  serialPort = new SerialPort(port, { baudrate: 9600 })
+  commandExecuted = Q.defer()
+
+  serialPort: serialPort
+
+  send: (command, onError) ->
+    commandExecuted = Q.defer()
+    serialPort.write command, (error) -> onError(error) if error
+    commandExecuted.promise
+
+  sendFinished: -> commandExecuted.resolve()
+
+  close: (callback) -> serialPort.close(callback)
 
 module.exports =
   deploy: (port, overrides = {}) ->
@@ -52,34 +57,35 @@ module.exports =
       reset: true
       save: true
 
-    options = extend({}, defaults, overrides)
-    serialPort = new SerialPort(port, { baudrate: 9600 })
+    espruino = createEspruino(port)
 
-    onSuccess = (chunk, encoding, callback) ->
+    options = extend({}, defaults, overrides)
+    serialPort = espruino.serialPort
+
+    onTransform = (chunk, encoding, callback) ->
       publish = createPublisher(@, callback)
-      espruinoCommand = createEspruinoCommand(serialPort, (error) -> publish.error(error))
-      finishCommand = createTimer(options.idleReadTimeBeforeClose, -> espruinoCommand.finished())
+      onError = (error) -> publish.error(error)
+      finishCommand = createTimer(options.idleReadTimeBeforeClose, -> espruino.sendFinished())
 
       serialPort.on 'data', (data) ->
         output.append(data.toString())
         finishCommand()
 
-      serialPort.on 'error', (error) -> publish.error(error)
+      serialPort.on('error', onError)
 
-      serialPort.open ->
-        Q()
-          .then(-> espruinoCommand.execute("reset();\n") if options.reset)
-          .then(-> espruinoCommand.execute("echo(0);\n") if options.echoOff)
-          .then(-> espruinoCommand.execute("{ #{chunk.contents.toString()} }\n"))
-          .then(-> espruinoCommand.execute("echo(1);\n") if options.echoOff)
-          .then(-> espruinoCommand.execute("save();\n") if options.save)
-          .then(-> publish.content(output.all()))
+      Q()
+        .then(-> espruino.send("reset();\n", onError) if options.reset)
+        .then(-> espruino.send("echo(0);\n", onError) if options.echoOff)
+        .then(-> espruino.send("{ #{chunk.contents.toString()} }\n", onError))
+        .then(-> espruino.send("echo(1);\n", onError) if options.echoOff)
+        .then(-> espruino.send("save();\n", onError) if options.save)
+        .then(-> publish.content(output.all()))
 
-    onFinish = (callback) ->
+    onFlush = (callback) ->
       self = this
 
-      serialPort.close ->
+      espruino.close ->
         self.push(null)
         callback()
 
-    through.obj(onSuccess, onFinish)
+    through.obj(onTransform, onFlush)
