@@ -34,7 +34,7 @@ describe 'espruino', ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1')
       .on(receive: /echo.0./, send: 'done')
-      .on(receive: /duuuude/, send: 'done')
+      .on(receive: /{ duuuude }/, send: 'done')
       .on(receive: /echo.1./, send: 'done')
       .on(receive: /save/, send: 'Checking...\nDone!')
       .build()
@@ -52,7 +52,7 @@ describe 'espruino', ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
       .on(receive: /echo.0./, send: 'echo off\n')
-      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
       .on(receive: /echo.1./, send: 'echo on\n')
       .on(receive: /save/, send: 'saved!')
       .build()
@@ -71,7 +71,7 @@ describe 'espruino', ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
       .on(receive: /echo.0./, send: 'echo off\n')
-      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
       .on(receive: /echo.1./, send: 'echo on\n')
       .build()
 
@@ -87,7 +87,7 @@ describe 'espruino', ->
   it 'should ignore reset when specified', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /echo.0./, send: 'echo off\n')
-      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
       .on(receive: /echo.1./, send: 'echo on\n')
       .on(receive: /save/, send: 'saved!')
       .build()
@@ -104,7 +104,7 @@ describe 'espruino', ->
   it 'should ignore echo when specified', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
       .on(receive: /save/, send: 'saved!')
       .build()
 
