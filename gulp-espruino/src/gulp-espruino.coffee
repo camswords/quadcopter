@@ -69,9 +69,7 @@ module.exports =
         Q()
           .then(-> executor.execute("reset();\n") if options.reset)
           .then(-> executor.execute("echo(0);\n") if options.echoOff)
-          .then(->
-            code = chunk.contents?.toString() || chunk
-            executor.execute("{ #{code} }\n"))
+          .then(-> executor.execute("{ #{chunk.contents.toString()} }\n"))
           .then(-> executor.execute("echo(1);\n") if options.echoOff)
           .then(-> executor.execute("save();\n") if options.save)
           .then(-> publish.content(output.all() unless publish.published()))

@@ -1,6 +1,18 @@
 proxyquire = require 'proxyquire'
 through = require('through2')
-StringStream = require('string-stream')
+util = require 'util'
+Readable = require('stream').Readable
+
+createCodeStream = (code) ->
+  CodeStream = -> Readable.call(@, objectMode: true)
+
+  util.inherits(CodeStream, Readable)
+
+  CodeStream.prototype._read = ->
+    this.push(code)
+    this.push(null)
+
+  new CodeStream(code)
 
 serialPortBuilder = ->
   communications = []
@@ -41,7 +53,7 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('duuuude')
+    createCodeStream(contents: new Buffer('duuuude'))
       .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
@@ -59,7 +71,7 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code')
+    createCodeStream(contents: new Buffer('code'))
       .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
       .pipe through (chunk, encoding, callback) ->
         expect(chunk.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
@@ -77,7 +89,7 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code')
+    createCodeStream(contents: new Buffer('code'))
       .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, save: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
@@ -94,7 +106,7 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code')
+    createCodeStream(contents: new Buffer('code'))
       .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, reset: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
@@ -110,7 +122,7 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code')
+    createCodeStream(contents: new Buffer('code'))
       .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, echoOff: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)

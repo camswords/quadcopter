@@ -3,7 +3,7 @@ coffee = require 'gulp-coffee'
 gutil = require 'gulp-util'
 concat = require 'gulp-concat'
 uglify = require 'gulp-uglify'
-espruino = require './src/deploy/gulp-espruino'
+espruino = require './gulp-espruino/src/gulp-espruino'
 miniTest = require './src/deploy/gulp-mini-test'
 
 gulp.task 'default', ->
