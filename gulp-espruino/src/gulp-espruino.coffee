@@ -1,5 +1,4 @@
 SerialPort = require('serialport').SerialPort
-fs = require 'fs'
 through = require 'through2'
 extend = require 'extend'
 Q = require 'q'
