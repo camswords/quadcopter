@@ -15,9 +15,10 @@ module.exports =
   deploy: (port, overrides = {}) ->
 
     defaults =
+      echoOff: true
       idleReadTimeBeforeClose: 1000
-      save: true
       reset: true
+      save: true
 
     options = extend({}, defaults, overrides)
     serialPort = new SerialPort(port, { baudrate: 9600 })
@@ -67,11 +68,11 @@ module.exports =
       serialPort.open ->
         Q()
           .then(-> executor.execute("reset();\n") if options.reset)
-          .then(-> executor.execute("echo(0);\n"))
+          .then(-> executor.execute("echo(0);\n") if options.echoOff)
           .then(->
             code = chunk.contents?.toString() || chunk
             executor.execute("{ #{code} }\n"))
-          .then(-> executor.execute("echo(1);\n"))
+          .then(-> executor.execute("echo(1);\n") if options.echoOff)
           .then(-> executor.execute("save();\n") if options.save)
           .then(-> publish.content(output.all() unless publish.published()))
 

@@ -14,13 +14,6 @@ serialPortBuilder = ->
       onData = ->
 
       serialPort =
-        commandsReceived: -> communications.slice(0, communicationsConducted)
-        lastCommandReceived: ->
-          if communicationsConducted == 0
-            'no communications received'
-          else
-            communications[communicationsConducted - 1]
-
         write: (command) ->
           communication = communications[communicationsConducted++]
 
@@ -48,54 +41,78 @@ describe 'espruino', ->
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('duuuude').pipe(espruino.deploy()).pipe through (chunk, encoding, callback) ->
-      this.push(null)
-      callback()
-      done()
+    new StringStream('duuuude')
+      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
+      .pipe through (chunk, encoding, callback) ->
+        this.push(null)
+        callback()
+        done()
 
   it 'should make all of the output available for the next stream', (done) ->
     serialPort = serialPortBuilder()
-    .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-    .on(receive: /echo.0./, send: 'echo off\n')
-    .on(receive: /code/, send: 'code uploaded\n')
-    .on(receive: /echo.1./, send: 'echo on\n')
-    .on(receive: /save/, send: 'saved!')
-    .build()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
+      .on(receive: /echo.0./, send: 'echo off\n')
+      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /echo.1./, send: 'echo on\n')
+      .on(receive: /save/, send: 'saved!')
+      .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code').pipe(espruino.deploy()).pipe through (chunk, encoding, callback) ->
-      expect(chunk.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
-      this.push(null)
-      callback()
-      done()
+    new StringStream('code')
+      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
+      .pipe through (chunk, encoding, callback) ->
+        expect(chunk.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
+        this.push(null)
+        callback()
+        done()
 
   it 'should ignore save when specified', (done) ->
     serialPort = serialPortBuilder()
-    .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-    .on(receive: /echo.0./, send: 'echo off\n')
-    .on(receive: /code/, send: 'code uploaded\n')
-    .on(receive: /echo.1./, send: 'echo on\n')
-    .build()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
+      .on(receive: /echo.0./, send: 'echo off\n')
+      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /echo.1./, send: 'echo on\n')
+      .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code').pipe(espruino.deploy('myport', save: false)).pipe through (chunk, encoding, callback) ->
-      this.push(null)
-      callback()
-      done()
+    new StringStream('code')
+      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, save: false))
+      .pipe through (chunk, encoding, callback) ->
+        this.push(null)
+        callback()
+        done()
 
   it 'should ignore reset when specified', (done) ->
     serialPort = serialPortBuilder()
-    .on(receive: /echo.0./, send: 'echo off\n')
-    .on(receive: /code/, send: 'code uploaded\n')
-    .on(receive: /echo.1./, send: 'echo on\n')
-    .on(receive: /save/, send: 'saved!')
-    .build()
+      .on(receive: /echo.0./, send: 'echo off\n')
+      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /echo.1./, send: 'echo on\n')
+      .on(receive: /save/, send: 'saved!')
+      .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    new StringStream('code').pipe(espruino.deploy('myport', reset: false)).pipe through (chunk, encoding, callback) ->
-      this.push(null)
-      callback()
-      done()
+    new StringStream('code')
+      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, reset: false))
+      .pipe through (chunk, encoding, callback) ->
+        this.push(null)
+        callback()
+        done()
+
+  it 'should ignore echo when specified', (done) ->
+    serialPort = serialPortBuilder()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
+      .on(receive: /code/, send: 'code uploaded\n')
+      .on(receive: /save/, send: 'saved!')
+      .build()
+
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    new StringStream('code')
+      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, echoOff: false))
+      .pipe through (chunk, encoding, callback) ->
+        this.push(null)
+        callback()
+        done()
