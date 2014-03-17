@@ -48,6 +48,8 @@ createEspruino = (config) ->
         output.append(data.toString())
         finishCommand()
 
+      serialPort.on 'error', (error) -> commandExecuted.reject(error)
+
       serialPort.open -> connected.resolve(serialPort)
 
     if !config.port && !config.serialNumber
@@ -78,11 +80,10 @@ createEspruino = (config) ->
     connected.promise.then((serialPort) -> serialPort.close(-> closed.resolve()))
     closed.promise
   log: -> output.all()
-  send: (command, onError) ->
+  send: (command) ->
     connected.promise.then (serialPort) ->
-      serialPort.on('error', onError)
       commandExecuted = Q.defer()
-      serialPort.write command, (error) -> onError(error) if error
+      serialPort.write command, (error) -> commandExecuted.reject(error) if error
       commandExecuted.promise
 
 module.exports =
@@ -98,14 +99,13 @@ module.exports =
 
     through.obj (chunk, encoding, callback) ->
       publish = createPublisher(@, callback)
-      onError = (error) -> publish.error(error)
 
       espruino.connect()
-         .then(-> espruino.send("reset();\n", onError) if config.reset)
-         .then(-> espruino.send("echo(0);\n", onError) if config.echoOff)
-         .then(-> espruino.send("{ #{chunk.contents.toString()} }\n", onError))
-         .then(-> espruino.send("echo(1);\n", onError) if config.echoOff)
-         .then(-> espruino.send("save();\n", onError) if config.save)
+         .then(-> espruino.send("reset();\n") if config.reset)
+         .then(-> espruino.send("echo(0);\n") if config.echoOff)
+         .then(-> espruino.send("{ #{chunk.contents.toString()} }\n"))
+         .then(-> espruino.send("echo(1);\n") if config.echoOff)
+         .then(-> espruino.send("save();\n") if config.save)
          .then(-> publish.content(espruino.log()))
          .fail((error) -> publish.error(error))
          .finally(-> espruino.close())
@@ -114,5 +114,4 @@ module.exports =
 # Todo.
 # blow up if not stream
 # add in hook to finish stream slurp whenever you want
-# reject promise on error
 # add timeout to promise chain
