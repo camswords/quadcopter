@@ -138,7 +138,7 @@ describe 'espruino', ->
         callback()
         done()
 
-  it 'should barf when there is no port or serial number supplied', ->
+  it 'should barf when there is no port or serial number supplied', (done) ->
     serialPort = serialPortBuilder().build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
@@ -150,7 +150,23 @@ describe 'espruino', ->
 
     createCodeStream(contents: new Buffer('code')).pipe(deployStream)
 
-  it 'should barf when the espruino with specified serialNumber cannot be found', ->
+  it 'should barf when time taken is longer than the timeout', (done) ->
+    serialPort = serialPortBuilder()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
+      .on(receive: /echo.0./, send: 'echo off\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
+      .on(receive: /echo.1./, send: 'echo on\n')
+      .on(receive: /save/, send: 'saved!')
+      .build()
+
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+    deployStream = espruino.deploy(port: '/dev/port', deployTimeout: 100)
+
+    deployStream.on 'error', (error) -> done()
+
+    createCodeStream(contents: new Buffer('code')).pipe(deployStream)
+
+  it 'should barf when the espruino with specified serialNumber cannot be found', (done) ->
     serialPort = serialPortBuilder()
       .withPorts([{ comName: '/my/other/serial/port', manufacturer: 'Acme', serialNumber: '1234' }])
       .build()
@@ -187,7 +203,7 @@ describe 'espruino', ->
       .withPorts([{ comName: '/my/other/serial/port', manufacturer: 'Acme', serialNumber: '1234' },
                   { comName: '/my/espruino/serial/port', manufacturer: 'STMicroelectronics', serialNumber: '48DF67773330' }
                  ])
-    .build()
+      .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 

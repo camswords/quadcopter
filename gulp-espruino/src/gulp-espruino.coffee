@@ -90,6 +90,7 @@ module.exports =
   deploy: (options = {}) ->
     defaults =
       echoOff: true
+      deployTimeout: 15000
       idleReadTimeBeforeClose: 1000
       reset: true
       save: true
@@ -101,15 +102,16 @@ module.exports =
       publish = createPublisher(@, callback)
 
       espruino.connect()
-         .then(-> espruino.send("reset();\n") if config.reset)
-         .then(-> espruino.send("echo(0);\n") if config.echoOff)
-         .then(-> espruino.send("{ #{chunk.contents.toString()} }\n"))
-         .then(-> espruino.send("echo(1);\n") if config.echoOff)
-         .then(-> espruino.send("save();\n") if config.save)
-         .then(-> publish.content(espruino.log()))
-         .fail((error) -> publish.error(error))
-         .finally(-> espruino.close())
-         .done()
+        .then(-> espruino.send("reset();\n") if config.reset)
+        .then(-> espruino.send("echo(0);\n") if config.echoOff)
+        .then(-> espruino.send("{ #{chunk.contents.toString()} }\n"))
+        .then(-> espruino.send("echo(1);\n") if config.echoOff)
+        .then(-> espruino.send("save();\n") if config.save)
+        .then(-> publish.content(espruino.log()))
+        .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds. Barfing.")
+        .fail((error) -> publish.error(error))
+        .finally(-> espruino.close())
+        .done()
 
 # Todo.
 # blow up if not stream
