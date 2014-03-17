@@ -11,13 +11,13 @@ gulp.task 'default', ->
     .pipe(coffee(bare: true).on('error', gutil.log))
     .pipe(concat('app.js'))
     .pipe(uglify())
-    .pipe(espruino.deploy('/dev/tty.usbmodem1421').on('error', gutil.log))
+    .pipe(espruino.deploy(serialNumber: '/dev/tty.usbmodem1421').on('error', gutil.log))
 
 gulp.task 'test', ->
   gulp.src(['./src/main/**/*.coffee', './src/test/**/*.coffee'])
     .pipe(coffee(bare: true).on('error', gutil.log))
     .pipe(concat('tests.js'))
     .pipe(uglify())
-    .pipe(espruino.deploy('/dev/tty.usbmodem1421').on('error', gutil.log))
+    .pipe(espruino.deploy(serialNumber: '48DF67773330').on('error', gutil.log))
     .pipe(miniTest.checkResults())
 

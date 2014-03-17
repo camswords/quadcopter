@@ -13,6 +13,7 @@
     "gulp-util": "*",
     "gulp-uglify": "*",
     "extend": "*",
-    "through2": "*"
+    "through2": "*",
+    "underscore": "*"
   }
 }

@@ -17,15 +17,22 @@ createCodeStream = (code) ->
 serialPortBuilder = ->
   communications = []
   communicationsConducted = 0
+  port = null
+  availablePorts = []
 
   builder =
     on: (options) ->
       communications.push(options)
       builder
+    withPorts: (_availablePorts) ->
+      availablePorts = _availablePorts
+      builder
     build: ->
       onData = ->
 
       serialPort =
+        list: (callback) -> callback(null, availablePorts)
+        port: -> port
         write: (command) ->
           communication = communications[communicationsConducted++]
 
@@ -37,7 +44,9 @@ serialPortBuilder = ->
         on: (eventName, callback) -> onData = callback if eventName == 'data'
         open: (callback) -> callback()
         close: (callback) -> callback()
-        SerialPort: -> serialPort
+        SerialPort: (_port, options) ->
+          port = _port
+          serialPort
 
   builder
 
@@ -54,7 +63,7 @@ describe 'espruino', ->
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     createCodeStream(contents: new Buffer('duuuude'))
-      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
+      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
         callback()
@@ -72,7 +81,7 @@ describe 'espruino', ->
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     createCodeStream(contents: new Buffer('code'))
-      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100))
+      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
       .pipe through (chunk, encoding, callback) ->
         expect(chunk.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
         this.push(null)
@@ -90,7 +99,7 @@ describe 'espruino', ->
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     createCodeStream(contents: new Buffer('code'))
-      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, save: false))
+      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, save: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
         callback()
@@ -107,7 +116,7 @@ describe 'espruino', ->
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     createCodeStream(contents: new Buffer('code'))
-      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, reset: false))
+      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, reset: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
         callback()
@@ -123,18 +132,63 @@ describe 'espruino', ->
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     createCodeStream(contents: new Buffer('code'))
-      .pipe(espruino.deploy('myport', idleReadTimeBeforeClose: 100, echoOff: false))
+      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, echoOff: false))
       .pipe through (chunk, encoding, callback) ->
         this.push(null)
         callback()
         done()
 
-  it 'should barf when there is no port supplied', ->
+  it 'should barf when there is no port or serial number supplied', ->
     serialPort = serialPortBuilder().build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
     try
-      espruino.deploy(null)
+      espruino.deploy({})
       throw new Error('failed to barf when no port is specified')
     catch error
-      expect(error.message).toBe('Espruino port is not specified. Barfing.')
+      expect(error.message).toBe('Espruino port or serial number is not specified. Barfing.')
+
+  it 'should barf when the espruino with specified serialNumber cannot be found', ->
+    serialPort = serialPortBuilder()
+      .withPorts([{ comName: '/my/other/serial/port', manufacturer: 'Acme', serialNumber: '1234' }])
+      .build()
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    try
+      espruino.deploy(serialNumber: 'hahaha.not.present')
+      throw new Error('failed to barf when espruino with serialNumber cannot be found')
+    catch error
+      expect(error.message).toBe("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
+                                 " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
+
+  it 'should barf when no configuration is supplied', ->
+    serialPort = serialPortBuilder().build()
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    try
+      espruino.deploy()
+      throw new Error('failed to barf when no port is specified')
+    catch error
+      expect(error.message).toBe('Espruino port or serial number is not specified. Barfing.')
+
+  it 'should find the espruino if the serial id is specified', (done) ->
+    serialPort = serialPortBuilder()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
+      .on(receive: /echo.0./, send: 'echo off\n')
+      .on(receive: /{ code }/, send: 'code uploaded\n')
+      .on(receive: /echo.1./, send: 'echo on\n')
+      .on(receive: /save/, send: 'saved!')
+      .withPorts([{ comName: '/my/other/serial/port', manufacturer: 'Acme', serialNumber: '1234' },
+                  { comName: '/my/espruino/serial/port', manufacturer: 'STMicroelectronics', serialNumber: '48DF67773330' }
+                 ])
+    .build()
+
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    createCodeStream(contents: new Buffer('code'))
+      .pipe(espruino.deploy(serialNumber: '48DF67773330', idleReadTimeBeforeClose: 100))
+      .pipe through (chunk, encoding, callback) ->
+          expect(serialPort.port()).toBe('/my/espruino/serial/port')
+          this.push(null)
+          callback()
+          done()
