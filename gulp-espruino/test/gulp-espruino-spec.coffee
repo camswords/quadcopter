@@ -142,11 +142,13 @@ describe 'espruino', ->
     serialPort = serialPortBuilder().build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    try
-      espruino.deploy({})
-      throw new Error('failed to barf when no port is specified')
-    catch error
-      expect(error.message).toBe('Espruino port or serial number is not specified. Barfing.')
+    deployStream = espruino.deploy({})
+
+    deployStream.on 'error', (error) ->
+      expect(error).toBe('Espruino port or serial number is not specified. Barfing.')
+      done()
+
+    createCodeStream(contents: new Buffer('code')).pipe(deployStream)
 
   it 'should barf when the espruino with specified serialNumber cannot be found', ->
     serialPort = serialPortBuilder()
@@ -154,22 +156,26 @@ describe 'espruino', ->
       .build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    try
-      espruino.deploy(serialNumber: 'hahaha.not.present')
-      throw new Error('failed to barf when espruino with serialNumber cannot be found')
-    catch error
-      expect(error.message).toBe("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
-                                 " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
+    deployStream = espruino.deploy(serialNumber: 'hahaha.not.present')
 
-  it 'should barf when no configuration is supplied', ->
+    deployStream.on 'error', (error) ->
+      expect(error).toBe("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
+                         " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
+      done()
+
+    createCodeStream(contents: new Buffer('code')).pipe(deployStream)
+
+  it 'should barf when no configuration is supplied', (done) ->
     serialPort = serialPortBuilder().build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
 
-    try
-      espruino.deploy()
-      throw new Error('failed to barf when no port is specified')
-    catch error
-      expect(error.message).toBe('Espruino port or serial number is not specified. Barfing.')
+    deployStream = espruino.deploy()
+
+    deployStream.on 'error', (error) ->
+      expect(error).toBe('Espruino port or serial number is not specified. Barfing.')
+      done()
+
+    createCodeStream(contents: new Buffer('code')).pipe(deployStream)
 
   it 'should find the espruino if the serial id is specified', (done) ->
     serialPort = serialPortBuilder()

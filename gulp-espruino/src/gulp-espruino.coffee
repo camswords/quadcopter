@@ -42,16 +42,17 @@ createEspruino = (config) ->
 
   connect: ->
     connectToSerialPort = (port) ->
-      serialPort = new SerialPort(port, baudrate: 9600)
+      serialPort = new SerialPort(port, { baudrate: 9600 }, false)
 
       serialPort.on 'data', (data) ->
         output.append(data.toString())
         finishCommand()
 
-      connected.resolve(serialPort)
+      serialPort.open -> connected.resolve(serialPort)
 
     if !config.port && !config.serialNumber
-      throw new PluginError('gulp-espruino', 'Espruino port or serial number is not specified. Barfing.');
+      connected.reject('Espruino port or serial number is not specified. Barfing.')
+      return connected.promise
 
     if config.port
       connectToSerialPort(config.port)
@@ -59,18 +60,23 @@ createEspruino = (config) ->
     if !config.port && config.serialNumber
       attachedDevices.list (error, ports) ->
         if error
-          throw new PluginError('gulp-espruino', "Failed to find attached serial devices. Error is #{error}. Barfing.")
+          connected.reject("Failed to find attached serial devices. Error is #{error}. Barfing.")
+          return connected.promise
 
         espruinoPort = _.find(ports, (port) -> port.serialNumber == config.serialNumber)
 
         if !espruinoPort
-          throw new PluginError('gulp-espruino', "Espruino with serial number '#{config.serialNumber}' not found. Barfing. We did find these ports: #{JSON.stringify(ports)}.")
+          connected.reject("Espruino with serial number '#{config.serialNumber}' not found. Barfing. We did find these ports: #{JSON.stringify(ports)}.")
+          return connected.promise
 
         connectToSerialPort(espruinoPort.comName)
 
     connected.promise
 
-  close: (callback) -> connected.promise.then((serialPort) -> serialPort.close(callback))
+  close: ->
+    closed = Q.defer()
+    connected.promise.then((serialPort) -> serialPort.close(-> closed.resolve()))
+    closed.promise
   log: -> output.all()
   send: (command, onError) ->
     connected.promise.then (serialPort) ->
@@ -89,28 +95,24 @@ module.exports =
 
     config = extend({}, defaults, options)
     espruino = createEspruino(config)
-    connected = espruino.connect()
 
-    onTransform = (chunk, encoding, callback) ->
+    through.obj (chunk, encoding, callback) ->
       publish = createPublisher(@, callback)
       onError = (error) -> publish.error(error)
 
-      connected.then(-> espruino.send("reset();\n", onError) if config.reset)
+      espruino.connect()
+         .then(-> espruino.send("reset();\n", onError) if config.reset)
          .then(-> espruino.send("echo(0);\n", onError) if config.echoOff)
          .then(-> espruino.send("{ #{chunk.contents.toString()} }\n", onError))
          .then(-> espruino.send("echo(1);\n", onError) if config.echoOff)
          .then(-> espruino.send("save();\n", onError) if config.save)
          .then(-> publish.content(espruino.log()))
-
-    onFlush = (callback) ->
-      publish = createPublisher(@, callback)
-      espruino.close -> publish.content(null)
-
-    through.obj(onTransform, onFlush)
+         .fail((error) -> publish.error(error))
+         .finally(-> espruino.close())
+         .done()
 
 # Todo.
 # blow up if not stream
-# move espruino close to finally
 # add in hook to finish stream slurp whenever you want
 # reject promise on error
 # add timeout to promise chain
