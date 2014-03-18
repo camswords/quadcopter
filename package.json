@@ -14,6 +14,9 @@
     "gulp-uglify": "*",
     "extend": "*",
     "through2": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "vinyl": "*",
+    "proxyquire": "*",
+    "jasmine-node": "*"
   }
 }
