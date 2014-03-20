@@ -17,7 +17,8 @@
     "underscore": "*",
     "vinyl": "*",
     "proxyquire": "*",
-    "jasmine-node": "*",
-    "stream-combiner": "*"
+    "stream-combiner": "*",
+    "mocha": "*",
+    "chai": "*"
   }
 }

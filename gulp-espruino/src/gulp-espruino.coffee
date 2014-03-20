@@ -15,10 +15,15 @@ createOutput = ->
 createPublisher = (inputFile, outputStream, outputStreamDone) ->
   published = false
 
-  content: (content) ->
+  content: (contents) ->
     if !published
       published = true
-      inputFile.contents = new Buffer(content)
+
+      if contents
+        inputFile.contents = new Buffer(contents)
+      else
+        inputFile.contents = contents
+
       outputStream.push(inputFile)
       outputStreamDone()
 

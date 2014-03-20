@@ -3,6 +3,7 @@ through = require('through2')
 util = require 'util'
 Readable = require('stream').Readable
 File = require('vinyl')
+expect = require('chai').expect
 
 createObjectStream = (object) ->
   CodeStream = -> Readable.call(@, objectMode: true)
@@ -84,7 +85,7 @@ describe 'espruino', ->
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
       .pipe through.obj (file, encoding, callback) ->
-        expect(file.contents.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
+        expect(file.contents.toString()).to.equal('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
         this.push(null)
         callback()
         done()
@@ -146,7 +147,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy({})
 
     deployStream.on 'error', (error) ->
-      expect(error).toBe('Espruino port or serial number is not specified. Barfing.')
+      expect(error).to.equal('Espruino port or serial number is not specified. Barfing.')
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)
@@ -176,8 +177,8 @@ describe 'espruino', ->
     deployStream = espruino.deploy(serialNumber: 'hahaha.not.present')
 
     deployStream.on 'error', (error) ->
-      expect(error).toBe("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
-                         " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
+      expect(error).to.equal("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
+                             " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)
@@ -189,7 +190,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy()
 
     deployStream.on 'error', (error) ->
-      expect(error).toBe('Espruino port or serial number is not specified. Barfing.')
+      expect(error).to.equal('Espruino port or serial number is not specified. Barfing.')
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)
@@ -211,7 +212,7 @@ describe 'espruino', ->
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(serialNumber: '48DF67773330', idleReadTimeBeforeClose: 100))
       .pipe through.obj (chunk, encoding, callback) ->
-          expect(serialPort.port()).toBe('/my/espruino/serial/port')
+          expect(serialPort.port()).to.equal('/my/espruino/serial/port')
           this.push(null)
           callback()
           done()
@@ -223,7 +224,7 @@ describe 'espruino', ->
     createObjectStream(new File(contents: null))
       .pipe(espruino.deploy(serialNumber: '48DF67773330'))
       .pipe through.obj (file, encoding, callback) ->
-          expect(file.isNull()).toBeTruthy()
+          expect(file.contents).to.be.null
           this.push(null)
           callback()
           done()
