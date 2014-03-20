@@ -65,7 +65,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('duuuude')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
-      .pipe through.obj (chunk, encoding, callback) ->
+      .pipe through.obj (file, encoding, callback) ->
         this.push(null)
         callback()
         done()
@@ -117,6 +117,23 @@ describe 'espruino', ->
         callback()
         done()
 
+  it 'should ignore code echo when specified', (done) ->
+    serialPort = serialPortBuilder()
+      .on(receive: /reset/, send: 'ESPRUINO v3.1')
+      .on(receive: /echo.0./, send: 'echo off')
+      .on(receive: /{ duuuude }/, send: 'done')
+      .on(receive: /echo.1./, send: 'echo on')
+      .on(receive: /save/, send: 'Checking...\nDone!')
+      .build()
+
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    createObjectStream(new File(contents: new Buffer('duuuude')))
+    .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, echoOn: false))
+    .pipe through.obj (file, encoding, callback) ->
+        this.push(null)
+        callback()
+        done()
   it 'should barf when there is no port or serial number supplied', (done) ->
     serialPort = serialPortBuilder().build()
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)

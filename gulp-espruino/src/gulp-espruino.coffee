@@ -19,7 +19,7 @@ createPublisher = (inputFile, outputStream, outputStreamDone) ->
     if !published
       published = true
 
-      if contents
+      if contents || contents == ''
         inputFile.contents = new Buffer(contents)
       else
         inputFile.contents = contents
@@ -51,7 +51,7 @@ createEspruino = (config) ->
       serialPort = new SerialPort(port, config.serialPortOptions, false)
 
       serialPort.on 'data', (data) ->
-        output.append(data.toString())
+        output.append(data.toString()) if config.capture.input
         finishCommand()
 
       serialPort.on 'error', (error) -> commandExecuted.reject(error)
@@ -89,7 +89,7 @@ createEspruino = (config) ->
   send: (command) ->
     connected.promise.then (serialPort) ->
       commandExecuted = Q.defer()
-      output.append(command)
+      output.append(command) if config.capture.output
       serialPort.write command, (error) -> commandExecuted.reject(error) if error
       commandExecuted.promise
 
@@ -97,7 +97,11 @@ module.exports =
   deploy: (options = {}) ->
     defaults =
       deployTimeout: 15000
+      echoOn: true
       idleReadTimeBeforeClose: 1000
+      capture:
+        output: true
+        input: true
       serialPortOptions:
         baudrate: 9600
       reset: true
@@ -118,14 +122,12 @@ module.exports =
       if file.isBuffer()
         espruino.connect()
           .then(-> espruino.send("reset();\n") if config.reset)
+          .then(-> espruino.send('echo(0);\n') if !config.echoOn)
           .then(-> espruino.send("{ #{file.contents.toString()} }\n"))
+          .then(-> espruino.send('echo(1);\n') if !config.echoOn)
           .then(-> espruino.send("save();\n") if config.save)
           .then(-> publish.content(espruino.log()))
           .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
           .fail((error) -> publish.error("gulp-espruino found an error, barfing. #{error}\nLog: #{espruino.log()}"))
           .finally(-> espruino.close())
           .done()
-
-# Todo.
-# continue emit errors
-# versioning

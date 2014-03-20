@@ -8,7 +8,8 @@ module.exports =
 
     gutil.log("Running tests...")
 
-    onChunk = (content, encoding, callback) ->
+    through.obj (file, encoding, callback) ->
+      content = file.contents.toString()
 
       for testOutput in content.split('\n')
         if testOutput.match(/passed:/)
@@ -19,10 +20,7 @@ module.exports =
           failedTests++
           gutil.log('  ' + gutil.colors.red(testOutput))
 
-      callback()
-
-    onFinish = (callback) ->
-      this.push(null)
+      this.push(file)
 
       if failedTests == 0
         gutil.log("#{numberOfTests} test(s) passed successfully :)")
@@ -30,4 +28,4 @@ module.exports =
       else
         callback("#{failedTests} of #{numberOfTests} test(s) failed :(")
 
-    through(objectMode: true, onChunk, onFinish)
+
