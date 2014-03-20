@@ -48,7 +48,7 @@ createEspruino = (config) ->
 
   connect: ->
     connectToSerialPort = (port) ->
-      serialPort = new SerialPort(port, { baudrate: 9600 }, false)
+      serialPort = new SerialPort(port, config.serialPortOptions, false)
 
       serialPort.on 'data', (data) ->
         output.append(data.toString())
@@ -98,6 +98,8 @@ module.exports =
     defaults =
       deployTimeout: 15000
       idleReadTimeBeforeClose: 1000
+      serialPortOptions:
+        baudrate: 9600
       reset: true
       save: true
 
@@ -124,7 +126,5 @@ module.exports =
 # Todo.
 # blow up if not stream
 # add in hook to finish stream slurp whenever you want
-# config for serialport
-# add timeout to promise chain
 # continue emit errors
 # versioning
