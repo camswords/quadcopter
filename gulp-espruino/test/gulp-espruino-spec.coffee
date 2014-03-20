@@ -152,8 +152,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy(serialNumber: 'hahaha.not.present')
 
     deployStream.on 'error', (error) ->
-      expect(error).to.contain("Espruino with serial number 'hahaha.not.present' not found." +
-                             " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
+      expect(error).to.contain("Espruino with serial number 'hahaha.not.present' not found.")
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)

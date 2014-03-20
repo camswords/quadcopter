@@ -74,7 +74,7 @@ createEspruino = (config) ->
         espruinoPort = _.find(ports, (port) -> port.serialNumber == config.serialNumber)
 
         if !espruinoPort
-          connected.reject("Espruino with serial number '#{config.serialNumber}' not found. We did find these ports: #{JSON.stringify(ports)}.")
+          connected.reject("Espruino with serial number '#{config.serialNumber}' not found.")
           return connected.promise
 
         connectToSerialPort(espruinoPort.comName)
@@ -127,7 +127,5 @@ module.exports =
           .done()
 
 # Todo.
-# blow up if not stream
-# add in hook to finish stream slurp whenever you want
 # continue emit errors
 # versioning

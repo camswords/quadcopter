@@ -17,7 +17,6 @@
     "underscore": "*",
     "vinyl": "*",
     "proxyquire": "*",
-    "stream-combiner": "*",
     "mocha": "*",
     "chai": "*",
     "string-stream": "*"

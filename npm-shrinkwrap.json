@@ -1025,16 +1025,6 @@
       "from": "proxyquire@",
       "resolved": "https://registry.npmjs.org/proxyquire/-/proxyquire-0.5.3.tgz"
     },
-    "stream-combiner": {
-      "version": "0.0.4",
-      "from": "stream-combiner@",
-      "dependencies": {
-        "duplexer": {
-          "version": "0.1.1",
-          "from": "duplexer@~0.1.1"
-        }
-      }
-    },
     "mocha": {
       "version": "1.18.2",
       "from": "mocha@",
