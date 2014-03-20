@@ -6,7 +6,9 @@ uglify = require 'gulp-uglify'
 espruino = require './gulp-espruino/src/gulp-espruino'
 miniTest = require './src/deploy/gulp-mini-test'
 
-gulp.task 'default', ->
+gulp.task 'default', ['test']
+
+gulp.task 'deploy', ->
   gulp.src('./src/main/**/*.coffee')
     .pipe(coffee(bare: true).on('error', gutil.log))
     .pipe(concat('app.js'))
