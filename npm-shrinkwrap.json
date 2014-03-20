@@ -1126,6 +1126,10 @@
           }
         }
       }
+    },
+    "string-stream": {
+      "version": "0.0.7",
+      "from": "string-stream@"
     }
   }
 }

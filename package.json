@@ -19,6 +19,7 @@
     "proxyquire": "*",
     "stream-combiner": "*",
     "mocha": "*",
-    "chai": "*"
+    "chai": "*",
+    "string-stream": "*"
   }
 }

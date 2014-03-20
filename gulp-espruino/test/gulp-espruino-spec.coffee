@@ -4,6 +4,7 @@ util = require 'util'
 Readable = require('stream').Readable
 File = require('vinyl')
 expect = require('chai').expect
+StringStream = require('string-stream')
 
 createObjectStream = (object) ->
   CodeStream = -> Readable.call(@, objectMode: true)
@@ -200,3 +201,15 @@ describe 'espruino', ->
           this.push(null)
           callback()
           done()
+
+  it 'should barf when contents is a stream', (done) ->
+    serialPort = serialPortBuilder().build()
+    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
+
+    deployStream = espruino.deploy(serialNumber: '48DF67773330')
+
+    deployStream.on 'error', (error) ->
+      expect(error).to.equal('gulp-espruino does not support streaming. Barfing.')
+      done()
+
+    createObjectStream(new File(contents: new StringStream('code'))).pipe(deployStream)

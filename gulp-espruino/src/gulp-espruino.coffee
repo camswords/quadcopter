@@ -112,6 +112,9 @@ module.exports =
       if file.isNull()
         publish.content(null)
 
+      if file.isStream()
+        publish.error('gulp-espruino does not support streaming. Barfing.')
+
       if file.isBuffer()
         espruino.connect()
           .then(-> espruino.send("reset();\n") if config.reset)
@@ -119,7 +122,7 @@ module.exports =
           .then(-> espruino.send("save();\n") if config.save)
           .then(-> publish.content(espruino.log()))
           .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
-          .fail((error) -> publish.error("Error found, barfing. #{error}\nLog: #{espruino.log()}"))
+          .fail((error) -> publish.error("gulp-espruino found an error, barfing. #{error}\nLog: #{espruino.log()}"))
           .finally(-> espruino.close())
           .done()
 
