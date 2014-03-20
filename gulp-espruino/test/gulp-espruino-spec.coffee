@@ -56,9 +56,7 @@ describe 'espruino', ->
   it 'should save once code has been written', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1')
-      .on(receive: /echo.0./, send: 'done')
       .on(receive: /{ duuuude }/, send: 'done')
-      .on(receive: /echo.1./, send: 'done')
       .on(receive: /save/, send: 'Checking...\nDone!')
       .build()
 
@@ -74,9 +72,7 @@ describe 'espruino', ->
   it 'should make all of the output available for the next stream', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /echo.0./, send: 'echo off\n')
       .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /echo.1./, send: 'echo on\n')
       .on(receive: /save/, send: 'saved!')
       .build()
 
@@ -85,7 +81,7 @@ describe 'espruino', ->
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
       .pipe through.obj (file, encoding, callback) ->
-        expect(file.contents.toString()).to.equal('reset();\nESPRUINO v3.1\necho(0);\necho off\n{ code }\ncode uploaded\necho(1);\necho on\nsave();\nsaved!')
+        expect(file.contents.toString()).to.equal('reset();\nESPRUINO v3.1\n{ code }\ncode uploaded\nsave();\nsaved!')
         this.push(null)
         callback()
         done()
@@ -93,9 +89,7 @@ describe 'espruino', ->
   it 'should ignore save when specified', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /echo.0./, send: 'echo off\n')
       .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /echo.1./, send: 'echo on\n')
       .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
@@ -109,9 +103,7 @@ describe 'espruino', ->
 
   it 'should ignore reset when specified', (done) ->
     serialPort = serialPortBuilder()
-      .on(receive: /echo.0./, send: 'echo off\n')
       .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /echo.1./, send: 'echo on\n')
       .on(receive: /save/, send: 'saved!')
       .build()
 
@@ -119,22 +111,6 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, reset: false))
-      .pipe through.obj (chunk, encoding, callback) ->
-        this.push(null)
-        callback()
-        done()
-
-  it 'should ignore echo when specified', (done) ->
-    serialPort = serialPortBuilder()
-      .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /save/, send: 'saved!')
-      .build()
-
-    espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
-
-    createObjectStream(new File(contents: new Buffer('code')))
-      .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, echoOff: false))
       .pipe through.obj (chunk, encoding, callback) ->
         this.push(null)
         callback()
@@ -196,9 +172,7 @@ describe 'espruino', ->
   it 'should find the espruino if the serial id is specified', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /echo.0./, send: 'echo off\n')
       .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /echo.1./, send: 'echo on\n')
       .on(receive: /save/, send: 'saved!')
       .withPorts([{ comName: '/my/other/serial/port', manufacturer: 'Acme', serialNumber: '1234' },
                   { comName: '/my/espruino/serial/port', manufacturer: 'STMicroelectronics', serialNumber: '48DF67773330' }

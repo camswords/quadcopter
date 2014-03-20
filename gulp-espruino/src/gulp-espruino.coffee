@@ -96,7 +96,6 @@ createEspruino = (config) ->
 module.exports =
   deploy: (options = {}) ->
     defaults =
-      echoOff: true
       deployTimeout: 15000
       idleReadTimeBeforeClose: 1000
       reset: true
@@ -114,9 +113,7 @@ module.exports =
       if file.isBuffer()
         espruino.connect()
           .then(-> espruino.send("reset();\n") if config.reset)
-          .then(-> espruino.send("echo(0);\n") if config.echoOff)
           .then(-> espruino.send("{ #{file.contents.toString()} }\n"))
-          .then(-> espruino.send("echo(1);\n") if config.echoOff)
           .then(-> espruino.send("save();\n") if config.save)
           .then(-> publish.content(espruino.log()))
           .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
@@ -130,3 +127,4 @@ module.exports =
 # config for serialport
 # add timeout to promise chain
 # continue emit errors
+# versioning

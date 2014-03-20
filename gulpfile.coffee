@@ -16,7 +16,6 @@ gulp.task 'deploy', ->
           concat('app.js'),
           uglify(),
           espruino.deploy(serialNumber: '48DF67773330'))
-    .on 'error', gutil.log
     .on 'data', (data) -> gutil.log(data.contents.toString())
 
 gulp.task 'test', ->
