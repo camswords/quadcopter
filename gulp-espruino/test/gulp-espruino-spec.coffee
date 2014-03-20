@@ -85,7 +85,7 @@ describe 'espruino', ->
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
       .pipe through.obj (file, encoding, callback) ->
-        expect(file.contents.toString()).to.equal('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
+        expect(file.contents.toString()).to.equal('reset();\nESPRUINO v3.1\necho(0);\necho off\n{ code }\ncode uploaded\necho(1);\necho on\nsave();\nsaved!')
         this.push(null)
         callback()
         done()
@@ -147,7 +147,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy({})
 
     deployStream.on 'error', (error) ->
-      expect(error).to.equal('Espruino port or serial number is not specified. Barfing.')
+      expect(error).to.contain('Espruino port or serial number is not specified.')
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)
@@ -155,16 +155,14 @@ describe 'espruino', ->
   it 'should barf when time taken is longer than the timeout', (done) ->
     serialPort = serialPortBuilder()
       .on(receive: /reset/, send: 'ESPRUINO v3.1\n')
-      .on(receive: /echo.0./, send: 'echo off\n')
-      .on(receive: /{ code }/, send: 'code uploaded\n')
-      .on(receive: /echo.1./, send: 'echo on\n')
-      .on(receive: /save/, send: 'saved!')
       .build()
 
     espruino = proxyquire('../src/gulp-espruino', 'serialport': serialPort)
-    deployStream = espruino.deploy(port: '/dev/port', deployTimeout: 100)
+    deployStream = espruino.deploy(port: '/dev/port', deployTimeout: 1)
 
-    deployStream.on 'error', (error) -> done()
+    deployStream.on 'error', (error) ->
+      expect(error).to.contain "Deploy timed out after 1 milliseconds."
+      done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)
 
@@ -177,7 +175,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy(serialNumber: 'hahaha.not.present')
 
     deployStream.on 'error', (error) ->
-      expect(error).to.equal("Espruino with serial number 'hahaha.not.present' not found. Barfing." +
+      expect(error).to.contain("Espruino with serial number 'hahaha.not.present' not found." +
                              " We did find these ports: [{\"comName\":\"/my/other/serial/port\",\"manufacturer\":\"Acme\",\"serialNumber\":\"1234\"}].")
       done()
 
@@ -190,7 +188,7 @@ describe 'espruino', ->
     deployStream = espruino.deploy()
 
     deployStream.on 'error', (error) ->
-      expect(error).to.equal('Espruino port or serial number is not specified. Barfing.')
+      expect(error).to.contain('Espruino port or serial number is not specified.')
       done()
 
     createObjectStream(new File(contents: new Buffer('code'))).pipe(deployStream)

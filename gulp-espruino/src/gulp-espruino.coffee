@@ -59,7 +59,7 @@ createEspruino = (config) ->
       serialPort.open -> connected.resolve(serialPort)
 
     if !config.port && !config.serialNumber
-      connected.reject('Espruino port or serial number is not specified. Barfing.')
+      connected.reject('Espruino port or serial number is not specified.')
       return connected.promise
 
     if config.port
@@ -68,13 +68,13 @@ createEspruino = (config) ->
     if !config.port && config.serialNumber
       attachedDevices.list (error, ports) ->
         if error
-          connected.reject("Failed to find attached serial devices. Error is #{error}. Barfing.")
+          connected.reject("Failed to find attached serial devices. Error is #{error}.")
           return connected.promise
 
         espruinoPort = _.find(ports, (port) -> port.serialNumber == config.serialNumber)
 
         if !espruinoPort
-          connected.reject("Espruino with serial number '#{config.serialNumber}' not found. Barfing. We did find these ports: #{JSON.stringify(ports)}.")
+          connected.reject("Espruino with serial number '#{config.serialNumber}' not found. We did find these ports: #{JSON.stringify(ports)}.")
           return connected.promise
 
         connectToSerialPort(espruinoPort.comName)
@@ -89,6 +89,7 @@ createEspruino = (config) ->
   send: (command) ->
     connected.promise.then (serialPort) ->
       commandExecuted = Q.defer()
+      output.append(command)
       serialPort.write command, (error) -> commandExecuted.reject(error) if error
       commandExecuted.promise
 
@@ -118,12 +119,14 @@ module.exports =
           .then(-> espruino.send("echo(1);\n") if config.echoOff)
           .then(-> espruino.send("save();\n") if config.save)
           .then(-> publish.content(espruino.log()))
-          .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds. Barfing.")
-          .fail((error) -> publish.error(error))
+          .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
+          .fail((error) -> publish.error("Error found, barfing. #{error}\nLog: #{espruino.log()}"))
           .finally(-> espruino.close())
           .done()
 
 # Todo.
 # blow up if not stream
 # add in hook to finish stream slurp whenever you want
+# config for serialport
 # add timeout to promise chain
+# continue emit errors

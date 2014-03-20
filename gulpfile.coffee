@@ -7,6 +7,7 @@ Combine = require 'stream-combiner'
 espruino = require './gulp-espruino/src/gulp-espruino'
 miniTest = require './src/deploy/gulp-mini-test'
 
+
 gulp.task 'default', ['test']
 
 gulp.task 'deploy', ->
@@ -16,6 +17,7 @@ gulp.task 'deploy', ->
           uglify(),
           espruino.deploy(serialNumber: '48DF67773330'))
     .on 'error', gutil.log
+    .on 'data', (data) -> gutil.log(data.contents.toString())
 
 gulp.task 'test', ->
   Combine(gulp.src(['./src/main/**/*.coffee', './src/test/**/*.coffee']),
