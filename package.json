@@ -17,6 +17,7 @@
     "underscore": "*",
     "vinyl": "*",
     "proxyquire": "*",
-    "jasmine-node": "*"
+    "jasmine-node": "*",
+    "stream-combiner": "*"
   }
 }
