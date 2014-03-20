@@ -12,20 +12,21 @@ createOutput = ->
   append: (content) -> consumed += content
   all: -> consumed
 
-createPublisher = (readableStream, readableStreamDone) ->
+createPublisher = (inputFile, outputStream, outputStreamDone) ->
   published = false
 
   content: (content) ->
     if !published
       published = true
-      readableStream.push(content)
-      readableStreamDone()
+      inputFile.contents = new Buffer(content)
+      outputStream.push(inputFile)
+      outputStreamDone()
 
   error: (error) ->
     if !published
       published = true
-      readableStream.push(null)
-      readableStreamDone(error)
+      outputStream.push(null)
+      outputStreamDone(error)
 
 createTimer = (timeoutInMillis, done) ->
   timeout = null
@@ -99,10 +100,10 @@ module.exports =
     espruino = createEspruino(config)
 
     through.obj (file, encoding, callback) ->
-      publish = createPublisher(@, callback)
+      publish = createPublisher(file, @, callback)
 
       if file.isNull()
-        publish.content(file)
+        publish.content(null)
 
       if file.isBuffer()
         espruino.connect()

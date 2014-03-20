@@ -65,7 +65,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('duuuude')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
-      .pipe through (chunk, encoding, callback) ->
+      .pipe through.obj (chunk, encoding, callback) ->
         this.push(null)
         callback()
         done()
@@ -83,8 +83,8 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100))
-      .pipe through (chunk, encoding, callback) ->
-        expect(chunk.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
+      .pipe through.obj (file, encoding, callback) ->
+        expect(file.contents.toString()).toBe('ESPRUINO v3.1\necho off\ncode uploaded\necho on\nsaved!')
         this.push(null)
         callback()
         done()
@@ -101,7 +101,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, save: false))
-      .pipe through (chunk, encoding, callback) ->
+      .pipe through.obj (chunk, encoding, callback) ->
         this.push(null)
         callback()
         done()
@@ -118,7 +118,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, reset: false))
-      .pipe through (chunk, encoding, callback) ->
+      .pipe through.obj (chunk, encoding, callback) ->
         this.push(null)
         callback()
         done()
@@ -134,7 +134,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(port: 'myport', idleReadTimeBeforeClose: 100, echoOff: false))
-      .pipe through (chunk, encoding, callback) ->
+      .pipe through.obj (chunk, encoding, callback) ->
         this.push(null)
         callback()
         done()
@@ -210,7 +210,7 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: new Buffer('code')))
       .pipe(espruino.deploy(serialNumber: '48DF67773330', idleReadTimeBeforeClose: 100))
-      .pipe through (chunk, encoding, callback) ->
+      .pipe through.obj (chunk, encoding, callback) ->
           expect(serialPort.port()).toBe('/my/espruino/serial/port')
           this.push(null)
           callback()
@@ -222,8 +222,8 @@ describe 'espruino', ->
 
     createObjectStream(new File(contents: null))
       .pipe(espruino.deploy(serialNumber: '48DF67773330'))
-      .pipe through (file, encoding, callback) ->
-          expect(file.contents).toBeNull()
+      .pipe through.obj (file, encoding, callback) ->
+          expect(file.isNull()).toBeTruthy()
           this.push(null)
           callback()
           done()
