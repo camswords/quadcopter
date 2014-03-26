@@ -1,3 +1,7 @@
+digitalWrite(LED1, false);
+digitalWrite(LED2, false);
+digitalWrite(LED3, false);
+
 Quad = ->
   throttle = 56
 
@@ -11,24 +15,28 @@ Quad = ->
 
   throttle: (newThrottle) -> throttle = newThrottle
 
+newIntensity = (sinceLastPulse) ->
+  intensity = sinceLastPulse
+
+  if isNaN(intensity)
+    intensity = 0
+
+  if intensity > 100
+    intensity = 100
+
+  if intensity < 0
+    intensity = 0
+
+  intensity
+
 Receiver = (pin, quad) ->
 
   listenForEvents: =>
-    setWatch ((event) =>
+    updateThrottle = (event) ->
       sinceLastPulse = (event.time - event.lastTime) * 100000
-      intensity = Math.floor sinceLastPulse - 100;
+      quad.throttle(newIntensity(sinceLastPulse))
 
-      if isNaN(intensity)
-        intensity = 0
-
-      if intensity > 100
-        intensity = 100
-
-      if intensity < 0
-        intensity = 0
-
-      quad.throttle(intensity)),
-      pin, {repeat: true, edge: 'falling'}
+    setWatch(updateThrottle, pin, repeat: true, edge: 'falling')
 
 quad = Quad()
 quad.startProps()

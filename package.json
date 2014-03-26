@@ -11,7 +11,6 @@
     "gulp-coffee": "*",
     "gulp-concat": "*",
     "gulp-util": "*",
-    "gulp-uglify": "*",
     "extend": "*",
     "through2": "*",
     "underscore": "*",
