@@ -18,6 +18,7 @@
     "proxyquire": "*",
     "mocha": "*",
     "chai": "*",
-    "string-stream": "*"
+    "string-stream": "*",
+    "jasmine-node": "*"
   }
 }
