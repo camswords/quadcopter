@@ -1,4 +1,4 @@
-require ['intensity'], (intensity) ->
+requirejs ['intensity'], (intensity) ->
   it "should be 0 when the time since the last pulse is NaN", (test) ->
     test.expect(intensity(NaN)).toBe(0)
 

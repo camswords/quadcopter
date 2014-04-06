@@ -1,5 +1,6 @@
 attachedDevices = require('serialport')
 SerialPort = attachedDevices.SerialPort
+spawn = require('child_process').spawn
 through = require 'through2'
 extend = require 'extend'
 _ = require 'underscore'
@@ -39,6 +40,40 @@ createTimer = (timeoutInMillis, done) ->
   ->
     clearTimeout(timeout)
     timeout = setTimeout(done, timeoutInMillis)
+
+createFakeEspruino = (config) ->
+  output = createOutput()
+  commandExecuted = Q.defer()
+  connected = Q.defer()
+  finishCommand = createTimer(config.idleReadTimeBeforeClose, -> commandExecuted.resolve())
+
+  connect: ->
+    espruinoProcess = spawn(config.fakePath)
+
+    espruinoProcess.stdout.on 'data', (data) ->
+      output.append(data.toString()) if config.capture.input
+      finishCommand()
+
+    espruinoProcess.stdout.on 'error', (error) ->
+      commandExecuted.reject(error)
+
+    espruinoProcess.stdin.on 'error', (error) ->
+      commandExecuted.reject(error)
+
+    connected.resolve(espruinoProcess)
+    connected.promise
+
+  close: -> connected.promise.then (espruinoProcess) ->
+    espruinoProcess.stdin.write('\x03')
+
+  log: -> output.all()
+
+  send: (command) ->
+    connected.promise.then (espruinoProcess) ->
+      commandExecuted = Q.defer()
+      output.append(command) if config.capture.output
+      espruinoProcess.stdin.write(command)
+      commandExecuted.promise
 
 createEspruino = (config) ->
   output = createOutput()
@@ -106,9 +141,14 @@ module.exports =
         baudrate: 9600
       reset: true
       save: true
+      fakePath: null
 
     config = extend({}, defaults, options)
-    espruino = createEspruino(config)
+
+    if config.fakePath
+      espruino = createFakeEspruino(config)
+    else
+      espruino = createEspruino(config)
 
     through.obj (file, encoding, callback) ->
       publish = createPublisher(file, @, callback)

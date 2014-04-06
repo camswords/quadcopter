@@ -1,7 +1,10 @@
+requirejs.config({
+  nodeRequire: require
+})
 
 define('quad', {})
 
-require ['quad', 'intensity'], (intensity) ->
+requirejs ['quad', 'intensity'], (intensity) ->
   digitalWrite(LED1, false);
   digitalWrite(LED2, false);
   digitalWrite(LED3, false);
