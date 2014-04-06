@@ -1,18 +1,25 @@
 through = require 'through2'
 extend = require 'extend'
+fs = require 'fs'
+exec = require('child_process').exec
+tempFile = require('temp').track()
 
-digitalPulse = ->
-digitalWrite = ->
-LED1 = 1
-LED2 = 2
-LED3 = 3
-A13 = 13
-C6 = 6
-C7 = 7
-C8 = 8
-C9 = 9
-E = clip: -> 0
-setWatch = ->
+espruinoGlobals = "
+var digitalPulse = function() {};
+var digitalWrite = function() {};
+var LED1 = 1;
+var LED2 = 2;
+var LED3 = 3;
+var A13 = 13;
+var C6 = 6;
+var C7 = 7;
+var C8 = 8;
+var C9 = 9;
+var E = {
+  clip: function() { return 0; }
+};
+var setWatch = function() {};
+"
 
 module.exports =
   deploy: (options) ->
@@ -25,12 +32,14 @@ module.exports =
     config = extend({}, defaults, options)
 
     through.obj (file, encoding, callback) ->
+      stream = @
+
       if file.isNull()
-        @.push(file)
+        stream.push(file)
         callback()
 
       if file.isStream()
-        @.push(null)
+        stream.push(null)
         callback('fake-espruino does not support streaming. Barfing.')
 
       if file.isBuffer()
@@ -38,30 +47,24 @@ module.exports =
         output += file.contents.toString() if config.capture.output
         output += file.contents.toString() if config.echoOn
 
-        code =
-        "(function safelyExecute() {
-          var captured = '';
-
-          var console = {
-            log: function() {
-              for(var i = 0; i < arguments.length; i++) {
-                captured = captured + arguments[i];
-              }
-              captured = captured + '\\n'
-            }
-          };
-          var setInterval = function(callback, time) {};
-          var setTimeout = function(callback, time) {};" +
-          file.contents.toString() +
-          " return captured;
-        })();"
-
-        consoleOutput = eval(code)
-        output += consoleOutput if config.capture.input
-
-        file.contents = new Buffer(output)
-        @.push(file)
-        callback()
-
-
-
+        tempFile.open 'fake-espruino-deployment', (openFileError, tempFile) ->
+          if openFileError
+            stream.push(null)
+            callback("fake-espruino: failed to open temporary file due to #{openFileError}")
+          else
+            fs.write(tempFile.fd, espruinoGlobals)
+            fs.write(tempFile.fd, file.contents.toString())
+            fs.close tempFile.fd, (closeError) ->
+              if closeError
+                stream.push(null)
+                callback("fake-espruino: failed to close temporary file due to #{closeError}")
+              else
+                exec "node #{tempFile.path} 2>&1", (execError, stdout) ->
+                  if execError
+                    stream.push(null)
+                    callback("fake-espruino: failed to execute code due to #{execError}")
+                  else
+                    output += stdout if config.capture.input
+                    file.contents = new Buffer(output)
+                    stream.push(file)
+                    callback()

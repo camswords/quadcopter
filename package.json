@@ -20,8 +20,8 @@
     "chai": "*",
     "string-stream": "*",
     "jasmine-node": "*",
-    "amd-optimize": "*",
     "event-stream": "*",
-    "gulp-order": "*"
+    "gulp-order": "*",
+    "temp": "*"
   }
 }

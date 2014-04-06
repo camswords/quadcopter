@@ -2,7 +2,6 @@ gulp = require 'gulp'
 coffee = require 'gulp-coffee'
 gutil = require 'gulp-util'
 concat = require 'gulp-concat'
-amdOptimize = require 'amd-optimize'
 order = require 'gulp-order'
 eventStream = require 'event-stream'
 espruino = require './gulp-espruino/src/gulp-espruino'
@@ -13,7 +12,6 @@ application = ->
     gulp.src('./src/lib/almond-0.2.9.js'),
     gulp.src('./src/main/**/*.coffee')
       .pipe coffee(bare: true).on('error', gutil.log)
-      .pipe amdOptimize('quad')
       .pipe concat('quadcopter.js'))
   .pipe order(['**/almond*.js', '**/quadcopter.js'])
   .pipe concat('application.js')
