@@ -1105,6 +1105,242 @@
           "from": "mkdirp@~0.3.5"
         }
       }
+    },
+    "amd-optimize": {
+      "version": "0.0.2",
+      "from": "amd-optimize@",
+      "resolved": "https://registry.npmjs.org/amd-optimize/-/amd-optimize-0.0.2.tgz",
+      "dependencies": {
+        "async": {
+          "version": "0.2.10",
+          "from": "async@~0.2.10"
+        },
+        "lodash": {
+          "version": "2.4.1",
+          "from": "lodash@~2.4.1"
+        },
+        "vinyl-fs": {
+          "version": "0.0.2",
+          "from": "vinyl-fs@0.0.2",
+          "resolved": "https://registry.npmjs.org/vinyl-fs/-/vinyl-fs-0.0.2.tgz",
+          "dependencies": {
+            "glob-stream": {
+              "version": "3.1.9",
+              "from": "glob-stream@~3.1.5",
+              "dependencies": {
+                "glob": {
+                  "version": "3.2.9",
+                  "from": "glob@~3.2.7",
+                  "dependencies": {
+                    "inherits": {
+                      "version": "2.0.1",
+                      "from": "inherits@2"
+                    }
+                  }
+                },
+                "minimatch": {
+                  "version": "0.2.14",
+                  "from": "minimatch@~0.2.12",
+                  "dependencies": {
+                    "lru-cache": {
+                      "version": "2.5.0",
+                      "from": "lru-cache@2"
+                    },
+                    "sigmund": {
+                      "version": "1.0.0",
+                      "from": "sigmund@~1.0.0"
+                    }
+                  }
+                },
+                "ordered-read-streams": {
+                  "version": "0.0.7",
+                  "from": "ordered-read-streams@~0.0.3"
+                },
+                "glob2base": {
+                  "version": "0.0.8",
+                  "from": "glob2base@~0.0.4"
+                },
+                "unique-stream": {
+                  "version": "0.0.3",
+                  "from": "unique-stream@~0.0.3"
+                },
+                "through": {
+                  "version": "2.3.4",
+                  "from": "through@~2.3.4"
+                }
+              }
+            },
+            "glob-watcher": {
+              "version": "0.0.4",
+              "from": "glob-watcher@~0.0.1",
+              "dependencies": {
+                "gaze": {
+                  "version": "0.5.1",
+                  "from": "gaze@^0.5.0",
+                  "dependencies": {
+                    "globule": {
+                      "version": "0.1.0",
+                      "from": "globule@~0.1.0",
+                      "dependencies": {
+                        "lodash": {
+                          "version": "1.0.1",
+                          "from": "lodash@~1.0.1"
+                        },
+                        "glob": {
+                          "version": "3.1.21",
+                          "from": "glob@~3.1.21",
+                          "dependencies": {
+                            "graceful-fs": {
+                              "version": "1.2.3",
+                              "from": "graceful-fs@~1.2.0"
+                            },
+                            "inherits": {
+                              "version": "1.0.0",
+                              "from": "inherits@1"
+                            }
+                          }
+                        },
+                        "minimatch": {
+                          "version": "0.2.14",
+                          "from": "minimatch@~0.2.11",
+                          "dependencies": {
+                            "lru-cache": {
+                              "version": "2.5.0",
+                              "from": "lru-cache@2"
+                            },
+                            "sigmund": {
+                              "version": "1.0.0",
+                              "from": "sigmund@~1.0.0"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "mkdirp": {
+              "version": "0.3.5",
+              "from": "mkdirp@~0.3.5"
+            },
+            "graceful-fs": {
+              "version": "2.0.3",
+              "from": "graceful-fs@~2.0.1"
+            },
+            "map-stream": {
+              "version": "0.1.0",
+              "from": "map-stream@~0.1.0"
+            }
+          }
+        },
+        "acorn": {
+          "version": "0.5.0",
+          "from": "acorn@~0.5.0",
+          "resolved": "https://registry.npmjs.org/acorn/-/acorn-0.5.0.tgz"
+        },
+        "ast-types": {
+          "version": "0.3.22",
+          "from": "ast-types@~0.3.16",
+          "resolved": "https://registry.npmjs.org/ast-types/-/ast-types-0.3.22.tgz",
+          "dependencies": {
+            "private": {
+              "version": "0.1.3",
+              "from": "private@~0.1.2",
+              "resolved": "https://registry.npmjs.org/private/-/private-0.1.3.tgz"
+            }
+          }
+        },
+        "escodegen": {
+          "version": "1.2.0",
+          "from": "escodegen@~1.2.0",
+          "resolved": "https://registry.npmjs.org/escodegen/-/escodegen-1.2.0.tgz",
+          "dependencies": {
+            "esprima": {
+              "version": "1.0.4",
+              "from": "esprima@~1.0.4"
+            },
+            "estraverse": {
+              "version": "1.5.0",
+              "from": "estraverse@~1.5.0",
+              "resolved": "https://registry.npmjs.org/estraverse/-/estraverse-1.5.0.tgz"
+            },
+            "esutils": {
+              "version": "1.0.0",
+              "from": "esutils@~1.0.0",
+              "resolved": "https://registry.npmjs.org/esutils/-/esutils-1.0.0.tgz"
+            },
+            "source-map": {
+              "version": "0.1.33",
+              "from": "source-map@~0.1.30",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "event-stream": {
+      "version": "3.1.1",
+      "from": "event-stream@",
+      "dependencies": {
+        "through": {
+          "version": "2.3.4",
+          "from": "through@~2.3.1"
+        },
+        "duplexer": {
+          "version": "0.1.1",
+          "from": "duplexer@~0.1.1"
+        },
+        "from": {
+          "version": "0.1.3",
+          "from": "from@~0"
+        },
+        "map-stream": {
+          "version": "0.1.0",
+          "from": "map-stream@~0.1.0"
+        },
+        "pause-stream": {
+          "version": "0.0.11",
+          "from": "pause-stream@0.0.11"
+        },
+        "split": {
+          "version": "0.2.10",
+          "from": "split@0.2"
+        },
+        "stream-combiner": {
+          "version": "0.0.4",
+          "from": "stream-combiner@~0.0.4"
+        }
+      }
+    },
+    "gulp-order": {
+      "version": "1.0.6",
+      "from": "gulp-order@",
+      "dependencies": {
+        "through": {
+          "version": "2.3.4",
+          "from": "through@~2.3.4"
+        },
+        "minimatch": {
+          "version": "0.2.14",
+          "from": "minimatch@~0.2.14",
+          "dependencies": {
+            "lru-cache": {
+              "version": "2.5.0",
+              "from": "lru-cache@2"
+            },
+            "sigmund": {
+              "version": "1.0.0",
+              "from": "sigmund@~1.0.0"
+            }
+          }
+        }
+      }
     }
   }
 }

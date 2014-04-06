@@ -19,6 +19,9 @@
     "mocha": "*",
     "chai": "*",
     "string-stream": "*",
-    "jasmine-node": "*"
+    "jasmine-node": "*",
+    "amd-optimize": "*",
+    "event-stream": "*",
+    "gulp-order": "*"
   }
 }

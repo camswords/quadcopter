@@ -1,3 +1,6 @@
+
+define('quad', {})
+
 digitalWrite(LED1, false);
 digitalWrite(LED2, false);
 digitalWrite(LED3, false);
@@ -44,4 +47,4 @@ quad.startProps()
 receiver = Receiver(A13, quad)
 receiver.listenForEvents()
 
-
+console.log "quadcopter started."
