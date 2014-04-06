@@ -42,7 +42,14 @@ module.exports =
         "(function safelyExecute() {
           var captured = '';
 
-          var console = { log: function(message) { captured = captured + message; } };
+          var console = {
+            log: function() {
+              for(var i = 0; i < arguments.length; i++) {
+                captured = captured + arguments[i];
+              }
+              captured = captured + '\\n'
+            }
+          };
           var setInterval = function(callback, time) {};
           var setTimeout = function(callback, time) {};" +
           file.contents.toString() +

@@ -18,6 +18,6 @@ gulp.task 'test', ->
   gulp.src ['./src/test/mini-test.coffee', './src/main/**/*.coffee', './src/test/**/*.coffee']
       .pipe coffee(bare: true).on('error', gutil.log)
       .pipe concat('tests.js')
-      .pipe espruino.deploy(serialNumber: '48DF67773330', echoOn: true, capture: { output: true, input: true })
+      .pipe fakeEspruino.deploy(serialNumber: '48DF67773330', echoOn: false, capture: { output: false, input: true })
     .on 'data', (data) ->
       console.log(data.contents.toString())
