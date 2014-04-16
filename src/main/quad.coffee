@@ -1,7 +1,3 @@
-requirejs.config({
-  nodeRequire: require
-})
-
 define('quad', {})
 
 requirejs ['quad', 'intensity'], (intensity) ->

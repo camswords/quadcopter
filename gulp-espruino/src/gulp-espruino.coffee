@@ -1,9 +1,12 @@
 attachedDevices = require('serialport')
 SerialPort = attachedDevices.SerialPort
 spawn = require('child_process').spawn
+exec = require('child_process').exec
 through = require 'through2'
 extend = require 'extend'
 _ = require 'underscore'
+tempfile = require('temp').track()
+fs = require 'fs'
 Q = require 'q'
 PluginError = require('gulp-util').PluginError;
 
@@ -43,37 +46,36 @@ createTimer = (timeoutInMillis, done) ->
 
 createFakeEspruino = (config) ->
   output = createOutput()
-  commandExecuted = Q.defer()
-  connected = Q.defer()
-  finishCommand = createTimer(config.idleReadTimeBeforeClose, -> commandExecuted.resolve())
 
-  connect: ->
-    espruinoProcess = spawn(config.fakePath)
-
-    espruinoProcess.stdout.on 'data', (data) ->
-      output.append(data.toString()) if config.capture.input
-      finishCommand()
-
-    espruinoProcess.stdout.on 'error', (error) ->
-      commandExecuted.reject(error)
-
-    espruinoProcess.stdin.on 'error', (error) ->
-      commandExecuted.reject(error)
-
-    connected.resolve(espruinoProcess)
-    connected.promise
-
-  close: -> connected.promise.then (espruinoProcess) ->
-    espruinoProcess.stdin.write('\x03')
-
+  connect: -> Q()
+  close: -> Q()
   log: -> output.all()
 
   send: (command) ->
-    connected.promise.then (espruinoProcess) ->
-      commandExecuted = Q.defer()
-      output.append(command) if config.capture.output
-      espruinoProcess.stdin.write(command)
-      commandExecuted.promise
+    commandExecuted = Q.defer()
+    output.append(command) if config.capture.output
+
+    tempfile.open 'command-to-send-to-fake-espruino', (fileError, info) ->
+      if fileError
+        commandExecuted.reject(fileError)
+      else
+        fs.write(info.fd, command)
+        fs.close info.fd, (closeError) ->
+          if closeError
+            commandExecuted.reject(closeError)
+
+          else
+            exec "#{config.fakePath} #{info.path}", (execError, stdout, stderr) ->
+              if execError
+                commandExecuted.reject(execError)
+              else
+                output.append(stdout) if config.capture.input
+                output.append(stderr) if config.capture.input
+
+                commandExecuted.resolve()
+
+    commandExecuted.promise
+
 
 createEspruino = (config) ->
   output = createOutput()
@@ -161,11 +163,11 @@ module.exports =
 
       if file.isBuffer()
         espruino.connect()
-          .then(-> espruino.send("reset();\n") if config.reset)
-          .then(-> espruino.send('echo(0);\n') if !config.echoOn)
+          .then(-> espruino.send("reset();\n") if config.reset && !config.fakePath)
+          .then(-> espruino.send('echo(0);\n') if !config.echoOn && !config.fakePath)
           .then(-> espruino.send("{ #{file.contents.toString()} }\n"))
-          .then(-> espruino.send('echo(1);\n') if !config.echoOn)
-          .then(-> espruino.send("save();\n") if config.save)
+          .then(-> espruino.send('echo(1);\n') if !config.echoOn && !config.fakePath)
+          .then(-> espruino.send("save();\n") if config.save && !config.fakePath)
           .then(-> publish.content(espruino.log()))
           .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
           .fail((error) -> publish.error("gulp-espruino found an error, barfing. #{error}\nLog: #{espruino.log()}"))

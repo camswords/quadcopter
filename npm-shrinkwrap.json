@@ -1164,6 +1164,47 @@
         }
       }
     },
+    "gulp-clean": {
+      "version": "0.2.4",
+      "from": "gulp-clean@",
+      "resolved": "https://registry.npmjs.org/gulp-clean/-/gulp-clean-0.2.4.tgz",
+      "dependencies": {
+        "rimraf": {
+          "version": "2.2.6",
+          "from": "rimraf@~2.2.6"
+        }
+      }
+    },
+    "gulp-if": {
+      "version": "0.0.5",
+      "from": "gulp-if@",
+      "dependencies": {
+        "through": {
+          "version": "2.3.4",
+          "from": "through@~2.3.4"
+        },
+        "gulp-match": {
+          "version": "0.0.2",
+          "from": "gulp-match@~0.0.1",
+          "dependencies": {
+            "minimatch": {
+              "version": "0.2.14",
+              "from": "minimatch@~0.2.14",
+              "dependencies": {
+                "lru-cache": {
+                  "version": "2.5.0",
+                  "from": "lru-cache@2"
+                },
+                "sigmund": {
+                  "version": "1.0.0",
+                  "from": "sigmund@~1.0.0"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "temp": {
       "version": "0.7.0",
       "from": "temp@",

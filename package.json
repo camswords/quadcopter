@@ -22,6 +22,8 @@
     "jasmine-node": "*",
     "event-stream": "*",
     "gulp-order": "*",
+    "gulp-clean": "*",
+    "gulp-if": "*",
     "temp": "*"
   }
 }
