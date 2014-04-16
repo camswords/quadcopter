@@ -1,0 +1,6 @@
+Gotcha!
+
+- no regular expressions
+- no exceptions
+- Object.prototype.hasOwnProperty not implemented (almond, requirejs)
+
