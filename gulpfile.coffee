@@ -34,7 +34,7 @@ gulp.task 'deploy', ['clean'], ->
             capture:
               input: true
               output: false
-            fakePath: '/Users/MYUSER/dev/quadcopter/Espruino/espruino')
+            fakePath: '../Espruino/espruino')
     .on 'data', (data) -> gutil.log(data.contents.toString())
 
 gulp.task 'test', ->
@@ -47,5 +47,5 @@ gulp.task 'test', ->
           capture:
             output: false
             input: true
-          fakePath: '/Users/MYUSER/dev/quadcopter/Espruino/espruino')
+          fakePath: '../Espruino/espruino')
   .on 'data', (data) -> gutil.log(data.contents.toString())
