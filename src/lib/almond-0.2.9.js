@@ -12,18 +12,21 @@
  * Modified for use in the quadcopter.
  * Modifications:
  * - NodeJS compatibility removed, regex is not supported: jsSuffixRegExp = /\.js$/;
- * hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
+ * - hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
+ * - Added a rudimentary "context" so that modules can be overridden during testing
  */
 
 var requirejs, require, define;
 (function (undef) {
     var main, req, makeMap, handlers,
-        defined = {},
-        waiting = {},
         config = {},
-        defining = {},
-        hasOwn = Object.prototype.hasOwnProperty,
-        aps = [].slice;
+        aps = [].slice,
+        context = {
+          defined: {},
+          defining: {},
+          definedInContext: {},
+          waiting: {}
+        };
 
     function hasProp(obj, prop) {
         return (prop in obj);
@@ -163,22 +166,23 @@ var requirejs, require, define;
 
     function makeLoad(depName) {
         return function (value) {
-            defined[depName] = value;
+            context.defined[depName] = value;
         };
     }
 
     function callDep(name) {
-        if (hasProp(waiting, name)) {
-            var args = waiting[name];
-            delete waiting[name];
-            defining[name] = true;
+        if (hasProp(context.waiting, name)) {
+            var args = context.waiting[name];
+            context.definedInContext[name] = context.waiting[name];
+            delete context.waiting[name];
+            context.defining[name] = true;
             main.apply(undef, args);
         }
 
-        if (!hasProp(defined, name) && !hasProp(defining, name)) {
+        if (!hasProp(context.defined, name) && !hasProp(context.defining, name)) {
             throw new Error('No ' + name);
         }
-        return defined[name];
+        return context.defined[name];
     }
 
     //Turns a plugin!resource to [plugin, resource]
@@ -248,18 +252,18 @@ var requirejs, require, define;
             return makeRequire(name);
         },
         exports: function (name) {
-            var e = defined[name];
+            var e = context.defined[name];
             if (typeof e !== 'undefined') {
                 return e;
             } else {
-                return (defined[name] = {});
+                return (context.defined[name] = {});
             }
         },
         module: function (name) {
             return {
                 id: name,
                 uri: '',
-                exports: defined[name],
+                exports: context.defined[name],
                 config: makeConfig(name)
             };
         }
@@ -294,36 +298,36 @@ var requirejs, require, define;
                 } else if (depName === "module") {
                     //CommonJS module spec 1.1
                     cjsModule = args[i] = handlers.module(name);
-                } else if (hasProp(defined, depName) ||
-                           hasProp(waiting, depName) ||
-                           hasProp(defining, depName)) {
+                } else if (hasProp(context.defined, depName) ||
+                           hasProp(context.waiting, depName) ||
+                           hasProp(context.defining, depName)) {
                     args[i] = callDep(depName);
                 } else if (map.p) {
                     map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
-                    args[i] = defined[depName];
+                    args[i] = context.defined[depName];
                 } else {
                     throw new Error(name + ' missing ' + depName);
                 }
             }
 
-            ret = callback ? callback.apply(defined[name], args) : undefined;
+            ret = callback ? callback.apply(context.defined[name], args) : undefined;
 
             if (name) {
                 //If setting exports via "module" is in play,
                 //favor that over return value and exports. After that,
                 //favor a non-undefined return value over exports use.
                 if (cjsModule && cjsModule.exports !== undef &&
-                        cjsModule.exports !== defined[name]) {
-                    defined[name] = cjsModule.exports;
+                        cjsModule.exports !== context.defined[name]) {
+                    context.defined[name] = cjsModule.exports;
                 } else if (ret !== undef || !usingExports) {
                     //Use the return value from the function.
-                    defined[name] = ret;
+                    context.defined[name] = ret;
                 }
             }
         } else if (name) {
             //May just be an object definition for the module. Only
             //worry about defining if have a module name.
-            defined[name] = callback;
+            context.defined[name] = callback;
         }
     };
 
@@ -398,7 +402,7 @@ var requirejs, require, define;
     /**
      * Expose module registry for debugging and tooling
      */
-    requirejs._defined = defined;
+    requirejs._defined = context.defined;
 
     define = function (name, deps, callback) {
 
@@ -411,9 +415,16 @@ var requirejs, require, define;
             deps = [];
         }
 
-        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
-            waiting[name] = [name, deps, callback];
+        if (!hasProp(context.defined, name) && !hasProp(context.waiting, name)) {
+            context.waiting[name] = [name, deps, callback];
+            context.definedInContext[name] = [name, deps, callback];
         }
+    };
+
+    define.newContext = function() {
+        context.waiting = context.definedInContext;
+        context.defined = {};
+        context.defining = {};
     };
 
     define.amd = {
