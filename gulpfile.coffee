@@ -15,9 +15,9 @@ application = ->
   .pipe concat('application.js')
 
 tests = ->
-  gulp.src(['./src/test/mini-test.coffee',
+  gulp.src(['./src/test/**/mini-test.coffee',
             './src/test/**/*.coffee',
-            './src/test/tests.coffee'])
+            './src/test/**/tests.coffee'])
   .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
   .pipe concat('tests.js')
 
