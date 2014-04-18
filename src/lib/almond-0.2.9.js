@@ -15,6 +15,7 @@
  * - hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
  * - Added a rudimentary "context" so that modules can be overridden during testing
  * - Added console logs where Errors would be thrown, otherwise Espruino barfs (cant handle exceptions) and you lose the error information
+ * - Added the ability for a client to get the names of all of the defined modules
  */
 
 var requirejs, require, define;
@@ -446,6 +447,8 @@ var requirejs, require, define;
         context.defining = {};
         context.overrides = {};
     };
+
+    define.all = function() { return Object.keys(context.definedInContext); };
 
     define.override = function(name, value) {
         context.overrides[name] = value;
