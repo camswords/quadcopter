@@ -45,7 +45,7 @@ gulp.task 'test', ->
           serialNumber: '48DF67773330'
           echoOn: true
           capture:
-            output: false
             input: true
+            output: false
           fakePath: '../Espruino/espruino')
   .on 'data', (data) -> gutil.log(data.contents.toString())
