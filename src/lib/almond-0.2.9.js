@@ -14,17 +14,19 @@
  * - NodeJS compatibility removed, regex is not supported: jsSuffixRegExp = /\.js$/;
  * - hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
  * - Added a rudimentary "context" so that modules can be overridden during testing
+ * - Added console logs where Errors would be thrown, otherwise Espruino barfs (cant handle exceptions) and you lose the error information
  */
 
 var requirejs, require, define;
 (function (undef) {
-    var main, req, makeMap, handlers,
+    var main, req, makeMap, handlers, deepCopy,
         config = {},
         aps = [].slice,
         context = {
           defined: {},
           defining: {},
           definedInContext: {},
+          overrides: {},
           waiting: {}
         };
 
@@ -171,15 +173,19 @@ var requirejs, require, define;
     }
 
     function callDep(name) {
+        if (hasProp(context.overrides, name)) {
+            return context.overrides[name];
+        }
+
         if (hasProp(context.waiting, name)) {
             var args = context.waiting[name];
-            context.definedInContext[name] = context.waiting[name];
             delete context.waiting[name];
             context.defining[name] = true;
             main.apply(undef, args);
         }
 
         if (!hasProp(context.defined, name) && !hasProp(context.defining, name)) {
+            console.log('error: No ' + name);
             throw new Error('No ' + name);
         }
         return context.defined[name];
@@ -269,6 +275,17 @@ var requirejs, require, define;
         }
     };
 
+    deepCopy = function(destination, source) {
+      for (var property in source) {
+        if (typeof source[property] === "object" && source[property] !== null && destination[property]) {
+          deepCopy(destination[property], source[property]);
+        } else {
+          destination[property] = source[property];
+        }
+      }
+      return destination;
+    };
+
     main = function (name, deps, callback, relName) {
         var cjsModule, depName, ret, map, i,
             args = [],
@@ -300,12 +317,14 @@ var requirejs, require, define;
                     cjsModule = args[i] = handlers.module(name);
                 } else if (hasProp(context.defined, depName) ||
                            hasProp(context.waiting, depName) ||
-                           hasProp(context.defining, depName)) {
+                           hasProp(context.defining, depName) ||
+                           hasProp(context.overrides, depName)) {
                     args[i] = callDep(depName);
                 } else if (map.p) {
                     map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
                     args[i] = context.defined[depName];
                 } else {
+                    console.log('error: ' + name + ' missing ' + depName);
                     throw new Error(name + ' missing ' + depName);
                 }
             }
@@ -422,9 +441,14 @@ var requirejs, require, define;
     };
 
     define.newContext = function() {
-        context.waiting = context.definedInContext;
+        context.waiting = deepCopy({}, context.definedInContext);
         context.defined = {};
         context.defining = {};
+        context.overrides = {};
+    };
+
+    define.override = function(name, value) {
+        context.overrides[name] = value;
     };
 
     define.amd = {
