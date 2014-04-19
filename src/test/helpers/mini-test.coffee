@@ -1,6 +1,4 @@
-define 'mini-test', ->
-  specs = []
-
+define 'mini-test', ['mini-test-it'], (it) ->
   newSpecContext = (spec, specComplete) ->
     errors = []
 
@@ -19,17 +17,13 @@ define 'mini-test', ->
         specComplete()
     }
 
-
-  it: (description, callback) ->
-    specs.push(description: description, execute: callback)
-
   run: ->
+    specs = it.all()
     index = -1
     hasNext = -> index + 1 < specs.length
     next = -> specs[++index]
 
     runNextSpec = -> runSpec(next()) if hasNext()
-    runSpec = (spec) ->
-      spec.execute(newSpecContext(spec, runNextSpec))
+    runSpec = (spec) -> spec.execute(newSpecContext(spec, runNextSpec))
 
     runNextSpec()
