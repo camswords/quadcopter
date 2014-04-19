@@ -1,12 +1,9 @@
-define 'mini-test-runner', ['mini-test-it'], (it) ->
+define 'mini-test-runner', ['mini-test-it', 'mini-test-matchers'], (it, matchers) ->
   newSpecContext = (spec, specComplete) ->
     errors = []
 
     return {
-      expect: (actual) ->
-        toBe: (expected) ->
-          if actual != expected
-            errors.push("Expected #{JSON.stringify(expected)}, to be #{JSON.stringify(actual)}")
+      expect: (actual) -> matchers.all(actual, errors)
 
       done: ->
         if errors.length > 0
