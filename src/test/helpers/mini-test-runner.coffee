@@ -1,4 +1,4 @@
-define 'mini-test', ['mini-test-it'], (it) ->
+define 'mini-test-runner', ['mini-test-it'], (it) ->
   newSpecContext = (spec, specComplete) ->
     errors = []
 
