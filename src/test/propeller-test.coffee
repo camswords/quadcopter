@@ -22,9 +22,9 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     stubs = 'espruino/digital-pulse': digitalPulse
 
     specHelper.require 'propeller', stubs, (propeller) ->
-      propeller.create(78).accelerateTo(1100)
+      propeller.create(78).accelerateTo(900)
 
-      test.expect(capturedFrequency).toBe(1.5)
+      test.expect(capturedFrequency).toBe(1)
       test.done()
 
   it 'propeller should accelerate by maximum amount when throttle is more than maximum', (test) ->
