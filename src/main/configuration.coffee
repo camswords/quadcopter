@@ -1,3 +1,3 @@
 define 'configuration', ->
   throttle:
-    pin: A13
+    inputPin: A13
