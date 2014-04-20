@@ -3,7 +3,7 @@ define 'quadcopter', [
          watch, scheduler, throttleRepository, adjustThrottles) ->
 
   watch(pin: A13).on 'change', (throttle) -> throttleRepository.save(throttle)
-  scheduler.every(2).execute adjustThrottles
+  scheduler.every(2).execute(adjustThrottles)
 
 
 requirejs ['intensity'], (intensity) ->

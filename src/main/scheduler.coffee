@@ -1,4 +1,6 @@
 
 define 'scheduler', ->
   every: (milliseconds) ->
-    execute: (command) -> setInterval(command, milliseconds)
+    execute: (command) ->
+      scheduleJob = setInterval(command, milliseconds)
+      stop: -> clearInterval(scheduleJob)
