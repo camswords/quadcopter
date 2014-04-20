@@ -8,7 +8,7 @@ define 'quadcopter', [
       pin: config.throttle.inputPin
       onChange: (throttle) -> throttleRepository.save(throttle)
 
-    scheduler.every(2).execute(adjustThrottles)
+    scheduler.continuously().execute(adjustThrottles)
 
 
 requirejs ['intensity'], (intensity) ->
