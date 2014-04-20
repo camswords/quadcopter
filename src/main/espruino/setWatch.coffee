@@ -1,0 +1,1 @@
+define 'setWatch', -> setWatch
