@@ -2,17 +2,15 @@ define 'mini-test-runner', ['mini-test-it', 'mini-test-matchers'], (it, matchers
   newSpecContext = (spec, specComplete) ->
     errors = []
 
-    return {
-      expect: (actual) -> matchers.all(actual, errors)
+    expect: (actual) -> matchers.all(actual, errors)
+    fail: (message) -> errors.push(message)
+    done: ->
+      if errors.length > 0
+        console.log 'failed:', spec.description, JSON.stringify(errors)
+      else
+        console.log 'passed:', spec.description
 
-      done: ->
-        if errors.length > 0
-          console.log 'failed:', spec.description, JSON.stringify(errors)
-        else
-          console.log 'passed:', spec.description
-
-        specComplete()
-    }
+      specComplete()
 
   run: ->
     specs = it.all()
