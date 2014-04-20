@@ -1,5 +1,5 @@
 define 'quadcopter', [
-         'watch', 'scheduler', 'throttleRepository', 'adjustThrottles', 'configuration'], (
+         'watch', 'scheduler', 'repository/throttle', 'adjustThrottles', 'configuration'], (
          watch, scheduler, throttleRepository, adjustThrottles, config) ->
 
   fly: ->

@@ -24,11 +24,21 @@ application = (overrides) ->
       .pipe gulp.dest('build')
 
 tests = ->
-  gulp.src(['./src/test/**/*.coffee',
-            './src/test/**/tests.coffee'])
-      .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
-      .pipe concat('tests.js')
-      .pipe gulp.dest('build')
+  testFiles = ->
+    gulp.src(['./src/test/**/*.coffee', '!./src/test/**/tests.coffee'])
+        .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
+        .pipe concat('test-files.js')
+
+  testRunner = ->
+    gulp.src(['./src/test/**/tests.coffee'])
+        .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
+        .pipe concat('test-runner.js')
+
+  eventStream.merge(testFiles(), testRunner())
+    .pipe order(['**/application.js', '**/tests.js'])
+    .pipe concat('tests.js')
+    .pipe gulp.dest('build')
+
 
 gulp.task 'default', ['test']
 
