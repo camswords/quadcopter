@@ -14,7 +14,6 @@
  * - NodeJS compatibility removed, regex is not supported: jsSuffixRegExp = /\.js$/;
  * - hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
  * - Added a rudimentary "context" so that modules can be overridden during testing
- * - Added console logs where Errors would be thrown, otherwise Espruino barfs (cant handle exceptions) and you lose the error information
  * - Added the ability for a client to get the names of all of the defined modules
  */
 
@@ -186,7 +185,6 @@ var requirejs, require, define;
         }
 
         if (!hasProp(context.defined, name) && !hasProp(context.defining, name)) {
-            console.log('error: No ' + name);
             throw new Error('No ' + name);
         }
         return context.defined[name];
@@ -325,7 +323,6 @@ var requirejs, require, define;
                     map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
                     args[i] = context.defined[depName];
                 } else {
-                    console.log('error: ' + name + ' missing ' + depName);
                     throw new Error(name + ' missing ' + depName);
                 }
             }

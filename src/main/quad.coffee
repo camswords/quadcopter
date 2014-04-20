@@ -1,6 +1,12 @@
-define('quad', {})
+define 'quadcopter', [
+         'watch', 'scheduler', 'throttleRepository', 'adjustThrottles'], (
+         watch, scheduler, throttleRepository, adjustThrottles) ->
 
-requirejs ['quad', 'intensity'], (intensity) ->
+  watch(pin: A13).on 'change', (throttle) -> throttleRepository.save(throttle)
+  scheduler.every(2).execute adjustThrottles
+
+
+requirejs ['intensity'], (intensity) ->
   digitalWrite(LED1, false);
   digitalWrite(LED2, false);
   digitalWrite(LED3, false);
