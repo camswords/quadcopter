@@ -1,8 +1,12 @@
 define 'quadcopter', [
-         'watch', 'scheduler', 'throttleRepository', 'adjustThrottles'], (
-         watch, scheduler, throttleRepository, adjustThrottles) ->
+         'watch', 'scheduler', 'throttleRepository', 'adjustThrottles', 'configuration'], (
+         watch, scheduler, throttleRepository, adjustThrottles, config) ->
 
-  watch(pin: A13).on 'change', (throttle) -> throttleRepository.save(throttle)
+  watch
+    'name': 'throttle'
+    'pin': 56
+    'onChange': (throttle) -> throttleRepository.save(throttle)
+
   scheduler.every(2).execute(adjustThrottles)
 
 

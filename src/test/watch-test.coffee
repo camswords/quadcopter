@@ -5,8 +5,13 @@ define 'watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     setWatch = -> calledWithArguments = arguments.slice(0)
 
     specHelper.require 'watch', { 'espruino/setWatch': setWatch }, (watch) ->
-      watch(pin: 56).then(->)
+      watch
+        name: 'watch happy path',
+        pin: 56,
+        onChange: -> 'on change called!'
+
       test.expect(calledWithArguments).toBeTruthy()
+      test.expect(calledWithArguments[0]()).toBe('on change called!')
       test.done()
 
   it "watch should fail when options is not specified", (test) ->
@@ -17,7 +22,7 @@ define 'watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     stubs = { 'espruino/setWatch': setWatch, 'espruino/failWhale': failWhale }
     specHelper.require 'watch', stubs, (watch) ->
       watch()
-      test.expect(capturedMessage).toBe('failed to start watch, pin is not specified')
+      test.expect(capturedMessage).toBe('failed to start watch[undefined]. pin (undefined), onChange and name must be specified.')
       test.done()
 
   it "watch should fail when pin is not specified", (test) ->
@@ -27,6 +32,6 @@ define 'watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
     stubs = { 'espruino/setWatch': setWatch, 'espruino/failWhale': failWhale }
     specHelper.require 'watch', stubs, (watch) ->
-      watch({})
-      test.expect(capturedMessage).toBe('failed to start watch, pin is not specified')
+      watch name: 'mywatch', onChange: ->
+      test.expect(capturedMessage).toBe('failed to start watch[mywatch]. pin (undefined), onChange and name must be specified.')
       test.done()
