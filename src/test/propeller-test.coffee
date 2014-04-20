@@ -16,5 +16,11 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       test.expect(calledWithArguments[2]).toBe(1.5)
       test.done()
 
+  it 'propeller should fail when pin is not specified', (test) ->
+    capturedMessage = null
+    stubs = 'espruino/failWhale': (message) -> capturedMessage = message
 
-
+    specHelper.require 'propeller', stubs, (propeller) ->
+      propeller.create(undefined)
+      test.expect(capturedMessage).toBe('failed to create propeller, pin (undefined) was not specified.')
+      test.done()
