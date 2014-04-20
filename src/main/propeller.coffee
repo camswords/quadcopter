@@ -5,4 +5,6 @@ define 'propeller', ['espruino/digital-pulse', 'espruino/failWhale'], (digitalPu
       return failWhale("failed to create propeller, pin (#{pin}) was not specified.")
 
     accelerateTo: (throttle) ->
-      digitalPulse(pin, 1, throttle / 1000)
+      safeThrottle = Math.max(1500, Math.min(throttle, 2000))
+
+      digitalPulse(pin, 1, safeThrottle / 1000)

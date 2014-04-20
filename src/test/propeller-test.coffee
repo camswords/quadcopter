@@ -7,13 +7,35 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     stubs = 'espruino/digital-pulse': digitalPulse
 
     specHelper.require 'propeller', stubs, (propeller) ->
-      propeller.create(78).accelerateTo(1500)
+      propeller.create(78).accelerateTo(1612)
 
       test.expect(calledWithArguments).toBeTruthy()
       test.expect(calledWithArguments.length).toBe(3)
       test.expect(calledWithArguments[0]).toBe(78)
       test.expect(calledWithArguments[1]).toBe(1)
-      test.expect(calledWithArguments[2]).toBe(1.5)
+      test.expect(calledWithArguments[2]).toBe(1.612)
+      test.done()
+
+  it 'propeller should accelerate by minimum amount when throttle is less than minimum', (test) ->
+    capturedFrequency = null
+    digitalPulse = (pin, value, frequency) -> capturedFrequency = frequency
+    stubs = 'espruino/digital-pulse': digitalPulse
+
+    specHelper.require 'propeller', stubs, (propeller) ->
+      propeller.create(78).accelerateTo(1100)
+
+      test.expect(capturedFrequency).toBe(1.5)
+      test.done()
+
+  it 'propeller should accelerate by maximum amount when throttle is more than maximum', (test) ->
+    capturedFrequency = null
+    digitalPulse = (pin, value, frequency) -> capturedFrequency = frequency
+    stubs = 'espruino/digital-pulse': digitalPulse
+
+    specHelper.require 'propeller', stubs, (propeller) ->
+      propeller.create(78).accelerateTo(2100)
+
+      test.expect(capturedFrequency).toBe(2)
       test.done()
 
   it 'propeller should fail when pin is not specified', (test) ->
@@ -24,3 +46,4 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       propeller.create(undefined)
       test.expect(capturedMessage).toBe('failed to create propeller, pin (undefined) was not specified.')
       test.done()
+
