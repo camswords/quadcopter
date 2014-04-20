@@ -7,9 +7,8 @@
 # defined globally.
 
 # Error isn't defined by the espruino.
-# If anyone creates one, print the error message, then quit.
+# If anyone creates one, send the error to the fail whale.
 Error = (message) ->
-  console.log 'ERROR:', message
-  quit()
-
+  require ['espruino/failWhale'], (failWhale) ->
+    failWhale(message)
 

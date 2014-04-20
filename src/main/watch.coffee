@@ -1,4 +1,4 @@
-define 'watch', ['setWatch', 'failWhale'], (setWatch, failWhale) ->
+define 'watch', ['setWatch', 'espruino/failWhale'], (setWatch, failWhale) ->
   (options) ->
     if options?.pin
       return then: (callback) ->

@@ -1,2 +1,5 @@
 
-define 'failWhale', -> (message) -> console.log('Whoops!', message)
+define 'espruino/failWhale', ->
+  (message) ->
+    console.log('FAIL WHALE: ', message)
+    quit()
