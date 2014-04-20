@@ -4,9 +4,9 @@ define 'quadcopter', [
 
   fly: ->
     watch
-      'name': 'throttle'
-      'pin': 56
-      'onChange': (throttle) -> throttleRepository.save(throttle)
+      name: 'throttle'
+      pin: 56
+      onChange: (throttle) -> throttleRepository.save(throttle)
 
     scheduler.every(2).execute(adjustThrottles)
 
