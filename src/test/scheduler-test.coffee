@@ -1,7 +1,7 @@
 define 'scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it "scheduler should function every specified interval", (test) ->
-    specHelper.require 'scheduler', {}, (scheduler) ->
+    specHelper.require 'scheduler', (scheduler) ->
       timesCalled = 0
       startTime = getTime()
 
