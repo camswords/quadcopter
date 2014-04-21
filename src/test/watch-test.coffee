@@ -40,7 +40,7 @@ define 'watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     setWatch = ->
     failWhale = (message) -> capturedMessage = message
 
-    stubs = { 'espruino/setWatch': setWatch, 'espruino/failWhale': failWhale }
+    stubs = { 'espruino/setWatch': setWatch, 'espruino/fail-whale': failWhale }
     specHelper.require 'watch', stubs, (watch) ->
       watch()
       test.expect(capturedMessage).toBe('failed to start watch[undefined]. pin (undefined), onChange and name must be specified.')
@@ -51,7 +51,7 @@ define 'watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     setWatch = ->
     failWhale = (message) -> capturedMessage = message
 
-    stubs = { 'espruino/setWatch': setWatch, 'espruino/failWhale': failWhale }
+    stubs = { 'espruino/setWatch': setWatch, 'espruino/fail-whale': failWhale }
     specHelper.require 'watch', stubs, (watch) ->
       watch name: 'mywatch', onChange: ->
       test.expect(capturedMessage).toBe('failed to start watch[mywatch]. pin (undefined), onChange and name must be specified.')
