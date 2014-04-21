@@ -1,7 +1,7 @@
 define 'foo', -> { value: '123456789' }
 define 'bob', ['foo'], (foo) -> { value: 'bob:' + foo.value }
 
-define 'amd-customisation-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
+define 'almond-modifications-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
   it 'amd should use real modules when not stubbed', (test) ->
     specHelper.require 'bob', {}, (bob) ->
       test.expect(bob.value).toBe('bob:123456789');

@@ -14,7 +14,7 @@ application = (overrides) ->
   options = extend({}, defaults, overrides)
 
   src = []
-  src.push('./src/lib/almond-*.js')
+  src.push('./src/main/lib/almond-*.js')
   src.push('!./src/main/application.coffee') if options.excludeStartupScript
   src.push('./src/main/**/*.coffee')
 
