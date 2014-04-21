@@ -19,7 +19,6 @@
     "mocha": "*",
     "chai": "*",
     "string-stream": "*",
-    "jasmine-node": "*",
     "event-stream": "*",
     "gulp-order": "*",
     "gulp-clean": "*",
