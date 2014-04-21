@@ -2,5 +2,6 @@ Gotcha!
 
 - no regular expressions
 - no exceptions
+- Error object does not exist at all
 - Object.prototype.hasOwnProperty not implemented (almond, requirejs)
 
