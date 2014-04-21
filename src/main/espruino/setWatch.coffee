@@ -1,1 +1,0 @@
-define 'espruino/setWatch', -> setWatch

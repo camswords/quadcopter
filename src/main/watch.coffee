@@ -1,4 +1,4 @@
-define 'watch', ['espruino/setWatch', 'espruino/fail-whale'], (setWatch, failWhale) ->
+define 'watch', ['espruino/set-watch', 'espruino/fail-whale'], (setWatch, failWhale) ->
 
   toDuration = (onChange) ->
     (event) ->
