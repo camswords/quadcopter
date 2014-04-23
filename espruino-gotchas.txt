@@ -4,4 +4,5 @@ Gotcha!
 - no exceptions
 - Error object does not exist at all
 - Object.prototype.hasOwnProperty not implemented (almond, requirejs)
+- 0.1 is falsy on the espruino (incorrectly it seems)
 

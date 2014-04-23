@@ -17,3 +17,7 @@ define 'mini-test-matchers', ->
       if !actual
         errors.push("Expected #{JSON.stringify(actual)} to be truthy")
 
+    toBeFalsy: ->
+      if actual
+        errors.push("Expected #{JSON.stringify(actual)} to be falsy")
+
