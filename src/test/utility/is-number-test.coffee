@@ -1,5 +1,5 @@
 
-define 'is-number-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
+define 'utility/is-number-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it 'is-number should determine if input is a number', (test) ->
     specHelper.require 'utility/is-number', (isNumber) ->

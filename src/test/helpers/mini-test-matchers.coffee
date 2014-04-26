@@ -5,6 +5,10 @@ define 'mini-test-matchers', ->
       if actual != expected
         errors.push("Expected #{JSON.stringify(actual)} to be #{JSON.stringify(expected)}")
 
+    toNotBe: (expected) ->
+      if actual == expected
+        errors.push("Expected #{JSON.stringify(actual)} to not be #{JSON.stringify(expected)}")
+
     toBeLessThan: (expected) ->
       if !(actual < expected)
         errors.push("Expected #{JSON.stringify(actual)} to be less than #{JSON.stringify(expected)}")
