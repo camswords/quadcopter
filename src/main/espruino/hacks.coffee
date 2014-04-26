@@ -9,6 +9,6 @@
 # Error isn't defined by the espruino.
 # If anyone creates one, send the error to the fail whale.
 Error = (message) ->
-  require ['espruino/failWhale'], (failWhale) ->
+  require ['espruino/fail-whale'], (failWhale) ->
     failWhale(message)
 
