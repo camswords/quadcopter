@@ -1,5 +1,5 @@
 
-define 'propeller', ['espruino/digital-pulse', 'espruino/fail-whale', 'utility/is-number'], (digitalPulse, failWhale, isNumber) ->
+define 'propeller', ['espruino/digital-pulse', 'utility/fail-whale', 'utility/is-number'], (digitalPulse, failWhale, isNumber) ->
   create: (pin) ->
     if !pin
       return failWhale("failed to create propeller, pin (#{pin}) was not specified.")

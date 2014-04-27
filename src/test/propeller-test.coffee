@@ -49,7 +49,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it 'propeller should fail when pin is not specified', (test) ->
     capturedMessage = null
-    stubs = 'espruino/fail-whale': (message) -> capturedMessage = message
+    stubs = 'utility/fail-whale': (message) -> capturedMessage = message
 
     specHelper.require 'propeller', stubs, (propeller) ->
       propeller.create(undefined)
