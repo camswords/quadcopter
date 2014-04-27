@@ -1,4 +1,4 @@
-define 'scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
+define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it "scheduler should execute function every specified interval", (test) ->
     specHelper.require 'utility/scheduler', (scheduler) ->
