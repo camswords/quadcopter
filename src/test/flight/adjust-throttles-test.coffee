@@ -1,5 +1,5 @@
 
-define 'adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
+define 'flight/adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it 'adjust-throttles should adjust throttles of all propellers', (test) ->
     acceleratedTo = []
@@ -12,7 +12,7 @@ define 'adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHelper, it
       'observer/loop-frequency': notify: (->)
     }
 
-    specHelper.require 'adjust-throttles' , stubs, (adjustThrottles) ->
+    specHelper.require 'flight/adjust-throttles' , stubs, (adjustThrottles) ->
       adjustThrottles(1234)
 
       test.expect(acceleratedTo.length).toBe(4)
@@ -30,7 +30,7 @@ define 'adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHelper, it
       'observer/loop-frequency': notify: -> timesNotified++
     }
 
-    specHelper.require 'adjust-throttles' , stubs, (adjustThrottles) ->
+    specHelper.require 'flight/adjust-throttles' , stubs, (adjustThrottles) ->
       adjustThrottles(1234)
       adjustThrottles(1250)
       adjustThrottles(1212)
