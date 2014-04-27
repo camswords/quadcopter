@@ -1,5 +1,5 @@
 
-define 'scheduler', ->
+define 'utility/scheduler', ->
   self = {}
 
   self.after = (milliseconds) ->

@@ -1,7 +1,7 @@
 define 'scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it "scheduler should execute function every specified interval", (test) ->
-    specHelper.require 'scheduler', (scheduler) ->
+    specHelper.require 'utility/scheduler', (scheduler) ->
       timesCalled = 0
       startTime = getTime()
 
@@ -16,7 +16,7 @@ define 'scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
           test.done()
 
   it "scheduler should execute function after specified interval", (test) ->
-    specHelper.require 'scheduler', (scheduler) ->
+    specHelper.require 'utility/scheduler', (scheduler) ->
       startTime = getTime()
 
       scheduler.after(200).execute ->
