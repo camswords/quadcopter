@@ -1,5 +1,5 @@
 
-define 'adjust-throttles', ['propeller', 'configuration'], (propeller, config) ->
+define 'adjust-throttles', ['propeller', 'configuration', 'observer/loop-frequency'], (propeller, config, loopFrequencyObserver) ->
 
   frontLeft = propeller.create(config.propeller.frontLeft.outputPin)
   backRight = propeller.create(config.propeller.backRight.outputPin)
@@ -12,3 +12,5 @@ define 'adjust-throttles', ['propeller', 'configuration'], (propeller, config) -
 
     frontRight.accelerateTo(throttle)
     backLeft.accelerateTo(throttle)
+
+    loopFrequencyObserver.notify()
