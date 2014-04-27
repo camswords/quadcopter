@@ -8,7 +8,7 @@ define 'flight/adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHel
       accelerateTo: (throttle) -> acceleratedTo.push(throttle)
 
     stubs = {
-      'propeller': propeller
+      'flight/propeller': propeller
       'observer/loop-frequency': notify: (->)
     }
 
@@ -26,7 +26,7 @@ define 'flight/adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHel
     timesNotified = 0
 
     stubs = {
-      'propeller': create: -> accelerateTo: (->)
+      'flight/propeller': create: -> accelerateTo: (->)
       'observer/loop-frequency': notify: -> timesNotified++
     }
 

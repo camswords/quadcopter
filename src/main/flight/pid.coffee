@@ -1,5 +1,5 @@
 
-define 'pid', ->
+define 'flight/pid', ->
   create: (proportional, integral, differential, target) ->
     cumulativeError = 0
     lastError = 0

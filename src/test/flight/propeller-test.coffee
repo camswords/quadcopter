@@ -1,5 +1,5 @@
 
-define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
+define 'flight/propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
   it 'propeller should accelerate', (test) ->
     calledWithArguments = null
@@ -9,7 +9,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       'utility/is-number': (-> true)
     }
 
-    specHelper.require 'propeller', stubs, (propeller) ->
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
       propeller.create(78).accelerateTo(1612)
 
       test.expect(calledWithArguments).toBeTruthy()
@@ -27,7 +27,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       'utility/is-number': (-> true)
     }
 
-    specHelper.require 'propeller', stubs, (propeller) ->
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
       propeller.create(78).accelerateTo(900)
 
       test.expect(capturedFrequency).toBe(1)
@@ -41,7 +41,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       'utility/is-number': (-> true)
     }
 
-    specHelper.require 'propeller', stubs, (propeller) ->
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
       propeller.create(78).accelerateTo(2100)
 
       test.expect(capturedFrequency).toBe(2)
@@ -51,7 +51,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
     capturedMessage = null
     stubs = 'utility/fail-whale': (message) -> capturedMessage = message
 
-    specHelper.require 'propeller', stubs, (propeller) ->
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
       propeller.create(undefined)
       test.expect(capturedMessage).toBe('failed to create propeller, pin (undefined) was not specified.')
       test.done()
@@ -63,7 +63,7 @@ define 'propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       'utility/is-number': (-> false)
     }
 
-    specHelper.require 'propeller', stubs, (propeller) ->
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
       propeller.create(1).accelerateTo("2100")
 
       test.expect(called).toBeFalsy()
