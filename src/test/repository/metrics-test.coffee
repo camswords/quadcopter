@@ -5,7 +5,7 @@ define 'repository/metrics-test', ['spec-helper', 'mini-test-it'], (specHelper, 
     written = null
 
     stubs = {
-      'utility/time': (-> 56),
+      'espruino/time': (-> 56),
       'espruino/file': (-> append: (data) -> written = data)
     }
 

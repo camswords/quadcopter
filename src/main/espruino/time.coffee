@@ -1,3 +1,3 @@
 
-define 'utility/time', ->
+define 'espruino/time', ->
   -> Math.floor(getTime())
