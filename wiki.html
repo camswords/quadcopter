@@ -143,6 +143,8 @@ Error message and password prompt
 
 <li>Analytics</li>
 
+<li>Commodity Flight Controllers</li>
+
 <li>Communicate to the ESCs using i2c</li>
 
 <li>Determine Euler angles from IMU data</li>
@@ -3486,7 +3488,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Quadcopter" modified="20140502050632217" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Flying in formation" modified="20140502051956655" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4252,6 +4254,63 @@ Error message and password prompt
             &quot;bottom&quot;: 231,
             &quot;height&quot;: 16
         }
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Quadcopter'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Quadcopter'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Commodity Flight Controllers&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 623,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 182,
+            &quot;right&quot;: 307,
+            &quot;bottom&quot;: 639,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Commodity Flight Controllers'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Commodity Flight Controllers&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Flying in formation&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 249,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 116,
+            &quot;right&quot;: 201,
+            &quot;bottom&quot;: 265,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Flying in formation'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Flying in formation&quot;
     }
 ]</pre>
 </div>
@@ -4270,8 +4329,8 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div modified="20140502050222936" title="$:/ShowEditPreview">
-<pre>yes</pre>
+<div modified="20140502051416502" title="$:/ShowEditPreview">
+<pre>no</pre>
 </div>
 <div created="20140502035531373" modified="20140502035535940" title="$:/SiteSubtitle">
 <pre>The ThoughtWorks Quadcopter wiki</pre>
@@ -4282,7 +4341,7 @@ Error message and password prompt
 <div modified="20140502050503983" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
-<div list="[[TW Quadcopter Project]]" title="$:/StoryList">
+<div list="[[TW Quadcopter Project]] [[Flying in formation]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div dependents="$:/themes/tiddlywiki/vanilla" description="A clean theme that emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.0.10-beta">
@@ -4334,6 +4393,12 @@ Error message and password prompt
 * Should we be using mavlink? http://qgroundcontrol.org/mavlink/start
 * Should we save information to sdcard, black box style?</pre>
 </div>
+<div created="20140502051455999" modified="20140502051506865" title="Commodity Flight Controllers">
+<pre>
+References:
+
+* http://3drobotics.com/apm/</pre>
+</div>
 <div created="20140502041023164" modified="20140502041212637" title="Communicate to the ESCs using i2c">
 <pre>Why would we do this?
 
@@ -4342,8 +4407,7 @@ Error message and password prompt
 ** Buy some of these http://www.hobbyking.com/hobbyking/store/__42551__Afro_Slim_20Amp_Multi_rotor_Motor_Speed_Controller_SimonK_Firmware_.html</pre>
 </div>
 <div created="20140502035246906" modified="20140502044815961" title="Determine Euler angles from IMU data">
-<pre>
-How should this be done?
+<pre>How should this be done?
 
 * Kalman filters
 ** http://en.wikipedia.org/wiki/Kalman_filter
@@ -4384,7 +4448,7 @@ b = new Int8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) :uses 12 storage RAM blocks.
 
 * UTF-8 is not implemented (not enough memory)</pre>
 </div>
-<div created="20140502040307784" modified="20140502045131664" title="Flying in formation">
+<div created="20140502040307784" modified="20140502051956654" title="Flying in formation">
 <pre>To explore regarding position:
 
 * Doppler effect
@@ -4398,6 +4462,7 @@ b = new Int8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) :uses 12 storage RAM blocks.
 References:
 
 * http://dondodge.typepad.com/the_next_big_thing/2013/06/indoor-location-startups-innovating-indoor-positioning.html
+* http://diydrones.com/profiles/blog/show?id=705844%3ABlogPost%3A1517366
 
 To explore regarding communcation:
 
@@ -4409,8 +4474,7 @@ To explore regarding communcation:
 </pre>
 </div>
 <div created="20140502043732212" modified="20140502044004625" title="Free fall detection">
-<pre>
-The Accelerometer we use has free fall detection. 
+<pre>The Accelerometer we use has free fall detection. 
 
 Questions:
 
@@ -4437,8 +4501,7 @@ Then you can:
 </pre>
 </div>
 <div created="20140502043525054" modified="20140502045348153" title="Infrared">
-<pre>
-References:
+<pre>References:
 
 * http://diydrones.com/m/blogpost?id=705844%3ABlogPost%3A550570
 * http://www.naturalpoint.com/optitrack/
@@ -4471,18 +4534,16 @@ It is very easy to write code that will use more than the 45kb of memory. To mit
 </pre>
 </div>
 <div created="20140502044211819" modified="20140502044220844" title="mesh networking">
-<pre>
-References:
+<pre>References:
 
 * YOW talk at https://www.dropbox.com/s/fkbzkgezvx2xwgg/YOW-Night-Hands-on-with-the-IoT.pdf</pre>
 </div>
 <div created="20140502043604733" modified="20140502043609821" title="PID Tuning">
-<pre>
-References:
+<pre>References:
 
 * [[http://www.multiwii.com/wiki/index.php?title=PID]]</pre>
 </div>
-<div created="20140502033844755" modified="20140502045443158" title="Quadcopter">
+<div created="20140502033844755" modified="20140502051451373" title="Quadcopter">
 <pre>To achieve flight:
 
 * [[Memory Management]]
@@ -4506,6 +4567,10 @@ Nice to haves:
 * Continuous Deployment
 * Automated flight test on check in
 * Redundancy
+
+Alternatives:
+
+* [[Commodity Flight Controllers]]
 </pre>
 </div>
 <div created="20140502041820565" modified="20140502050152851" title="TW Quadcopter Project">
