@@ -8,13 +8,10 @@ async = require 'async'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 Table = require 'cli-table'
 
-howMuchMemory = (sourceFile, callback) ->
-  gulp.src(['./src/main/lib/almond-*.js',
-            './src/performance/memory/before.coffee',
-            sourceFile,
-            './src/performance/memory/after.coffee'])
+howMuchMemory = (sourceFile, sourceFiles, callback) ->
+  gulp.src(sourceFiles)
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
-      .pipe concat('all.js')
+      .pipe concat('performance.js')
       .pipe gulp.dest('build')
       .pipe espruino.deploy(
         serialNumber: '48DF67773330'
@@ -31,7 +28,22 @@ howMuchMemory = (sourceFile, callback) ->
         else
           callback("failed to determine memory for #{sourceFile}")
 
-printResults = (results) ->
+howMuchMemoryForAMD = (callback) ->
+  howMuchMemory('./src/main/lib/almond-*.js',
+                ['./src/performance/memory/before.coffee',
+                 './src/main/lib/almond-*.js',
+                 './src/performance/memory/after.coffee'],
+                callback)
+
+howMuchMemoryForFile = (sourceFile, callback) ->
+  howMuchMemory(sourceFile,
+                ['./src/main/lib/almond-*.js',
+                 './src/performance/memory/before.coffee',
+                 sourceFile,
+                 './src/performance/memory/after.coffee'],
+                callback)
+
+formatResults = (results) ->
   table = new Table(head: ['Source File', 'Memory Usage (blocks)'], colWidths: [50, 25])
   total = 0
   for result in results
@@ -39,15 +51,17 @@ printResults = (results) ->
     total += result.memoryUsage
 
   table.push(['Total', total])
-
-  gutil.log(table.toString())
-
+  table.toString()
 
 module.exports = ->
   files = glob.sync('./src/main/**/*.coffee')
 
-  async.mapSeries files, howMuchMemory, (error, results) ->
-    if error
-      gutil.log("failed!", error)
+  howMuchMemoryForAMD (amdError, amdResults) ->
+    if amdError
+      gutil.log "error!", amdError
     else
-      printResults(results)
+      async.mapSeries files, howMuchMemoryForFile, (filesError, fileResults) ->
+        if filesError
+          gutil.log "error!", filesError
+        else
+          console.log formatResults(fileResults.concat([amdResults]))
