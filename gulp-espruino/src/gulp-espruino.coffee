@@ -137,7 +137,7 @@ module.exports =
       echoOn: true
       idleReadTimeBeforeClose: 1000
       capture:
-        output: true
+        output: false
         input: true
       serialPortOptions:
         baudrate: 9600

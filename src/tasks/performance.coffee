@@ -8,18 +8,12 @@ async = require 'async'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 Table = require 'cli-table'
 
-howMuchMemory = (sourceFile, sourceFiles, callback) ->
+howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
   gulp.src(sourceFiles)
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('performance.js')
       .pipe gulp.dest('build')
-      .pipe espruino.deploy(
-        serialNumber: '48DF67773330'
-        echoOn: true
-        capture:
-          input: true
-          output: false
-        fakePath: '../Espruino/espruino')
+      .pipe espruino.deploy(options.espruino)
       .on 'data', (data) ->
         matches = /memory used: (.*)/.exec(data.contents.toString())
 
@@ -28,20 +22,23 @@ howMuchMemory = (sourceFile, sourceFiles, callback) ->
         else
           callback("failed to determine memory for #{sourceFile}")
 
-howMuchMemoryForAMD = (callback) ->
-  howMuchMemory('./src/main/lib/almond-*.js',
-                ['./src/performance/memory/before.coffee',
-                 './src/main/lib/almond-*.js',
-                 './src/performance/memory/after.coffee'],
-                callback)
+howMuchMemoryForAMD = (options, callback) ->
+    howMuchMemory(options
+                  './src/main/lib/almond-*.js',
+                  ['./src/performance/memory/before.coffee',
+                   './src/main/lib/almond-*.js',
+                   './src/performance/memory/after.coffee'],
+                  callback)
 
-howMuchMemoryForFile = (sourceFile, callback) ->
-  howMuchMemory(sourceFile,
-                ['./src/main/lib/almond-*.js',
-                 './src/performance/memory/before.coffee',
-                 sourceFile,
-                 './src/performance/memory/after.coffee'],
-                callback)
+howMuchMemoryForFile = (options) ->
+  (sourceFile, callback) ->
+    howMuchMemory(options,
+                  sourceFile,
+                  ['./src/main/lib/almond-*.js',
+                   './src/performance/memory/before.coffee',
+                   sourceFile,
+                   './src/performance/memory/after.coffee'],
+                  callback)
 
 formatResults = (results) ->
   table = new Table(head: ['Source File', 'Memory Usage (blocks)'], colWidths: [50, 25])
@@ -53,14 +50,14 @@ formatResults = (results) ->
   table.push(['Total', total])
   table.toString()
 
-module.exports = ->
+module.exports = (options) ->
   files = glob.sync('./src/main/**/*.coffee')
 
-  howMuchMemoryForAMD (amdError, amdResults) ->
+  howMuchMemoryForAMD options, (amdError, amdResults) ->
     if amdError
       gutil.log "error!", amdError
     else
-      async.mapSeries files, howMuchMemoryForFile, (filesError, fileResults) ->
+      async.mapSeries files, howMuchMemoryForFile(options), (filesError, fileResults) ->
         if filesError
           gutil.log "error!", filesError
         else
