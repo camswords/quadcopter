@@ -969,6 +969,17 @@
       "version": "0.8.0",
       "from": "async@",
       "resolved": "https://registry.npmjs.org/async/-/async-0.8.0.tgz"
+    },
+    "cli-table": {
+      "version": "0.3.0",
+      "from": "cli-table@",
+      "resolved": "https://registry.npmjs.org/cli-table/-/cli-table-0.3.0.tgz",
+      "dependencies": {
+        "colors": {
+          "version": "0.6.2",
+          "from": "colors@0.6.2"
+        }
+      }
     }
   }
 }

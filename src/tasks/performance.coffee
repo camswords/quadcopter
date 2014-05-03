@@ -6,6 +6,7 @@ gulpif = require 'gulp-if'
 glob = require 'glob'
 async = require 'async'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
+Table = require 'cli-table'
 
 howMuchMemory = (sourceFile, callback) ->
   gulp.src(['./src/main/lib/almond-*.js',
@@ -30,6 +31,18 @@ howMuchMemory = (sourceFile, callback) ->
         else
           callback("failed to determine memory for #{sourceFile}")
 
+printResults = (results) ->
+  table = new Table(head: ['Source File', 'Memory Usage (blocks)'], colWidths: [50, 25])
+  total = 0
+  for result in results
+    table.push([result.sourceFile, result.memoryUsage])
+    total += result.memoryUsage
+
+  table.push(['Total', total])
+
+  gutil.log(table.toString())
+
+
 module.exports = ->
   files = glob.sync('./src/main/**/*.coffee')
 
@@ -37,10 +50,4 @@ module.exports = ->
     if error
       gutil.log("failed!", error)
     else
-      total = 0
-      for result in results
-        gutil.log(result.sourceFile, result.memoryUsage)
-        total += result.memoryUsage
-
-      gutil.log('total:', total)
-
+      printResults(results)
