@@ -23,6 +23,7 @@
     "gulp-order": "*",
     "gulp-clean": "*",
     "gulp-if": "*",
-    "temp": "*"
+    "temp": "*",
+    "glob": "*"
   }
 }

@@ -1,0 +1,2 @@
+
+memoryUsedBefore = process.memory().usage
