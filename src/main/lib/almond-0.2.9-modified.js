@@ -15,9 +15,12 @@
  * - hasProp implementation changed to overcome limitation of not implemented Object.prototype.hasOwnProperty method
  * - Added a rudimentary "context" so that modules can be overridden during testing
  * - Added the ability for a client to get the names of all of the defined modules
+ * - removed define.amd: its not used
+ * - removed _defined: its not used
+ * - dont define requirejs, its not used
  */
 
-var requirejs, require, define;
+var require, define;
 (function (undef) {
     var main, req, makeMap, handlers, deepCopy,
         config = {},
@@ -348,7 +351,7 @@ var requirejs, require, define;
         }
     };
 
-    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
+    require = req = function (deps, callback, relName, forceSync, alt) {
         if (typeof deps === "string") {
             if (handlers[deps]) {
                 //callback in this case is really relName
@@ -416,11 +419,6 @@ var requirejs, require, define;
         return req(cfg);
     };
 
-    /**
-     * Expose module registry for debugging and tooling
-     */
-    requirejs._defined = context.defined;
-
     define = function (name, deps, callback) {
 
         //This module may not have dependencies
@@ -449,9 +447,5 @@ var requirejs, require, define;
 
     define.override = function(name, value) {
         context.overrides[name] = value;
-    };
-
-    define.amd = {
-        jQuery: true
     };
 }());
