@@ -959,6 +959,16 @@
           "from": "inherits@2"
         }
       }
+    },
+    "require-dir": {
+      "version": "0.1.0",
+      "from": "require-dir@",
+      "resolved": "https://registry.npmjs.org/require-dir/-/require-dir-0.1.0.tgz"
+    },
+    "async": {
+      "version": "0.8.0",
+      "from": "async@",
+      "resolved": "https://registry.npmjs.org/async/-/async-0.8.0.tgz"
     }
   }
 }
