@@ -7,8 +7,9 @@
 # defined globally.
 
 # Error isn't defined by the espruino.
-# If anyone creates one, send the error to the fail whale.
-Error = (message) ->
-  require ['utility/fail-whale'], (failWhale) ->
-    failWhale(message)
+
+# Don't pass this error to the fail whale, if the fail whale
+# can't be loaded then we end up in a recursive loop until we
+# stack overflow.
+Error = (message) -> console.log('ERROR FOUND:', message)
 

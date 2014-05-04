@@ -1,4 +1,3 @@
 
 define 'utility/fail-whale', ->
-  (message) ->
-    console.log('FAIL WHALE: ', message)
+  (message) -> new Error('FAIL WHALE: ', message)
