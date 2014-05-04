@@ -129,7 +129,7 @@ createEspruino = (config) ->
         espruinoPort = _.find ports, (port) -> port.manufacturer == 'STMicroelectronics'
 
         if !espruinoPort
-          connected.reject("Espruino with serial number '#{config.connection.serialNumber}' not found.")
+          connected.reject("Unable to find connected Espruino.")
           return connected.promise
 
         connectToSerialPort(espruinoPort.comName)
