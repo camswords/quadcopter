@@ -8,7 +8,7 @@ async = require 'async'
 Table = require 'cli-table'
 Q = require 'q'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
-minify = require './espruino-minify'
+minify = require './minify'
 
 howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
   gulp.src(sourceFiles)

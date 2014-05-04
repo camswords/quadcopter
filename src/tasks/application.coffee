@@ -4,7 +4,7 @@ concat = require 'gulp-concat'
 gulpif = require 'gulp-if'
 extend = require 'extend'
 gutil = require 'gulp-util'
-minify = require './espruino-minify'
+minify = require './minify'
 
 module.exports = (overrides) ->
   defaults = excludeStartupScript: false
