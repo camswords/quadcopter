@@ -7,6 +7,7 @@ glob = require 'glob'
 async = require 'async'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 Table = require 'cli-table'
+Q = require 'q'
 
 howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
   gulp.src(sourceFiles)
@@ -43,7 +44,9 @@ howMuchMemoryForFile = (options) ->
 formatResults = (results) ->
   table = new Table(head: ['Source File', 'Memory Usage (blocks)'], colWidths: [50, 25])
   total = 0
-  for result in results
+  sortedResults = results.sort((a, b) -> a.memoryUsage - b.memoryUsage)
+
+  for result in sortedResults
     table.push([result.sourceFile, result.memoryUsage])
     total += result.memoryUsage
 
@@ -53,12 +56,10 @@ formatResults = (results) ->
 module.exports = (options) ->
   files = glob.sync('./src/main/**/*.coffee')
 
-  howMuchMemoryForAMD options, (amdError, amdResults) ->
-    if amdError
-      gutil.log "error!", amdError
-    else
-      async.mapSeries files, howMuchMemoryForFile(options), (filesError, fileResults) ->
-        if filesError
-          gutil.log "error!", filesError
-        else
-          console.log formatResults(fileResults.concat([amdResults]))
+  amdMemoryMeasured = Q.denodeify(howMuchMemoryForAMD)(options)
+  eachFileMemoryMeasured = Q.denodeify(async.mapSeries)(files, howMuchMemoryForFile(options))
+
+  Q.all([eachFileMemoryMeasured, amdMemoryMeasured])
+    .spread (fileResults, amdResults) ->
+      gutil.log formatResults(fileResults.concat([amdResults]))
+    .done()
