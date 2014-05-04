@@ -65,7 +65,7 @@ createFakeEspruino = (config) ->
             commandExecuted.reject(closeError)
 
           else
-            exec "#{config.fakePath} #{info.path}", (execError, stdout, stderr) ->
+            exec "#{config.connection.fakePath} #{info.path}", (execError, stdout, stderr) ->
               if execError
                 commandExecuted.reject(execError)
               else
@@ -95,27 +95,44 @@ createEspruino = (config) ->
 
       serialPort.open -> connected.resolve(serialPort)
 
-    if !config.port && !config.serialNumber
-      connected.reject('Espruino port or serial number is not specified.')
+    if !config.connection.port &&
+       !config.connection.serialNumber &&
+       !config.connection.fakePath &&
+       !config.connection.findFirst
+      connected.reject('Espruino port, serial number, find first or fake path is not specified.')
       return connected.promise
 
-    if config.port
-      connectToSerialPort(config.port)
+    if config.connection.port
+      connectToSerialPort(config.connection.port)
 
-    if !config.port && config.serialNumber
+    else if config.connection.serialNumber
       attachedDevices.list (error, ports) ->
         if error
           connected.reject("Failed to find attached serial devices. Error is #{error}.")
           return connected.promise
 
-        espruinoPort = _.find(ports, (port) -> port.serialNumber == config.serialNumber)
+        espruinoPort = _.find(ports, (port) -> port.serialNumber == config.connection.serialNumber)
 
         if !espruinoPort
-          connected.reject("Espruino with serial number '#{config.serialNumber}' not found.")
+          connected.reject("Espruino with serial number '#{config.connection.serialNumber}' not found.")
           return connected.promise
 
         connectToSerialPort(espruinoPort.comName)
 
+    else if config.connection.findFirst
+      attachedDevices.list (error, ports) ->
+        if error
+          connected.reject("Failed to find any attached espruino devices. Error is #{error}.")
+          return connected.promise
+
+        # totally a bad way to find it - will have to do for the moment.
+        espruinoPort = _.find ports, (port) -> port.manufacturer == 'STMicroelectronics'
+
+        if !espruinoPort
+          connected.reject("Espruino with serial number '#{config.connection.serialNumber}' not found.")
+          return connected.promise
+
+        connectToSerialPort(espruinoPort.comName)
     connected.promise
 
   close: ->
@@ -143,11 +160,16 @@ module.exports =
         baudrate: 9600
       reset: true
       save: true
-      fakePath: null
+      connection:
+        fakePath: null
+        findFirst: true
+        serialNumber: null
+        port: null
+
 
     config = extend({}, defaults, options)
 
-    if config.fakePath
+    if config.connection.fakePath
       espruino = createFakeEspruino(config)
     else
       espruino = createEspruino(config)
@@ -163,11 +185,11 @@ module.exports =
 
       if file.isBuffer()
         espruino.connect()
-          .then(-> espruino.send("reset();\n") if config.reset && !config.fakePath)
-          .then(-> espruino.send('echo(0);\n') if !config.echoOn && !config.fakePath)
+          .then(-> espruino.send("reset();\n") if config.reset && !config.connection.fakePath)
+          .then(-> espruino.send('echo(0);\n') if !config.echoOn && !config.connection.fakePath)
           .then(-> espruino.send("{ #{file.contents.toString()} }\n"))
-          .then(-> espruino.send('echo(1);\n') if !config.echoOn && !config.fakePath)
-          .then(-> espruino.send("save();\n") if config.save && !config.fakePath)
+          .then(-> espruino.send('echo(1);\n') if !config.echoOn && !config.connection.fakePath)
+          .then(-> espruino.send("save();\n") if config.save && !config.connection.fakePath)
           .then(-> publish.content(espruino.log()))
           .timeout(config.deployTimeout, "Deploy timed out after #{config.deployTimeout} milliseconds.")
           .fail((error) -> publish.error("gulp-espruino found an error, barfing. #{error}\nLog: #{espruino.log()}"))
