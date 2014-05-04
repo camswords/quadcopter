@@ -5,13 +5,17 @@ concat = require 'gulp-concat'
 gulpif = require 'gulp-if'
 glob = require 'glob'
 async = require 'async'
-espruino = require '../../gulp-espruino/src/gulp-espruino'
 Table = require 'cli-table'
 Q = require 'q'
+espruino = require '../../gulp-espruino/src/gulp-espruino'
+minify = require './espruino-minify'
 
 howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
   gulp.src(sourceFiles)
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
+      .pipe concat('performance-unminified.js')
+      .pipe gulp.dest('build')
+      .pipe minify()
       .pipe concat('performance.js')
       .pipe gulp.dest('build')
       .pipe espruino.deploy(options.espruino)

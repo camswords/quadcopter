@@ -27,6 +27,7 @@
     "glob": "*",
     "require-dir": "*",
     "async": "*",
-    "cli-table": "*"
+    "cli-table": "*",
+    "gulp-uglify": "*"
   }
 }

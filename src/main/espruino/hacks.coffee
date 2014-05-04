@@ -4,12 +4,9 @@
 # regarding the espruino.
 
 # This is deliberately not an AMD module. These variables should be
-# defined globally.
+# defined globally. This ensures that these hacks work even when AMD loading fails.
 
-# Error isn't defined by the espruino.
+# This file should be loaded first onto the Espruino.
 
-# Don't pass this error to the fail whale, if the fail whale
-# can't be loaded then we end up in a recursive loop until we
-# stack overflow.
-Error = (message) -> console.log('ERROR FOUND:', message)
-
+# Use instead of throwing 'new Error'. Replace this with Error if Exceptions are ever implemented.
+ReportError = (message) -> console.log('ERROR FOUND:', message)

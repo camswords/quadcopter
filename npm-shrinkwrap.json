@@ -980,6 +980,50 @@
           "from": "colors@0.6.2"
         }
       }
+    },
+    "gulp-uglify": {
+      "version": "0.2.1",
+      "from": "gulp-uglify@",
+      "dependencies": {
+        "deepmerge": {
+          "version": "0.2.7",
+          "from": "deepmerge@~0.2.7"
+        },
+        "uglify-js": {
+          "version": "2.4.13",
+          "from": "uglify-js@~2.4.6",
+          "dependencies": {
+            "async": {
+              "version": "0.2.10",
+              "from": "async@~0.2.6"
+            },
+            "source-map": {
+              "version": "0.1.33",
+              "from": "source-map@~0.1.33",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4"
+                }
+              }
+            },
+            "optimist": {
+              "version": "0.3.7",
+              "from": "optimist@~0.3.5",
+              "dependencies": {
+                "wordwrap": {
+                  "version": "0.0.2",
+                  "from": "wordwrap@~0.0.2"
+                }
+              }
+            },
+            "uglify-to-browserify": {
+              "version": "1.0.2",
+              "from": "uglify-to-browserify@~1.0.0"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -18,6 +18,7 @@
  * - removed define.amd: its not used
  * - removed _defined: its not used
  * - dont define requirejs, its not used
+ * - replace throw new Error with ReportError, Error isn't defined and throws isn't implemeted on an Espruino.
  */
 
 var require, define;
@@ -188,7 +189,8 @@ var require, define;
         }
 
         if (!hasProp(context.defined, name) && !hasProp(context.defining, name)) {
-            throw new Error('No ' + name);
+            ReportError('No ' + name);
+            return -1;
         }
         return context.defined[name];
     }
@@ -326,7 +328,8 @@ var require, define;
                     map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
                     args[i] = context.defined[depName];
                 } else {
-                    throw new Error(name + ' missing ' + depName);
+                    ReportError(name + ' missing ' + depName);
+                    return -1;
                 }
             }
 

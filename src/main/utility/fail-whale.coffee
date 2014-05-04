@@ -1,3 +1,3 @@
 
 define 'utility/fail-whale', ->
-  (message) -> new Error('FAIL WHALE: ', message)
+  (message) -> ReportError('FAIL WHALE: ', message)
