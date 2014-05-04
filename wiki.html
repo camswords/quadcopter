@@ -3488,7 +3488,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Flying in formation" modified="20140502052558221" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Memory Management" modified="20140504062812319" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4367,6 +4367,34 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Flying in formation&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 237,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 140,
+            &quot;right&quot;: 265,
+            &quot;bottom&quot;: 253,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
     }
 ]</pre>
 </div>
@@ -4397,7 +4425,7 @@ Error message and password prompt
 <div modified="20140502050503983" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
-<div list="[[TW Quadcopter Project]] Quadcopter [[Flying in formation]]" title="$:/StoryList">
+<div list="[[TW Quadcopter Project]] Quadcopter [[Memory Management]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div dependents="$:/themes/tiddlywiki/vanilla" description="A clean theme that emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.0.10-beta">
@@ -4450,8 +4478,7 @@ Error message and password prompt
 * Should we save information to sdcard, black box style?</pre>
 </div>
 <div created="20140502051455999" modified="20140502051506865" title="Commodity Flight Controllers">
-<pre>
-References:
+<pre>References:
 
 * http://3drobotics.com/apm/</pre>
 </div>
@@ -4572,15 +4599,15 @@ References
 * https://www.sparkfun.com/products/10724
 * https://github.com/ptrbrtz/razor-9dof-ahrs/tree/master/Arduino/Razor_AHRS</pre>
 </div>
-<div created="20140502034418412" modified="20140502035056415" title="Memory Management">
+<div created="20140502034418412" modified="20140504062812318" title="Memory Management">
 <pre>The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
 
 It is very easy to write code that will use more than the 45kb of memory. To mitigate this:
 
 * Minify code, it makes a big difference (~30% reduction)
-** remove whitespace
-** make variable names smaller so that the names allocate less space
-** optimise where possible
+** remove whitespace (done)
+** make variable names smaller so that the names allocate less space (not done - breaking)
+** optimise where possible (could optimise defines to convert to Int8Array)
 ** make sure all of this is covered by tests, initial exploration into this area has found some funny bugs
 * Write a test harness that can all us to optimise us how much memory is used by showing us
 ** to define a module
