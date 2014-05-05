@@ -3488,7 +3488,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Memory Management" modified="20140504072849774" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Memory Management" modified="20140505123248407" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4401,6 +4401,58 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 237,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 140,
+            &quot;right&quot;: 265,
+            &quot;bottom&quot;: 253,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
     }
 ]</pre>
 </div>
@@ -4605,7 +4657,7 @@ References
 * https://www.sparkfun.com/products/10724
 * https://github.com/ptrbrtz/razor-9dof-ahrs/tree/master/Arduino/Razor_AHRS</pre>
 </div>
-<div created="20140502034418412" modified="20140504072849773" title="Memory Management">
+<div created="20140502034418412" modified="20140505123248406" title="Memory Management">
 <pre>The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
 
 It is very easy to write code that will use more than the 45kb of memory. To mitigate this:
@@ -4613,14 +4665,19 @@ It is very easy to write code that will use more than the 45kb of memory. To mit
 * Minify code, it makes a big difference (~30% reduction)
 ** remove whitespace (done)
 ** make variable names smaller so that the names allocate less space (not done - breaking)
-** optimise where possible (could optimise defines to convert to Int8Array)
+** optimise where possible (could optimise defines to convert to Int8Array, would this even be worth the effort?)
 ** make sure all of this is covered by tests, initial exploration into this area has found some funny bugs
 * Write a test harness that can all us to optimise us how much memory is used by showing us
 ** to define a module (done)
 ** to execute that module (harder)
 * Use Int8Arrays where possible (arrays are very inefficient)
 * Upgrade to a STM32F4 processor
+** Buy a STM32-F4 discovery board (unsupported) (bought!)
+*** Install instructions http://youtu.be/t_NQ0ZlgjMU
+** Replace the chip on the espruino board with a STM32F?
+*** How to drag solder a STM32 chip http://youtu.be/h5OFMd-sMrk
 * Dont remember the defined in context stuff in release mode
+* Swap out loaded modules using the flash memory
 </pre>
 </div>
 <div created="20140502044211819" modified="20140502044220844" title="mesh networking">
