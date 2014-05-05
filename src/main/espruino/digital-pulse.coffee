@@ -1,2 +1,2 @@
-
-define 'espruino/digital-pulse', -> digitalPulse
+define 'espruino/digital-pulse', ['configuration'], (config) ->
+  config.overrides.digitalPulse

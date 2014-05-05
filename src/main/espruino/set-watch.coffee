@@ -1,1 +1,2 @@
-define 'espruino/set-watch', -> setWatch
+define 'espruino/set-watch', ['configuration'], (config) ->
+  config.overrides.setWatch

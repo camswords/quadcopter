@@ -7,12 +7,15 @@ gutil = require 'gulp-util'
 minify = require './minify'
 
 module.exports = (overrides) ->
-  defaults = excludeStartupScript: false
+  defaults =
+    excludeStartupScript: false
+    configuration: 'local'
   options = extend({}, defaults, overrides)
 
   src = []
   src.push('./src/main/espruino/hacks.coffee')
   src.push('./src/main/lib/almond-*.js')
+  src.push("./src/configuration/#{options.configuration}.coffee")
   src.push('!./src/main/application.coffee') if options.excludeStartupScript
   src.push('./src/main/**/*.coffee')
 

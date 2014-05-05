@@ -1,4 +1,7 @@
 define 'configuration', ->
+  overrides:
+    digitalPulse: digitalPulse
+    setWatch: setWatch
   throttle:
     inputPin: A13
   propeller:

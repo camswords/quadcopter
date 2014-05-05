@@ -6,8 +6,9 @@ gutil = require 'gulp-util'
 eventStream = require 'event-stream'
 order = require 'gulp-order'
 application = require './application'
+extend = require 'extend'
 
-module.exports = ->
+module.exports = (overrides) ->
   testFiles = ->
     gulp.src(['./src/test/**/*.coffee', '!./src/test/**/tests.coffee'])
         .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
@@ -23,7 +24,12 @@ module.exports = ->
     .pipe concat('tests.js')
     .pipe gulp.dest('build')
 
+  defaults =
+    excludeStartupScript: true
+    configuration: 'local'
 
-  eventStream.merge(application(excludeStartupScript: true), tests)
+  options = extend({}, defaults, overrides)
+
+  eventStream.merge(application(options), tests)
     .pipe order(['**/application.js', '**/tests.js'])
     .pipe concat('all.js')
