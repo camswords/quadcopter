@@ -3,9 +3,13 @@ define 'quadcopter', [
          watch, scheduler, throttleRepository, adjustThrottles, config) ->
 
   fly: ->
-    watch
+    watch.fallingEdge
       name: 'throttle'
       pin: config.throttle.inputPin
       onChange: (throttle) -> throttleRepository.save(throttle)
 
-    scheduler.continuously().execute 'adjustThrottles', adjustThrottles
+    scheduler.continuously().execute 'adjust-throttles', adjustThrottles
+
+  kill: ->
+    scheduler.stop 'adjust-throttles'
+    watch.clearAll()

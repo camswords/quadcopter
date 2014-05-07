@@ -5,10 +5,10 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
       timesCalled = 0
       startTime = getTime()
 
-      scheduledJob = scheduler.every(100).execute 'foo', ->
+      scheduler.every(100).execute 'foo', ->
         timesCalled++
         if timesCalled == 5
-          scheduledJob.stop()
+          scheduler.stop 'foo'
 
           timeTaken = getTime() - startTime
           test.expect(timeTaken).toBeLessThan(0.505)

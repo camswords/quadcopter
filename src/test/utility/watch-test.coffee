@@ -5,7 +5,7 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     setWatch = -> calledWithArguments = arguments.slice(0)
 
     specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
-      watch
+      watch.fallingEdge
         name: 'mywatch',
         pin: 56,
         onChange: ->
@@ -17,7 +17,7 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     setWatch = (callback) -> callback(time: 1397984610.738292932510, lastTime: 1397984610.737293958663)
 
     specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
-      watch
+      watch.fallingEdge
         name: 'mywatch',
         pin: 1,
         onChange: (value) ->
@@ -28,7 +28,7 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     setWatch = (callback) -> callback(time: 1397984610.738292932510, lastTime: NaN)
 
     specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
-      watch
+      watch.fallingEdge
         name: 'mywatch',
         pin: 1,
         onChange: -> test.fail('expect on change not to be called')
@@ -42,7 +42,7 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
 
     stubs = { 'espruino/set-watch': setWatch, 'utility/fail-whale': failWhale }
     specHelper.require 'utility/watch', stubs, (watch) ->
-      watch()
+      watch.fallingEdge()
       test.expect(capturedMessage).toBe('failed to start watch[undefined]. pin (undefined), onChange and name must be specified.')
       test.done()
 
@@ -53,6 +53,16 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
 
     stubs = { 'espruino/set-watch': setWatch, 'utility/fail-whale': failWhale }
     specHelper.require 'utility/watch', stubs, (watch) ->
-      watch name: 'mywatch', onChange: ->
+      watch.fallingEdge name: 'mywatch', onChange: ->
       test.expect(capturedMessage).toBe('failed to start watch[mywatch]. pin (undefined), onChange and name must be specified.')
+      test.done()
+
+  it "watch should clear all watches", (test) ->
+    called = false
+    clearWatch = -> called = true
+
+    stubs = { 'espruino/clear-watch': clearWatch }
+    specHelper.require 'utility/watch', stubs, (watch) ->
+      watch.clearAll()
+      test.expect(called).toBeTruthy()
       test.done()
