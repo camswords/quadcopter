@@ -8,4 +8,4 @@ define 'quadcopter', [
       pin: config.throttle.inputPin
       onChange: (throttle) -> throttleRepository.save(throttle)
 
-    scheduler.continuously().execute(adjustThrottles)
+    scheduler.continuously().execute 'adjustThrottles', adjustThrottles

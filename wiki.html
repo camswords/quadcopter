@@ -3488,7 +3488,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Memory Management" modified="20140505123638055" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Memory Management" modified="20140507121637539" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4459,6 +4459,87 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;What to buy&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 181,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 197,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'What to buy'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;What to buy&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 237,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 140,
+            &quot;right&quot;: 265,
+            &quot;bottom&quot;: 253,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
     }
 ]</pre>
 </div>
@@ -4477,7 +4558,7 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div modified="20140502051416502" title="$:/ShowEditPreview">
+<div modified="20140505125953854" title="$:/ShowEditPreview">
 <pre>no</pre>
 </div>
 <div created="20140502035531373" modified="20140502035535940" title="$:/SiteSubtitle">
@@ -4663,8 +4744,24 @@ References
 * https://www.sparkfun.com/products/10724
 * https://github.com/ptrbrtz/razor-9dof-ahrs/tree/master/Arduino/Razor_AHRS</pre>
 </div>
-<div created="20140502034418412" modified="20140505123638053" title="Memory Management">
+<div created="20140502034418412" modified="20140507121637538" title="Memory Management">
 <pre>The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
+
+Details:
+
+```
+Freshly (soft) resetted espruino (1v62): {&quot;free&quot;:1781,&quot;usage&quot;:19,&quot;total&quot;:1800 }
+```
+```
+Freshly (soft) resetted linux espruino process (1v61): {&quot;free&quot;:1011,&quot;usage&quot;:13,&quot;total&quot;:1024 }
+```
+```
+After defining the application modules (as of 5th May 2014) on an espruino (1v62): 
+{&quot;free&quot;:656,&quot;usage&quot;:1144,&quot;total&quot;:1800 }
+```
+```
+After defining the application modules (as of 5th May 2014) on the linux espruino process (1v61): {&quot;free&quot;:1069,&quot;usage&quot;:979,&quot;total&quot;:2048,&quot;history&quot;:438}
+```
 
 It is very easy to write code that will use more than the 45kb of memory. To mitigate this:
 
@@ -4676,7 +4773,6 @@ It is very easy to write code that will use more than the 45kb of memory. To mit
 * Write a test harness that can all us to optimise us how much memory is used by showing us
 ** to define a module (done)
 ** to execute that module (harder)
-* Use Int8Arrays where possible (arrays are very inefficient)
 * Upgrade to a STM32F4 processor
 ** Buy a STM32-F4 discovery board (unsupported) (bought!)
 *** Install instructions http://youtu.be/t_NQ0ZlgjMU
@@ -4684,7 +4780,9 @@ It is very easy to write code that will use more than the 45kb of memory. To mit
 *** How to drag solder a STM32 chip http://youtu.be/h5OFMd-sMrk
 * Dont remember the defined in context stuff in release mode
 * Swap out loaded modules using the flash memory
-* Apparently the Espruino STM chip has more memory than it advertises http://forum.espruino.com/conversations/1246/</pre>
+* Apparently the Espruino STM chip has more memory than it advertises http://forum.espruino.com/conversations/1246/
+* remove AMD (totally, or just parts that I don't use?)
+* execute defined modules on &quot;nextTick&quot; so that I can see a better sample rate of memory measurement</pre>
 </div>
 <div created="20140502044211819" modified="20140502044220844" title="mesh networking">
 <pre>References:
@@ -4735,7 +4833,7 @@ Alternatives:
 
 [[Flying in formation]]</pre>
 </div>
-<div created="20140502035824518" modified="20140502041554587" title="What to buy">
+<div created="20140502035824518" modified="20140507081027026" title="What to buy">
 <pre>Nice to have parts
 
 * Bench Top Power Supply
@@ -4744,6 +4842,7 @@ Alternatives:
 ** LCD showing current draw and voltage provided is nice to have
 * Oscilloscope
 ** Picoscope, software and data logger? Would be very useful diagnosing the throttle signal.
+* One of those cool blower things that makes it easy to remove ICs from a board.
 * Quad parts - a range so we can compare different parts for different sizes.
 * Backup parts so that we are not delayed because of part failure.</pre>
 </div>
