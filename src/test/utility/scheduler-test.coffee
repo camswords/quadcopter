@@ -19,13 +19,13 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
     specHelper.require 'utility/scheduler', (scheduler) ->
       startTime = getTime()
 
-      scheduler.after(200).execute 'bar', ->
+      scheduler.after(200).execute ->
         timeTaken = getTime() - startTime
         test.expect(timeTaken).toBeLessThan(0.205)
         test.expect(timeTaken).toBeGreaterThan(0.199)
         test.done()
 
-  it "scheduler should stop scheduled job", (test) ->
+  it "scheduler should stop a specific scheduled job", (test) ->
     specHelper.require 'utility/scheduler', (scheduler) ->
       timesCalled = 0
 
@@ -38,6 +38,21 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
         timesCalled++
 
         scheduler.stop 'scheduledJob'
+        setTimeout(waitABit, 300)
+
+  it "scheduler should stop all scheduled jobs", (test) ->
+    specHelper.require 'utility/scheduler', (scheduler) ->
+      timesCalled = 0
+
+      waitABit = ->
+        test.expect(timesCalled).toBe(1)
+        test.expect(scheduler.jobs['another.scheduled.job']).toBeFalsy()
+        test.done()
+
+      scheduler.every(50).execute 'another.scheduled.job', ->
+        timesCalled++
+
+        scheduler.stopAll()
         setTimeout(waitABit, 300)
 
   it "scheduler should continue unfased when stopping non existant scheduled job", (test) ->

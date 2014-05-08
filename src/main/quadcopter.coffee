@@ -11,5 +11,5 @@ define 'quadcopter', [
     scheduler.continuously().execute 'adjust-throttles', adjustThrottles
 
   kill: ->
-    scheduler.stop 'adjust-throttles'
+    scheduler.stopAll()
     watch.clearAll()
