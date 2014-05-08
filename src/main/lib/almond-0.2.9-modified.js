@@ -41,15 +41,6 @@ var require, define;
         return (prop in obj);
     }
 
-    function makeRequire(relName, forceSync) {
-        return function () {
-            //A version of a require function that passes a moduleName
-            //value for items that may need to
-            //look up paths relative to the moduleName
-            return req.apply(undef, aps.call(arguments, 0).concat([relName, forceSync]));
-        };
-    }
-
     function callDep(name) {
         if (hasProp(context.overrides, name)) {
             return context.overrides[name];
@@ -69,12 +60,6 @@ var require, define;
         return context.defined[name];
     }
 
-    function makeConfig(name) {
-        return function () {
-            return (config && config.config && config.config[name]) || {};
-        };
-    }
-
     deepCopy = function(destination, source) {
       for (var property in source) {
         if (typeof source[property] === "object" && source[property] !== null && destination[property]) {
@@ -86,7 +71,7 @@ var require, define;
       return destination;
     };
 
-    main = function (name, deps, callback, relName) {
+    main = function (name, deps, callback) {
         var depName, ret, i,
             args = [],
             callbackType = typeof callback,
@@ -128,27 +113,6 @@ var require, define;
     };
 
     require = req = function (deps, callback, relName, forceSync, alt) {
-        if (!deps.splice) {
-            //deps is a config object, not an array.
-            config = deps;
-            if (config.deps) {
-                req(config.deps, config.callback);
-            }
-            if (!callback) {
-                return;
-            }
-
-            if (callback.splice) {
-                //callback is an array, which means it is a dependency list.
-                //Adjust args if there are dependencies
-                deps = callback;
-                callback = relName;
-                relName = null;
-            } else {
-                deps = undef;
-            }
-        }
-
         //Support require(['a'])
         callback = callback || function () {};
 
