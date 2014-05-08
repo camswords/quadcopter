@@ -18,6 +18,8 @@ gulp.task 'deploy', ['clean'], ->
        .on 'data', (data) -> gutil.log(data.contents.toString())
 
 gulp.task 'test', ['clean'], ->
-  gulps.tests(configuration: 'local')
+  gulps.tests(configuration: 'test')
+       .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
+       .on 'data', (data) -> gutil.log(data.contents.toString())
        .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
        .on 'data', (data) -> gutil.log(data.contents.toString())

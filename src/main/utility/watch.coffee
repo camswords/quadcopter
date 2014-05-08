@@ -14,6 +14,6 @@ define 'utility/watch', ['espruino/set-watch', 'espruino/clear-watch', 'utility/
     else
       failWhale("failed to start watch[#{options?.name}]. pin (#{options?.pin}), onChange and name must be specified.")
 
-  self.clearAll = -> clearWatch
+  self.clearAll = -> clearWatch()
 
   self
