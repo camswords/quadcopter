@@ -10,6 +10,7 @@ module.exports = (overrides) ->
   defaults =
     excludeStartupScript: false
     configuration: 'local'
+    additionalSourceFiles: []
   options = extend({}, defaults, overrides)
 
   src = []
@@ -19,7 +20,7 @@ module.exports = (overrides) ->
   src.push('!./src/main/application.coffee') if options.excludeStartupScript
   src.push('./src/main/**/*.coffee')
 
-  gulp.src(src)
+  gulp.src(src.concat(options.additionalSourceFiles))
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('application-unminified.js')
       .pipe gulp.dest('build')

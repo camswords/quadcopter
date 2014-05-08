@@ -21,5 +21,11 @@ gulp.task 'test', ['clean'], ->
   gulps.tests(configuration: 'test')
        .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
        .on 'data', (data) -> gutil.log(data.contents.toString())
+
+gulp.task 'deploy-local', ['clean'], ->
+  gulps.application(
+          configuration: 'performance'
+          excludeStartupScript: true
+          additionalSourceFiles: ['./src/performance/sample-running-quadcopter.coffee'])
        .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
        .on 'data', (data) -> gutil.log(data.contents.toString())
