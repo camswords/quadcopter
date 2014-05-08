@@ -26,7 +26,7 @@
 
 var require, define;
 (function (undef) {
-    var main, req, makeMap, handlers, deepCopy,
+    var main, req, handlers, deepCopy,
         config = {},
         aps = [].slice,
         context = {
@@ -50,12 +50,6 @@ var require, define;
         };
     }
 
-    function makeLoad(depName) {
-        return function (value) {
-            context.defined[depName] = value;
-        };
-    }
-
     function callDep(name) {
         if (hasProp(context.overrides, name)) {
             return context.overrides[name];
@@ -75,50 +69,11 @@ var require, define;
         return context.defined[name];
     }
 
-    function splitPrefix(name) {
-        return [undefined, name];
-    }
-
-    /**
-     * Makes a name map, normalizing the name, and using a plugin
-     * for normalization if necessary. Grabs a ref to plugin
-     * too, as an optimization.
-     */
-    makeMap = function (name, relName) {
-        //Using ridiculous property names for space reasons
-        return {
-            f: name,
-            n: name
-        };
-    };
-
     function makeConfig(name) {
         return function () {
             return (config && config.config && config.config[name]) || {};
         };
     }
-
-    handlers = {
-        require: function (name) {
-            return makeRequire(name);
-        },
-        exports: function (name) {
-            var e = context.defined[name];
-            if (typeof e !== 'undefined') {
-                return e;
-            } else {
-                return (context.defined[name] = {});
-            }
-        },
-        module: function (name) {
-            return {
-                id: name,
-                uri: '',
-                exports: context.defined[name],
-                config: makeConfig(name)
-            };
-        }
-    };
 
     deepCopy = function(destination, source) {
       for (var property in source) {
@@ -132,13 +87,10 @@ var require, define;
     };
 
     main = function (name, deps, callback, relName) {
-        var depName, ret, map, i,
+        var depName, ret, i,
             args = [],
             callbackType = typeof callback,
             usingExports;
-
-        //Use name if no relName
-        relName = relName || name;
 
         //Call the callback to define the module, if necessary.
         if (callbackType === 'undefined' || callbackType === 'function') {
@@ -147,24 +99,13 @@ var require, define;
             //Default to [require, exports, module] if no deps
             deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
             for (i = 0; i < deps.length; i += 1) {
-                map = makeMap(deps[i], relName);
-                depName = map.f;
+                depName = deps[i];
 
-                //Fast path CommonJS standard dependencies.
-                if (depName === "require") {
-                    args[i] = handlers.require(name);
-                } else if (depName === "exports") {
-                    //CommonJS module spec 1.1
-                    args[i] = handlers.exports(name);
-                    usingExports = true;
-                } else if (hasProp(context.defined, depName) ||
-                           hasProp(context.waiting, depName) ||
-                           hasProp(context.defining, depName) ||
-                           hasProp(context.overrides, depName)) {
+                if (hasProp(context.defined, depName) ||
+                    hasProp(context.waiting, depName) ||
+                    hasProp(context.defining, depName) ||
+                    hasProp(context.overrides, depName)) {
                     args[i] = callDep(depName);
-                } else if (map.p) {
-                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
-                    args[i] = context.defined[depName];
                 } else {
                     ReportError(name + ' missing ' + depName);
                     return -1;
@@ -187,17 +128,7 @@ var require, define;
     };
 
     require = req = function (deps, callback, relName, forceSync, alt) {
-        if (typeof deps === "string") {
-            if (handlers[deps]) {
-                //callback in this case is really relName
-                return handlers[deps](callback);
-            }
-            //Just return the module wanted. In this scenario, the
-            //deps arg is the module name, and second arg (if passed)
-            //is just the relName.
-            //Normalize module name, if it contains . or ..
-            return callDep(makeMap(deps, callback).f);
-        } else if (!deps.splice) {
+        if (!deps.splice) {
             //deps is a config object, not an array.
             config = deps;
             if (config.deps) {
