@@ -34,3 +34,8 @@ gulp.task 'test-deferred', ['clean'], ->
   gulps.deferred.test()
        .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
        .on 'data', (data) -> gutil.log(data.contents.toString())
+
+gulp.task 'test-module', ['clean'], ->
+  gulps.modules.test()
+       .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
+       .on 'data', (data) -> gutil.log(data.contents.toString())
