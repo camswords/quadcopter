@@ -29,9 +29,9 @@ howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
 
 howMuchMemoryForAMD = (options, callback) ->
     howMuchMemory(options
-                  './src/main/lib/almond-*.js',
+                  './src/main/modules.coffee',
                   ['./src/performance/memory/before.coffee',
-                   './src/main/lib/almond-*.js',
+                   './src/main/modules.coffee',
                    './src/performance/memory/after.coffee'],
                   callback)
 
@@ -39,7 +39,8 @@ howMuchMemoryForFile = (options) ->
   (sourceFile, callback) ->
     howMuchMemory(options,
                   sourceFile,
-                  ['./src/main/lib/almond-*.js',
+                  ['./src/main/deferred.coffee',
+                   './src/main/modules.coffee',
                    './src/performance/memory/before.coffee',
                    sourceFile,
                    './src/performance/memory/after.coffee'],

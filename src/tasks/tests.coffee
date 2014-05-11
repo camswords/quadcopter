@@ -10,7 +10,10 @@ extend = require 'extend'
 
 module.exports = (overrides) ->
   testFiles = ->
-    gulp.src(['./src/test/**/*.coffee', '!./src/test/**/tests.coffee'])
+    gulp.src(['./src/test/**/*.coffee',
+              '!./src/test/**/deferred-test.coffee',
+              '!./src/test/**/modules-test.coffee',
+              '!./src/test/**/tests.coffee'])
         .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
         .pipe concat('test-files.js')
 
@@ -33,3 +36,4 @@ module.exports = (overrides) ->
   eventStream.merge(application(options), tests)
     .pipe order(['**/application.js', '**/tests.js'])
     .pipe concat('all.js')
+    .pipe gulp.dest('build')

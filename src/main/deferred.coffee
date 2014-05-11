@@ -5,26 +5,29 @@ Deferred =
     resolved = false
     rejected = false
 
+    nextTick = (callback, parameters) ->
+      setTimeout (-> callback.apply({}, parameters)), 1
+
     self = {}
     self.isFinished = -> !!(resolved || rejected)
 
     self.resolve = (value) ->
       if !self.isFinished()
-        callback.success(value) for callback in callbacks
+        nextTick(callback.success, [value]) for callback in callbacks
         resolved = { value: value }
 
     self.reject = (value) ->
       if !self.isFinished()
-        callback.failure(value) for callback in callbacks
+        nextTick(callback.failure, [value]) for callback in callbacks
         rejected = { value: value }
 
     self.promise =
-      then: (successCallback, failureCallback) ->
-        success = successCallback || ->
-        failure = failureCallback || ->
+      then: (success, failure) ->
+        success = success || ->
+        failure = failure || ->
 
-        success?(resolved.value) if resolved
-        failure?(rejected.value) if rejected
+        nextTick(success, [resolved.value]) if resolved
+        nextTick(failure, [rejected.value]) if rejected
 
         if !self.isFinished()
           callbacks.push({ success: success, failure: failure })
