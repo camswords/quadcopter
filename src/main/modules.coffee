@@ -1,11 +1,14 @@
 defined = {}
 waiting = {}
+overrides = {}
 
 load = (name) ->
   waiting[name] = waiting[name] || Deferred.create()
 
   if defined[name] && !waiting[name].isFinished()
-    if defined[name].dependencyNames.length == 0
+    if overrides[name]
+      waiting[name].resolve overrides[name]
+    else if defined[name].dependencyNames.length == 0
       waiting[name].resolve defined[name].factory()
     else
       require defined[name].dependencyNames, ->
@@ -37,5 +40,11 @@ require = (dependencyNames, factory) ->
 define.all = -> Object.keys(defined)
 
 define.newContext = ->
-define.override = ->
+  overrides = []
+
+  for moduleName in Object.keys(waiting)
+    waiting[moduleName] = Deferred.create()
+
+define.override = (name, value) ->
+  overrides[name] = value
 

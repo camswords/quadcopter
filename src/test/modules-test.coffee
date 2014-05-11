@@ -79,3 +79,25 @@ outcome = (test, condition) ->
   define 'mymodule', -> 'foo'
   require ['mymodule'], (mymodule) -> outcome(testName, mymodule == 'foo')
 )()
+
+(->
+  testName = 'modules should allow overriding of dependencies'
+
+  define 'moduleToOverride', -> 'before'
+  define.newContext()
+  define.override 'moduleToOverride', 'after'
+  require ['moduleToOverride'], (module) -> outcome(testName, module == 'after')
+)()
+
+(->
+  testName = 'modules should remove overridden dependency on new context'
+
+  define 'pleaseResetThisModule', -> 'before'
+  define.override 'pleaseResetThisModule', 'after'
+
+  require ['pleaseResetThisModule'], ->
+    define.newContext()
+
+    require ['pleaseResetThisModule'], (module) ->
+      outcome(testName, module == 'before')
+)()
