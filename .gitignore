@@ -2,3 +2,5 @@ node_modules/
 build
 espruino.state
 build
+metrics*.txt
+

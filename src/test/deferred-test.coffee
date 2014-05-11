@@ -5,7 +5,6 @@ outcome = (test, condition) ->
   else
     console.log "failed: #{test}"
 
-
 (->
   testName = 'deferred should execute success when deferred is resolved'
   deferred = Deferred.create()
