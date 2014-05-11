@@ -101,3 +101,14 @@ outcome = (test, condition) ->
     require ['pleaseResetThisModule'], (module) ->
       outcome(testName, module == 'before')
 )()
+
+(->
+  testName = 'modules can be overridden in define dependencies'
+
+  define 'standsTall', -> 'tall'
+  define 'leansOn', ['standsTall'], (tall) -> 'leans on ' + tall
+  define.override 'standsTall', 'pretty high'
+
+  require ['leansOn'], (leans) -> outcome(testName, leans == 'leans on pretty high')
+)()
+
