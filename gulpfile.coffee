@@ -29,3 +29,8 @@ gulp.task 'deploy-local', ['clean'], ->
           additionalSourceFiles: ['./src/performance/sample-running-quadcopter.coffee'])
        .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
        .on 'data', (data) -> gutil.log(data.contents.toString())
+
+gulp.task 'test-deferred', ['clean'], ->
+  gulps.deferred.test()
+       .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
+       .on 'data', (data) -> gutil.log(data.contents.toString())
