@@ -5,23 +5,31 @@ Deferred =
     resolved = false
     rejected = false
 
-    resolve: (value) ->
-      if !resolved && !rejected
+    self = {}
+    self.isFinished = -> !!(resolved || rejected)
+
+    self.resolve = (value) ->
+      if !self.isFinished()
         callback.success(value) for callback in callbacks
         resolved = { value: value }
 
-    reject: (value) ->
-      if !resolved && !rejected
+    self.reject = (value) ->
+      if !self.isFinished()
         callback.failure(value) for callback in callbacks
         rejected = { value: value }
 
-    promise:
-      then: (success, failure) ->
-        success(resolved.value) if resolved
-        failure(rejected.value) if rejected
+    self.promise =
+      then: (successCallback, failureCallback) ->
+        success = successCallback || ->
+        failure = failureCallback || ->
 
-        if !rejected && !resolved
+        success?(resolved.value) if resolved
+        failure?(rejected.value) if rejected
+
+        if !self.isFinished()
           callbacks.push({ success: success, failure: failure })
+
+    self
 
   all: (promises) ->
     deferred = Deferred.create()

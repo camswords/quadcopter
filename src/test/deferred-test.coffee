@@ -144,3 +144,28 @@ outcome = (test, condition) ->
 
   deferredB.reject('error')
 )()
+
+(->
+  testName = 'deferred should be finished when resolved'
+  deferred = Deferred.create()
+
+  deferred.resolve()
+
+  outcome(testName, deferred.isFinished() == true)
+)()
+
+(->
+  testName = 'deferred should be finished when rejected'
+  deferred = Deferred.create()
+  deferred.reject()
+
+  outcome(testName, deferred.isFinished() == true)
+)()
+
+(->
+  testName = 'deferred should be unfinished when not resolved and not rejected'
+  deferred = Deferred.create()
+
+  outcome(testName, deferred.isFinished() == false)
+)()
+
