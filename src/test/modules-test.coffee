@@ -64,5 +64,18 @@ outcome = (test, condition) ->
         outcome(testName, callback == 1)
 )()
 
+(->
+  testName = 'modules should only allow defining a module once'
 
+  define 'amodule', [], -> 1
+  define 'amodule', [], -> 2
 
+  require ['amodule'], (amodule) -> outcome(testName, amodule == 1)
+)()
+
+(->
+  testName = 'modules should allow definitions without dependencies'
+
+  define 'mymodule', -> 'foo'
+  require ['mymodule'], (mymodule) -> outcome(testName, mymodule == 'foo')
+)()

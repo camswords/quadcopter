@@ -15,12 +15,17 @@ load = (name) ->
 
 
 define = (name, dependencyNames, factory) ->
+  return if defined[name]
+
+  if !dependencyNames.slice
+    factory = dependencyNames
+    dependencyNames = []
+
   defined[name] = dependencyNames: dependencyNames, factory: factory
 
   if waiting[name]
     load(name).then (value) ->
       waiting[name].resolve(value)
-      delete waiting[name]
 
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)
@@ -30,3 +35,7 @@ require = (dependencyNames, factory) ->
 
 
 define.all = -> Object.keys(defined)
+
+define.newContext = ->
+define.override = ->
+
