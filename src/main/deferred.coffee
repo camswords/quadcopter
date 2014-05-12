@@ -15,11 +15,13 @@ Deferred =
       if !self.isFinished()
         nextTick(callback.success, [value]) for callback in callbacks
         resolved = { value: value }
+        callbacks = []
 
     self.reject = (value) ->
       if !self.isFinished()
         nextTick(callback.failure, [value]) for callback in callbacks
         rejected = { value: value }
+        callbacks = []
 
     self.promise =
       then: (success, failure) ->

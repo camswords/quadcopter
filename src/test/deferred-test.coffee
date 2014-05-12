@@ -168,4 +168,3 @@ outcome = (test, condition) ->
 
   outcome(testName, deferred.isFinished() == false)
 )()
-
