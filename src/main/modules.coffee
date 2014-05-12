@@ -1,21 +1,28 @@
 defined = {}
-waiting = {}
 overrides = {}
+waiting = {}
+cached = {}
 
 load = (name) ->
-  waiting[name] = waiting[name] || Deferred.create()
+  loaded = Deferred.create()
 
-  if defined[name] && !waiting[name].isFinished()
-    if overrides[name]
-      waiting[name].resolve overrides[name]
+  if name of defined
+    if name of overrides
+      loaded.resolve overrides[name]
+    else if name of cached
+      loaded.resolve cached[name]
     else if defined[name].dependencyNames.length == 0
-      waiting[name].resolve defined[name].factory()
+      cached[name] = defined[name].factory()
+      loaded.resolve cached[name]
     else
       require defined[name].dependencyNames, ->
-        waiting[name].resolve defined[name].factory.apply({}, arguments)
+        cached[name] = defined[name].factory.apply({}, arguments)
+        loaded.resolve cached[name]
+  else
+    waiting[name] = waiting[name] && waiting || []
+    waiting[name].push(loaded)
 
-  waiting[name].promise
-
+  loaded.promise
 
 define = (name, dependencyNames, factory) ->
   return if defined[name]
@@ -28,7 +35,8 @@ define = (name, dependencyNames, factory) ->
 
   if waiting[name]
     load(name).then (value) ->
-      waiting[name].resolve(value)
+      loaded.resolve(value) for loaded in waiting[name]
+      delete waiting[name]
 
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)
@@ -40,11 +48,8 @@ require = (dependencyNames, factory) ->
 define.all = -> Object.keys(defined)
 
 define.newContext = ->
-  overrides = []
+  overrides = {}
+  waiting = {}
+  cached = {}
 
-  for moduleName in Object.keys(waiting)
-    waiting[moduleName] = Deferred.create()
-
-define.override = (name, value) ->
-  overrides[name] = value
-
+define.override = (name, value) -> overrides[name] = value

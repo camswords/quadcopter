@@ -90,6 +90,17 @@ outcome = (test, condition) ->
 )()
 
 (->
+  testName = 'modules should allow overriding of overridden dependencies'
+
+  define 'overrideLots', -> 'first'
+  define.newContext()
+  define.override 'overrideLots', 'second'
+  define.newContext()
+  define.override 'overrideLots', 'third'
+  require ['overrideLots'], (module) -> outcome(testName, module == 'third')
+)()
+
+(->
   testName = 'modules should remove overridden dependency on new context'
 
   define 'pleaseResetThisModule', -> 'before'
