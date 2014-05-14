@@ -1,5 +1,5 @@
 gulp = require 'gulp'
-gulps = (require 'require-dir')('./src/tasks')
+gulps = require('require-dir')('./src/tasks')
 
 gulp.task 'default', ['test']
 gulp.task 'clean', -> gulps['clean']
