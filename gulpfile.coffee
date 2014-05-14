@@ -2,7 +2,7 @@ gulp = require 'gulp'
 gulps = require('require-dir')('./src/tasks')
 
 gulp.task 'default', ['test']
-gulp.task 'clean', -> gulps['clean']
+gulp.task 'clean', -> gulps['clean']()
 
 gulp.task 'test', ['test-module', 'test-deferred', 'test-unit']
 gulp.task 'test-unit', ['clean'], -> gulps['test-unit']()
