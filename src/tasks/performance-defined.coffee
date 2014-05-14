@@ -36,6 +36,14 @@ howMuchMemoryForAMD = (options, callback) ->
                    './src/performance/memory/after.coffee'],
                   callback)
 
+howMuchMemoryForDeferred = (options, callback) ->
+    howMuchMemory(options
+                  './src/main/deferred.coffee',
+                  ['./src/performance/memory/before.coffee',
+                   './src/main/deferred.coffee',
+                   './src/performance/memory/after.coffee'],
+                  callback)
+
 howMuchMemoryForFile = (options) ->
   (sourceFile, callback) ->
     howMuchMemory(options,
@@ -65,9 +73,10 @@ module.exports = (options) ->
     fileName != './src/main/deferred.coffee'
 
   amdMemoryMeasured = Q.denodeify(howMuchMemoryForAMD)(options)
+  deferredMemoryMeasured = Q.denodeify(howMuchMemoryForDeferred)(options)
   eachFileMemoryMeasured = Q.denodeify(async.mapSeries)(files, howMuchMemoryForFile(options))
 
-  Q.all([eachFileMemoryMeasured, amdMemoryMeasured])
-    .spread (fileResults, amdResults) ->
-      gutil.log formatResults(fileResults.concat([amdResults]))
+  Q.all([eachFileMemoryMeasured, amdMemoryMeasured, deferredMemoryMeasured])
+    .spread (fileResults, amdResults, deferredResults) ->
+      gutil.log formatResults(fileResults.concat([amdResults, deferredResults]))
     .done()

@@ -3490,7 +3490,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Memory Management" modified="20140512082438739" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Memory Management" modified="20140514103235979" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4655,6 +4655,40 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 237,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 140,
+            &quot;right&quot;: 265,
+            &quot;bottom&quot;: 253,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Memory Management'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Memory Management&quot;
     }
 ]</pre>
 </div>
@@ -4685,7 +4719,7 @@ Error message and password prompt
 <div modified="20140502050503983" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
-<div list="[[TW Quadcopter Project]] Quadcopter [[Memory Management]] [[Espruino Deploy System]]" title="$:/StoryList">
+<div list="[[TW Quadcopter Project]] Quadcopter [[Memory Management]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div dependents="$:/themes/tiddlywiki/vanilla" description="A clean theme that emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.0.10-beta">
@@ -4764,8 +4798,7 @@ See
 * http://theboredengineers.com/2012/09/the-quadcopter-get-its-orientation-from-sensors/</pre>
 </div>
 <div created="20140512082048324" modified="20140512082129107" title="Espruino Deploy System">
-<pre>
-Todo:
+<pre>Todo:
 
 * When the promise to execute times out, kill the Espruino process
 * when there is a stackoverflow (log limit reached), show the console log</pre>
@@ -4866,22 +4899,8 @@ References
 * https://www.sparkfun.com/products/10724
 * https://github.com/ptrbrtz/razor-9dof-ahrs/tree/master/Arduino/Razor_AHRS</pre>
 </div>
-<div created="20140502034418412" modified="20140512082438737" title="Memory Management">
-<pre># remove modules
-  # remove deferred
-
-  # make sure that the results are correct for each file
-  # add another step to measure the deferred properly
-  # combine all tests into one gulp step
-  # make sure the application can build correctly with the new modules format
-  # combine all performance into one gulp step
-# why is there so much memory being consumed now? memory leak?
-## waiting - consumes about 3500 blocks of memory. fail.
-
-
-
-
-The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
+<div created="20140502034418412" modified="20140514103235976" title="Memory Management">
+<pre>The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
 
 Details:
 
