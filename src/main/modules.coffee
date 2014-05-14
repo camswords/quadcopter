@@ -2,6 +2,12 @@ defined = {}
 overrides = {}
 waiting = {}
 cached = {}
+amdModuleMemory = {}
+
+addToCache = (name, callback) ->
+  before = process.memory().usage if debug?.recordMemory
+  cached[name] = callback()
+  amdModuleMemory[name] = (process.memory().usage - before) if debug?.recordMemory
 
 load = (name) ->
   loaded = Deferred.create()
@@ -12,11 +18,12 @@ load = (name) ->
     else if name of cached
       loaded.resolve cached[name]
     else if defined[name].dependencyNames.length == 0
-      cached[name] = defined[name].factory()
+      addToCache name, -> defined[name].factory()
       loaded.resolve cached[name]
     else
       require defined[name].dependencyNames, ->
-        cached[name] = defined[name].factory.apply({}, arguments)
+        args = arguments
+        addToCache name, -> defined[name].factory.apply({}, args)
         loaded.resolve cached[name]
   else
     waiting[name] = waiting[name] && waiting || []

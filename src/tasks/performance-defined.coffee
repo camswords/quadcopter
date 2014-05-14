@@ -23,7 +23,6 @@ howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
         matches = /memory used: (.*)/.exec(data.contents.toString())
 
         if matches && matches.length > 1
-          console.log sourceFile, parseInt(matches[1])
           callback(null, sourceFile: sourceFile, memoryUsage: parseInt(matches[1]))
         else
           callback("failed to determine memory for #{sourceFile}")
