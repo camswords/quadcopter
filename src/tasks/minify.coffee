@@ -2,7 +2,8 @@ uglify = require 'gulp-uglify'
 
 module.exports = ->
   uglify
-    mangle: false,
+    mangle:
+      excludes: []
     compress:
       sequences     : true,
       properties    : true,
