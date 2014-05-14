@@ -36,7 +36,7 @@ define = (name, dependencyNames, factory) ->
   if waiting[name]
     load(name).then (value) ->
       loaded.resolve(value) for loaded in waiting[name]
-      delete waiting[name]
+#      delete waiting[name]
 
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)

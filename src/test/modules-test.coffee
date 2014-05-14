@@ -1,125 +1,128 @@
 
-outcome = (test, condition) ->
+printOutcome = (test, condition) ->
   if condition
     console.log "passed: #{test}"
   else
     console.log "failed: #{test}"
 
-(->
-  testName = 'modules should require a defined module'
+tests = [
+  ((done) ->
+    testName = 'modules should require a defined module'
 
-  define 'foobar', [], -> name: 'foo'
-  require ['foobar'], (foobar) ->
-    outcome(testName, foobar.name == 'foo')
-)()
+    define 'foobar', [], -> name: 'foo'
+    require ['foobar'], (foobar) ->
+      done(testName, foobar.name == 'foo')
+  ),
+  ((done) ->
+    testName = 'modules should require a defined module even if defined afterwards'
 
-(->
-  testName = 'modules should require a defined module even if defined afterwards'
+    require ['barfoo'], (barfoo) ->
+      done(testName, barfoo.name == 'bar')
 
-  require ['barfoo'], (barfoo) ->
-    outcome(testName, barfoo.name == 'bar')
+    define 'barfoo', [], -> name: 'bar'
+  ),
+  ((done) ->
+    testName = 'modules should require more than one defined module'
 
-  define 'barfoo', [], -> name: 'bar'
-)()
+    define 'b', [], -> value: 'b'
 
-(->
-  testName = 'modules should require more than one defined module'
+    require ['a', 'b'], (a, b) ->
+      done(testName, a.value == 'a' && b.value == 'b')
 
-  define 'b', [], -> value: 'b'
+    define 'a', [], -> value: 'a'
+  ),
+  ((done) ->
+    testName = 'modules should require a module that has dependencies'
 
-  require ['a', 'b'], (a, b) ->
-    outcome(testName, a.value == 'a' && b.value == 'b')
+    define 'petrolTank', [], -> full: -> true
+    define 'car', ['petrolTank'], (petrolTank) -> full: -> petrolTank.full()
 
-  define 'a', [], -> value: 'a'
-)()
+    require ['car'], (car) -> done(testName, car.full() == true)
+  ),
+  ((done) ->
+    testName = 'modules should return all defined module names'
 
-(->
-  testName = 'modules should require a module that has dependencies'
+    define 'first', [], -> value: 1
+    define 'second', [], -> value: 2
 
-  define 'petrolTank', [], -> full: -> true
-  define 'car', ['petrolTank'], (petrolTank) -> full: -> petrolTank.full()
+    definedModules = define.all()
+    done(testName, definedModules.indexOf('first') && definedModules.indexOf('second'))
+  ),
+  ((done) ->
+    testName = 'modules should only execute factory function once'
+    callback = 0
 
-  require ['car'], (car) -> outcome(testName, car.full() == true)
-)()
+    define 'newmodule', [], -> callback++
 
-(->
-  testName = 'modules should return all defined module names'
-
-  define 'first', [], -> value: 1
-  define 'second', [], -> value: 2
-
-  definedModules = define.all()
-  outcome(testName, definedModules.indexOf('first') && definedModules.indexOf('second'))
-)()
-
-(->
-  testName = 'modules should only execute factory function once'
-  callback = 0
-
-  define 'newmodule', [], -> callback++
-
-  require ['newmodule'], ->
     require ['newmodule'], ->
       require ['newmodule'], ->
-        outcome(testName, callback == 1)
-)()
+        require ['newmodule'], ->
+          done(testName, callback == 1)
+  ),
+  ((done) ->
+    testName = 'modules should only allow defining a module once'
 
-(->
-  testName = 'modules should only allow defining a module once'
+    define 'amodule', [], -> 1
+    define 'amodule', [], -> 2
 
-  define 'amodule', [], -> 1
-  define 'amodule', [], -> 2
+    require ['amodule'], (amodule) -> done(testName, amodule == 1)
+  ),
+  ((done)->
+    testName = 'modules should allow definitions without dependencies'
 
-  require ['amodule'], (amodule) -> outcome(testName, amodule == 1)
-)()
+    define 'mymodule', -> 'foo'
+    require ['mymodule'], (mymodule) -> done(testName, mymodule == 'foo')
+  ),
+  ((done) ->
+    testName = 'modules should allow overriding of dependencies'
 
-(->
-  testName = 'modules should allow definitions without dependencies'
-
-  define 'mymodule', -> 'foo'
-  require ['mymodule'], (mymodule) -> outcome(testName, mymodule == 'foo')
-)()
-
-(->
-  testName = 'modules should allow overriding of dependencies'
-
-  define 'moduleToOverride', -> 'before'
-  define.newContext()
-  define.override 'moduleToOverride', 'after'
-  require ['moduleToOverride'], (module) -> outcome(testName, module == 'after')
-)()
-
-(->
-  testName = 'modules should allow overriding of overridden dependencies'
-
-  define 'overrideLots', -> 'first'
-  define.newContext()
-  define.override 'overrideLots', 'second'
-  define.newContext()
-  define.override 'overrideLots', 'third'
-  require ['overrideLots'], (module) -> outcome(testName, module == 'third')
-)()
-
-(->
-  testName = 'modules should remove overridden dependency on new context'
-
-  define 'pleaseResetThisModule', -> 'before'
-  define.override 'pleaseResetThisModule', 'after'
-
-  require ['pleaseResetThisModule'], ->
+    define 'moduleToOverride', -> 'before'
     define.newContext()
+    define.override 'moduleToOverride', 'after'
+    require ['moduleToOverride'], (module) -> done(testName, module == 'after')
+  ),
+  ((done) ->
+    testName = 'modules should allow overriding of overridden dependencies'
 
-    require ['pleaseResetThisModule'], (module) ->
-      outcome(testName, module == 'before')
-)()
+    define 'overrideLots', -> 'first'
+    define.newContext()
+    define.override 'overrideLots', 'second'
+    define.newContext()
+    define.override 'overrideLots', 'third'
+    require ['overrideLots'], (module) ->
+      done(testName, module == 'third')
+  ),
+  ((done) ->
+    testName = 'modules should remove overridden dependency on new context'
 
-(->
-  testName = 'modules can be overridden in define dependencies'
+    define 'pleaseResetThisModule', -> 'before'
+    define.override 'pleaseResetThisModule', 'after'
 
-  define 'standsTall', -> 'tall'
-  define 'leansOn', ['standsTall'], (tall) -> 'leans on ' + tall
-  define.override 'standsTall', 'pretty high'
+    require ['pleaseResetThisModule'], ->
+      define.newContext()
 
-  require ['leansOn'], (leans) -> outcome(testName, leans == 'leans on pretty high')
-)()
+      require ['pleaseResetThisModule'], (module) ->
+        done(testName, module == 'before')
+  ),
+  ((done) ->
+    testName = 'modules can be overridden in define dependencies'
+
+    define 'standsTall', -> 'tall'
+    define 'leansOn', ['standsTall'], (tall) -> 'leans on ' + tall
+    define.override 'standsTall', 'pretty high'
+
+    require ['leansOn'], (leans) ->
+      done(testName, leans == 'leans on pretty high')
+  )]
+
+runTest = (index) ->
+  tests[index] (testName, condition) ->
+    printOutcome(testName, condition)
+
+    nextIndex = index + 1
+    runTest(nextIndex) if nextIndex < tests.length
+
+runTest(0)
+
+
 
