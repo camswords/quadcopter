@@ -6,9 +6,9 @@ gutil = require 'gulp-util'
 eventStream = require 'event-stream'
 order = require 'gulp-order'
 application = require './application'
-extend = require 'extend'
+espruino = require '../../gulp-espruino/src/gulp-espruino'
 
-module.exports = (overrides) ->
+module.exports = ->
   testFiles = ->
     gulp.src(['./src/test/**/*.coffee',
               '!./src/test/**/deferred-test.coffee',
@@ -27,13 +27,11 @@ module.exports = (overrides) ->
     .pipe concat('tests.js')
     .pipe gulp.dest('build')
 
-  defaults =
-    excludeStartupScript: true
-    configuration: 'local'
-
-  options = extend({}, defaults, overrides)
-
-  eventStream.merge(application(options), tests)
+  app = application(excludeStartupScript: true, configuration: 'test')
+  eventStream.merge(app, tests)
     .pipe order(['**/application.js', '**/tests.js'])
     .pipe concat('all.js')
     .pipe gulp.dest('build')
+    .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
+    .on 'data', (data) -> gutil.log(data.contents.toString())
+
