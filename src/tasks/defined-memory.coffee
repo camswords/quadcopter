@@ -18,7 +18,7 @@ howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
       .pipe minify()
       .pipe concat('performance.js')
       .pipe gulp.dest('build')
-      .pipe espruino.deploy(options.espruino)
+      .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
       .on 'data', (data) ->
         matches = /memory used: (.*)/.exec(data.contents.toString())
 

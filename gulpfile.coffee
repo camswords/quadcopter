@@ -5,10 +5,6 @@ requireDir = require 'require-dir'
 gulps = requireDir './src/tasks'
 
 fake = connection: { fakePath: '../Espruino/espruino' }
-performance =
-  defined: -> gulps['defined-memory'](espruino: fake)
-  running: -> gulps['running-memory'](espruino: fake)
-
 
 gulp.task 'default', ['test']
 
@@ -19,8 +15,8 @@ gulp.task 'test', ['clean'], ->
        .pipe espruino.deploy(fake)
        .on 'data', (data) -> gutil.log(data.contents.toString())
 
-gulp.task 'performance-defined', ['clean'], -> performance.defined()
-gulp.task 'performance-running', ['clean'], -> performance.running()
+gulp.task 'performance-defined', ['clean'], -> gulps['defined-memory']()
+gulp.task 'performance-running', ['clean'], -> gulps['running-memory']()
 
 gulp.task 'deploy', ['clean'], ->
   gulps.application(configuration: 'release')
