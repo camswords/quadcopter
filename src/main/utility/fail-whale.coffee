@@ -1,3 +1,3 @@
 
 define 'utility/fail-whale', ->
-  (message) -> ReportError('FAIL WHALE: ' + message)
+  (message) -> console.log('FAIL WHALE:', message)
