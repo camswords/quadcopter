@@ -25,6 +25,6 @@ module.exports = (overrides) ->
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('application-unminified.js')
       .pipe gulp.dest('build')
-#      .pipe minify()
+      .pipe minify()
       .pipe concat('application.js')
       .pipe gulp.dest('build')

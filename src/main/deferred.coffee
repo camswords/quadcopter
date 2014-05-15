@@ -45,7 +45,7 @@ Deferred =
 
     results = new Array(promises.length)
     callbacks = 0
-    
+
     for promise, index in promises
       onSuccess = ((elementIndex) ->
         (value) ->

@@ -4,11 +4,6 @@ waiting = {}
 cached = {}
 amdModuleMemory = {}
 
-addToCache = (name, callback) ->
-  before = process.memory().usage if debug?.recordMemory
-  cached[name] = callback()
-  amdModuleMemory[name] = (process.memory().usage - before) if debug?.recordMemory
-
 load = (name) ->
   loaded = Deferred.create()
 
@@ -17,20 +12,17 @@ load = (name) ->
       loaded.resolve overrides[name]
     else if name of cached
       loaded.resolve cached[name]
-    else if defined[name].dependencyNames.length == 0
-      addToCache name, -> defined[name].factory()
-      loaded.resolve cached[name]
-      if define.config.optimise
-        delete defined[name].dependencyNames
-        delete defined[name].factory
     else
       require defined[name].dependencyNames, ->
-        args = arguments
-        addToCache name, -> defined[name].factory.apply({}, args)
-        loaded.resolve cached[name]
+        memoryBefore = process.memory().usage if debug?.recordMemory
+        cached[name] = defined[name].factory.apply({}, arguments)
+        amdModuleMemory[name] = (process.memory().usage - memoryBefore) if debug?.recordMemory
+
         if define.config.optimise
           delete defined[name].dependencyNames
           delete defined[name].factory
+
+        loaded.resolve cached[name]
   else
     waiting[name] = waiting[name] && waiting || []
     waiting[name].push(loaded)
@@ -54,8 +46,11 @@ define = (name, dependencyNames, factory) ->
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)
 
-  Deferred.all(loaded).then (factoryArguments) ->
-    factory.apply({}, factoryArguments)
+  if dependencyNames.length == 0
+    factory()
+  else
+    Deferred.all(loaded).then (factoryArguments) ->
+      factory.apply({}, factoryArguments)
 
 define.config = optimise: true
 
