@@ -17,7 +17,7 @@ module.exports = ->
   testFiles = ->
     gulp.src(['./src/test/**/*.coffee',
               '!./src/test/**/deferred-test.coffee',
-              '!./src/test/**/modules-test.coffee',
+              '!./src/test/**/amd-test.coffee',
               '!./src/test/**/tests.coffee',
               '!./src/test/**/amd-setup.coffee'])
         .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))

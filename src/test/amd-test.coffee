@@ -7,14 +7,14 @@ printOutcome = (test, condition) ->
 
 tests = [
   ((done) ->
-    testName = 'modules should require a defined module'
+    testName = 'amd should require a defined module'
 
     define 'foobar', [], -> name: 'foo'
     require ['foobar'], (foobar) ->
       done(testName, foobar.name == 'foo')
   ),
   ((done) ->
-    testName = 'modules should require a defined module even if defined afterwards'
+    testName = 'amd should require a defined module even if defined afterwards'
 
     require ['barfoo'], (barfoo) ->
       done(testName, barfoo.name == 'bar')
@@ -22,7 +22,7 @@ tests = [
     define 'barfoo', [], -> name: 'bar'
   ),
   ((done) ->
-    testName = 'modules should require more than one defined module'
+    testName = 'amd should require more than one defined module'
 
     define 'b', [], -> value: 'b'
 
@@ -32,7 +32,7 @@ tests = [
     define 'a', [], -> value: 'a'
   ),
   ((done) ->
-    testName = 'modules should require a module that has dependencies'
+    testName = 'amd should require a module that has dependencies'
 
     define 'petrolTank', [], -> full: -> true
     define 'car', ['petrolTank'], (petrolTank) -> full: -> petrolTank.full()
@@ -40,16 +40,16 @@ tests = [
     require ['car'], (car) -> done(testName, car.full() == true)
   ),
   ((done) ->
-    testName = 'modules should return all defined module names'
+    testName = 'amd should return all defined module names'
 
     define 'first', [], -> value: 1
     define 'second', [], -> value: 2
 
-    definedModules = define.all()
-    done(testName, definedModules.indexOf('first') && definedModules.indexOf('second'))
+    definedamd = define.all()
+    done(testName, definedamd.indexOf('first') && definedamd.indexOf('second'))
   ),
   ((done) ->
-    testName = 'modules should only execute factory function once'
+    testName = 'amd should only execute factory function once'
     callback = 0
 
     define 'newmodule', [], -> callback++
@@ -60,7 +60,7 @@ tests = [
           done(testName, callback == 1)
   ),
   ((done) ->
-    testName = 'modules should only allow defining a module once'
+    testName = 'amd should only allow defining a module once'
 
     define 'amodule', [], -> 1
     define 'amodule', [], -> 2
@@ -68,13 +68,13 @@ tests = [
     require ['amodule'], (amodule) -> done(testName, amodule == 1)
   ),
   ((done)->
-    testName = 'modules should allow definitions without dependencies'
+    testName = 'amd should allow definitions without dependencies'
 
     define 'mymodule', -> 'foo'
     require ['mymodule'], (mymodule) -> done(testName, mymodule == 'foo')
   ),
   ((done) ->
-    testName = 'modules should allow overriding of dependencies'
+    testName = 'amd should allow overriding of dependencies'
 
     define 'moduleToOverride', -> 'before'
     define.newContext()
@@ -82,7 +82,7 @@ tests = [
     require ['moduleToOverride'], (module) -> done(testName, module == 'after')
   ),
   ((done) ->
-    testName = 'modules should allow overriding of overridden dependencies'
+    testName = 'amd should allow overriding of overridden dependencies'
 
     define 'overrideLots', -> 'first'
     define.newContext()
@@ -93,7 +93,7 @@ tests = [
       done(testName, module == 'third')
   ),
   ((done) ->
-    testName = 'modules should remove overridden dependency on new context'
+    testName = 'amd should remove overridden dependency on new context'
 
     define 'pleaseResetThisModule', -> 'before'
     define.override 'pleaseResetThisModule', 'after'
@@ -105,7 +105,7 @@ tests = [
         done(testName, module == 'before')
   ),
   ((done) ->
-    testName = 'modules can be overridden in define dependencies'
+    testName = 'amd can be overridden in define dependencies'
 
     define 'standsTall', -> 'tall'
     define 'leansOn', ['standsTall'], (tall) -> 'leans on ' + tall
@@ -115,7 +115,7 @@ tests = [
       done(testName, leans == 'leans on pretty high')
   ),
   ((done) ->
-    testName = 'modules delete factories when loaded by itself'
+    testName = 'amd delete factories when loaded by itself'
     define.config.optimise = true
 
     define 'aModuleUsingMemory', -> 'some value'
@@ -127,7 +127,7 @@ tests = [
       done(testName, expression)
   ),
   ((done) ->
-    testName = 'modules delete factories when loaded by others'
+    testName = 'amd delete factories when loaded by others'
     define.config.optimise = true
 
     define 'module123', -> 'some value'
@@ -140,7 +140,7 @@ tests = [
       done(testName, expression)
   ),
   ((done) ->
-    testName = 'modules delete waiting modules when they are loaded'
+    testName = 'amd delete waiting amd when they are loaded'
     define.config.optimise = true
 
     require ['module567'], ->
@@ -151,7 +151,7 @@ tests = [
     define 'module567', -> 'some value'
   ),
   ((done) ->
-    testName = 'modules dont delete factories when loaded by itself and no optimisation requested'
+    testName = 'amd dont delete factories when loaded by itself and no optimisation requested'
     define.config.optimise = false
 
     define 'module167', -> 'some value'
@@ -163,7 +163,7 @@ tests = [
       done(testName, expression)
   ),
   ((done) ->
-    testName = 'modules delete factories when loaded by others and no optimisation requested'
+    testName = 'amd delete factories when loaded by others and no optimisation requested'
     define.config.optimise = false
 
     define 'module876', -> 'some value'
@@ -176,7 +176,7 @@ tests = [
       done(testName, expression)
   )
   ((done) ->
-    testName = 'modules dont delete waiting modules when no optimisation requested'
+    testName = 'amd dont delete waiting amd when no optimisation requested'
     define.config.optimise = false
 
     require ['module135'], ->
