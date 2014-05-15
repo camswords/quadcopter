@@ -6,7 +6,7 @@ gulpif = require 'gulp-if'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 
 module.exports = ->
-  gulp.src(['./src/main/deferred.coffee',
+  gulp.src(['./src/main/utility/deferred.coffee',
             './src/main/utility/amd.coffee',
             './src/test/utility/amd-test.coffee'])
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))

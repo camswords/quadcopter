@@ -6,7 +6,8 @@ gulpif = require 'gulp-if'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 
 module.exports = ->
-  gulp.src(['./src/main/deferred.coffee', './src/test/deferred-test.coffee'])
+  gulp.src(['./src/main/utility/deferred.coffee',
+            './src/test/utility/deferred-test.coffee'])
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('deferred-tests.js')
       .pipe gulp.dest('build')
