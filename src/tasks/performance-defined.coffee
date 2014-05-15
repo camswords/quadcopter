@@ -30,17 +30,17 @@ howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
 howMuchMemoryForAMD = (options, callback) ->
     howMuchMemory(options
                   './src/main/modules.coffee',
-                  ['./src/performance/memory/before.coffee',
+                  ['./src/performance/sample-memory-before.coffee',
                    './src/main/modules.coffee',
-                   './src/performance/memory/after.coffee'],
+                   './src/performance/sample-memory-after.coffee'],
                   callback)
 
 howMuchMemoryForDeferred = (options, callback) ->
     howMuchMemory(options
                   './src/main/deferred.coffee',
-                  ['./src/performance/memory/before.coffee',
+                  ['./src/performance/sample-memory-before.coffee',
                    './src/main/deferred.coffee',
-                   './src/performance/memory/after.coffee'],
+                   './src/performance/sample-memory-after.coffee'],
                   callback)
 
 howMuchMemoryForFile = (options) ->
@@ -49,9 +49,9 @@ howMuchMemoryForFile = (options) ->
                   sourceFile,
                   ['./src/main/deferred.coffee',
                    './src/main/modules.coffee',
-                   './src/performance/memory/before.coffee',
+                   './src/performance/sample-memory-before.coffee',
                    sourceFile,
-                   './src/performance/memory/after.coffee'],
+                   './src/performance/sample-memory-after.coffee'],
                   callback)
 
 formatResults = (results) ->
