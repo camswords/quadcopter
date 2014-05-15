@@ -9,11 +9,17 @@ application = require './application'
 espruino = require '../../gulp-espruino/src/gulp-espruino'
 
 module.exports = ->
+  amdSetup = ->
+    gulp.src(['./src/test/**/amd-setup.coffee'])
+        .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
+        .pipe concat('amd-setup.js')
+
   testFiles = ->
     gulp.src(['./src/test/**/*.coffee',
               '!./src/test/**/deferred-test.coffee',
               '!./src/test/**/modules-test.coffee',
-              '!./src/test/**/tests.coffee'])
+              '!./src/test/**/tests.coffee',
+              '!./src/test/**/amd-setup.coffee'])
         .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
         .pipe concat('test-files.js')
 
@@ -22,8 +28,8 @@ module.exports = ->
         .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
         .pipe concat('test-runner.js')
 
-  tests = eventStream.merge(testFiles(), testRunner())
-    .pipe order(['test-files.js', 'test-runner.js'])
+  tests = eventStream.merge(amdSetup(), testFiles(), testRunner())
+    .pipe order(['amd-setup.js', 'test-files.js', 'test-runner.js'])
     .pipe concat('tests.js')
     .pipe gulp.dest('build')
 

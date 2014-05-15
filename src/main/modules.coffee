@@ -20,11 +20,17 @@ load = (name) ->
     else if defined[name].dependencyNames.length == 0
       addToCache name, -> defined[name].factory()
       loaded.resolve cached[name]
+      if define.config.optimise
+        delete defined[name].dependencyNames
+        delete defined[name].factory
     else
       require defined[name].dependencyNames, ->
         args = arguments
         addToCache name, -> defined[name].factory.apply({}, args)
         loaded.resolve cached[name]
+        if define.config.optimise
+          delete defined[name].dependencyNames
+          delete defined[name].factory
   else
     waiting[name] = waiting[name] && waiting || []
     waiting[name].push(loaded)
@@ -43,7 +49,7 @@ define = (name, dependencyNames, factory) ->
   if waiting[name]
     load(name).then (value) ->
       loaded.resolve(value) for loaded in waiting[name]
-#      delete waiting[name]
+      delete waiting[name] if define.config.optimise
 
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)
@@ -51,9 +57,12 @@ require = (dependencyNames, factory) ->
   Deferred.all(loaded).then (factoryArguments) ->
     factory.apply({}, factoryArguments)
 
+define.config = optimise: true
 
 define.all = -> Object.keys(defined)
 
+# don't use new context / override with optimise: true,
+# else new contexts wont be able to find module definitions.
 define.newContext = ->
   overrides = {}
   waiting = {}

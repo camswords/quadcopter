@@ -113,6 +113,78 @@ tests = [
 
     require ['leansOn'], (leans) ->
       done(testName, leans == 'leans on pretty high')
+  ),
+  ((done) ->
+    testName = 'modules delete factories when loaded by itself'
+    define.config.optimise = true
+
+    define 'aModuleUsingMemory', -> 'some value'
+
+    require ['aModuleUsingMemory'], ->
+      expression = defined['aModuleUsingMemory'].factory == undefined &&
+      defined['aModuleUsingMemory'].dependencyNames == undefined
+
+      done(testName, expression)
+  ),
+  ((done) ->
+    testName = 'modules delete factories when loaded by others'
+    define.config.optimise = true
+
+    define 'module123', -> 'some value'
+    define 'module321', ['module123'], -> 'some value'
+
+    require ['module321'], ->
+      expression = defined['module321'].factory == undefined &&
+      defined['module321'].dependencyNames == undefined
+
+      done(testName, expression)
+  ),
+  ((done) ->
+    testName = 'modules delete waiting modules when they are loaded'
+    define.config.optimise = true
+
+    require ['module567'], ->
+
+    waiting['module567'][0].promise.then ->
+      done(testName, waiting['module567'] == undefined)
+
+    define 'module567', -> 'some value'
+  ),
+  ((done) ->
+    testName = 'modules dont delete factories when loaded by itself and no optimisation requested'
+    define.config.optimise = false
+
+    define 'module167', -> 'some value'
+
+    require ['module167'], ->
+      expression = defined['module167'].factory != undefined &&
+                   defined['module167'].dependencyNames != undefined
+
+      done(testName, expression)
+  ),
+  ((done) ->
+    testName = 'modules delete factories when loaded by others and no optimisation requested'
+    define.config.optimise = false
+
+    define 'module876', -> 'some value'
+    define 'module981', ['module876'], -> 'some value'
+
+    require ['module981'], ->
+      expression = defined['module981'].factory != undefined &&
+                   defined['module981'].dependencyNames != undefined
+
+      done(testName, expression)
+  )
+  ((done) ->
+    testName = 'modules dont delete waiting modules when no optimisation requested'
+    define.config.optimise = false
+
+    require ['module135'], ->
+
+    waiting['module135'][0].promise.then ->
+      done(testName, waiting['module135'] != undefined)
+
+    define 'module135', -> 'some value'
   )]
 
 runTest = (index) ->
