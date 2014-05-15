@@ -15,7 +15,7 @@ module.exports = (overrides) ->
 
   src = []
   src.push('./src/main/deferred.coffee')
-  src.push('./src/main/amd.coffee')
+  src.push('./src/main/utility/amd.coffee')
   src.push("./src/configuration/#{options.configuration}.coffee")
   src.push('!./src/main/application.coffee') if options.excludeStartupScript
   src.push('./src/main/**/*.coffee')

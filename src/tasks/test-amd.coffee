@@ -7,8 +7,8 @@ espruino = require '../../gulp-espruino/src/gulp-espruino'
 
 module.exports = ->
   gulp.src(['./src/main/deferred.coffee',
-            './src/main/amd.coffee',
-            './src/test/amd-test.coffee'])
+            './src/main/utility/amd.coffee',
+            './src/test/utility/amd-test.coffee'])
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('amd-tests.js')
       .pipe gulp.dest('build')

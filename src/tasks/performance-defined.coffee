@@ -29,9 +29,9 @@ howMuchMemory = (options, sourceFile, sourceFiles, callback) ->
 
 howMuchMemoryForAMD = (options, callback) ->
     howMuchMemory(options
-                  './src/main/amd.coffee',
+                  './src/main/utility/amd.coffee',
                   ['./src/performance/sample-memory-before.coffee',
-                   './src/main/amd.coffee',
+                   './src/main/utility/amd.coffee',
                    './src/performance/sample-memory-after.coffee'],
                   callback)
 
@@ -48,7 +48,7 @@ howMuchMemoryForFile = (options) ->
     howMuchMemory(options,
                   sourceFile,
                   ['./src/main/deferred.coffee',
-                   './src/main/amd.coffee',
+                   './src/main/utility/amd.coffee',
                    './src/performance/sample-memory-before.coffee',
                    sourceFile,
                    './src/performance/sample-memory-after.coffee'],
@@ -68,7 +68,7 @@ formatResults = (results) ->
 
 module.exports = (options) ->
   files = glob.sync('./src/main/**/*.coffee').filter (fileName) ->
-    fileName != './src/main/amd.coffee' &&
+    fileName != './src/main/utility/amd.coffee' &&
     fileName != './src/main/deferred.coffee'
 
   amdMemoryMeasured = Q.denodeify(howMuchMemoryForAMD)(options)
