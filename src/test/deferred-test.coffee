@@ -76,6 +76,30 @@ outcome = (test, condition) ->
 )()
 
 (->
+  testName = 'deferred should be finished when resolved'
+  deferred = Deferred.create()
+
+  deferred.resolve()
+
+  outcome(testName, deferred.isFinished() == true)
+)()
+
+(->
+  testName = 'deferred should be finished when rejected'
+  deferred = Deferred.create()
+  deferred.reject()
+
+  outcome(testName, deferred.isFinished() == true)
+)()
+
+(->
+  testName = 'deferred should be unfinished when not resolved and not rejected'
+  deferred = Deferred.create()
+
+  outcome(testName, deferred.isFinished() == false)
+)()
+
+(->
   testName = 'deferred all should callback when all promises are resolved'
   deferredA = Deferred.create()
   deferredB = Deferred.create()
@@ -146,25 +170,11 @@ outcome = (test, condition) ->
 )()
 
 (->
-  testName = 'deferred should be finished when resolved'
-  deferred = Deferred.create()
+  testName = 'deferred all should resolve when no promises are passed in'
+  onSuccess = (value) -> outcome(testName, value == undefined)
+  onFailure = -> outcome(testName, false)
 
-  deferred.resolve()
-
-  outcome(testName, deferred.isFinished() == true)
+  Deferred.all([]).then onSuccess, onFailure
 )()
 
-(->
-  testName = 'deferred should be finished when rejected'
-  deferred = Deferred.create()
-  deferred.reject()
 
-  outcome(testName, deferred.isFinished() == true)
-)()
-
-(->
-  testName = 'deferred should be unfinished when not resolved and not rejected'
-  deferred = Deferred.create()
-
-  outcome(testName, deferred.isFinished() == false)
-)()

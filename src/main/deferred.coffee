@@ -38,9 +38,14 @@ Deferred =
 
   all: (promises) ->
     deferred = Deferred.create()
+
+    if promises.length == 0
+      deferred.resolve()
+      return deferred.promise
+
     results = new Array(promises.length)
     callbacks = 0
-
+    
     for promise, index in promises
       onSuccess = ((elementIndex) ->
         (value) ->
