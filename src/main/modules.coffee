@@ -14,9 +14,9 @@ load = (name) ->
       loaded.resolve cached[name]
     else
       require defined[name].dependencyNames, ->
-        memoryBefore = process.memory().usage if debug?.recordMemory
+        memoryBefore = process.memory().usage if define.config.recordMemory
         cached[name] = defined[name].factory.apply({}, arguments)
-        amdModuleMemory[name] = (process.memory().usage - memoryBefore) if debug?.recordMemory
+        amdModuleMemory[name] = (process.memory().usage - memoryBefore) if define.config.recordMemory
 
         if define.config.optimise
           delete defined[name].dependencyNames
@@ -52,7 +52,9 @@ require = (dependencyNames, factory) ->
     Deferred.all(loaded).then (factoryArguments) ->
       factory.apply({}, factoryArguments)
 
-define.config = optimise: true
+define.config =
+  optimise: true
+  recordMemory: false
 
 define.all = -> Object.keys(defined)
 
