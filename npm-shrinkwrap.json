@@ -53,27 +53,6 @@
       "from": "https://registry.npmjs.org/q/-/q-1.0.0.tgz",
       "resolved": "https://registry.npmjs.org/q/-/q-1.0.0.tgz"
     },
-    "node-espruino": {
-      "version": "0.1.5",
-      "from": "node-espruino@",
-      "resolved": "https://registry.npmjs.org/node-espruino/-/node-espruino-0.1.5.tgz",
-      "dependencies": {
-        "lodash": {
-          "version": "2.4.1",
-          "from": "lodash@~2.4.1"
-        },
-        "minimist": {
-          "version": "0.0.7",
-          "from": "minimist@0.0.7",
-          "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.7.tgz"
-        },
-        "string": {
-          "version": "1.8.0",
-          "from": "string@~1.8.0",
-          "resolved": "https://registry.npmjs.org/string/-/string-1.8.0.tgz"
-        }
-      }
-    },
     "gulp": {
       "version": "3.6.2",
       "from": "gulp@3.6.2",
@@ -1022,6 +1001,39 @@
               "from": "uglify-to-browserify@~1.0.0"
             }
           }
+        }
+      }
+    },
+    "esprima": {
+      "version": "1.2.1",
+      "from": "esprima@"
+    },
+    "gulp-mocha": {
+      "version": "0.4.1",
+      "from": "gulp-mocha@"
+    },
+    "expect.js": {
+      "version": "0.3.1",
+      "from": "expect.js@",
+      "resolved": "https://registry.npmjs.org/expect.js/-/expect.js-0.3.1.tgz"
+    },
+    "breeze-dag": {
+      "version": "0.1.0",
+      "from": "breeze-dag@",
+      "dependencies": {
+        "breeze-queue": {
+          "version": "0.1.0",
+          "from": "breeze-queue@0.1.x",
+          "dependencies": {
+            "breeze-nexttick": {
+              "version": "0.2.1",
+              "from": "breeze-nexttick@*"
+            }
+          }
+        },
+        "gaia-tsort": {
+          "version": "0.1.0",
+          "from": "gaia-tsort@*"
         }
       }
     }

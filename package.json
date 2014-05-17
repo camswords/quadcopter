@@ -30,6 +30,7 @@
     "gulp-uglify": "*",
     "esprima": "*",
     "gulp-mocha": "*",
-    "expect.js": "*"
+    "expect.js": "*",
+    "breeze-dag": "*"
   }
 }
