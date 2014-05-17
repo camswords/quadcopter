@@ -1,7 +1,7 @@
 dag = require 'breeze-dag'
 
 module.exports = (defines, callback) ->
-  return callback([]) if !defines
+  return callback(null, []) if !defines
 
   edges = []
   ordered = []
@@ -25,6 +25,6 @@ module.exports = (defines, callback) ->
     next()
 
 
-  onDone = (error) -> callback(ordered)
+  onDone = (error) -> callback(error, ordered)
 
   dag(edges, 1, onEdge, onDone)

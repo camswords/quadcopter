@@ -4,17 +4,17 @@ order = require '../src/order-defines'
 describe 'order-defines', ->
 
   it 'should return empty array when no defines are provided', (done) ->
-    order [], (ordered) ->
+    order [], (error, ordered) ->
       expect(ordered).to.eql([])
       done()
 
   it 'should return empty array when defines are null', (done) ->
-    order null, (ordered) ->
+    order null, (error, ordered) ->
       expect(ordered).to.eql([])
       done()
 
   it 'should return empty array when defines are undefined', (done) ->
-    order undefined, (ordered) ->
+    order undefined, (error, ordered) ->
       expect(ordered).to.eql([])
       done()
 
@@ -24,7 +24,7 @@ describe 'order-defines', ->
         dependencyNames: []
         factory: 'factory'
 
-    order defines, (ordered) ->
+    order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(1)
       expect(ordered[0].name).to.be('module')
       expect(ordered[0].dependencyNames).to.eql([])
@@ -36,7 +36,7 @@ describe 'order-defines', ->
       moduleA: dependencyNames: []
       moduleB: dependencyNames: []
 
-    order defines, (ordered) ->
+    order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
       expect(ordered[0].name).to.be('moduleA')
       expect(ordered[0].dependencyNames).to.eql([])
@@ -49,7 +49,7 @@ describe 'order-defines', ->
       moduleA: dependencyNames: []
       moduleB: dependencyNames: ['moduleA']
 
-    order defines, (ordered) ->
+    order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
       expect(ordered[0].name).to.be('moduleA')
       expect(ordered[0].dependencyNames).to.eql([])
@@ -62,7 +62,7 @@ describe 'order-defines', ->
       moduleB: dependencyNames: ['moduleA']
       moduleA: dependencyNames: []
 
-    order defines, (ordered) ->
+    order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
       expect(ordered[0].name).to.be('moduleA')
       expect(ordered[0].dependencyNames).to.eql([])
@@ -77,7 +77,7 @@ describe 'order-defines', ->
       moduleD: dependencyNames: ['moduleC']
       moduleC: dependencyNames: []
 
-    order defines, (ordered) ->
+    order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(4)
       expect(ordered[0].name).to.be('moduleA')
       expect(ordered[0].dependencyNames).to.eql([])
@@ -87,4 +87,13 @@ describe 'order-defines', ->
       expect(ordered[2].dependencyNames).to.eql(['moduleA'])
       expect(ordered[3].name).to.be('moduleD')
       expect(ordered[3].dependencyNames).to.eql(['moduleC'])
+      done()
+
+  it 'should throw error when there are cyclic dependencies', (done) ->
+    defines =
+      moduleA: dependencyNames: ['moduleB']
+      moduleB: dependencyNames: ['moduleA']
+
+    order defines, (error) ->
+      expect(error.message).to.be('moduleA can not come before moduleB')
       done()
