@@ -31,6 +31,7 @@
     "esprima": "*",
     "gulp-mocha": "*",
     "expect.js": "*",
-    "breeze-dag": "*"
+    "breeze-dag": "*",
+    "escodegen": "*"
   }
 }
