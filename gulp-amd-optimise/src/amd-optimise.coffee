@@ -19,8 +19,11 @@ module.exports = ->
       ast = astFactory.build file.contents.toString()
 
       order ast.defines(), (error, ordered) ->
-        sourceCode = modules.generate(ordered)
-        file.contents = new Buffer(sourceCode)
-        stream.push(file)
-        callback()
+        if error
+          stream.push(null)
+          callback(error)
+        else
+          file.contents = new Buffer(modules.generate(ordered))
+          stream.push(file)
+          callback()
 

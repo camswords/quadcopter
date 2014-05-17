@@ -37,6 +37,13 @@ describe 'amd-optimise', ->
           expect(modules['h']).to.be('fabgababaceh')
           done()
 
+  it 'should barf when cyclic modules are defined', (done) ->
+    gulp.src('./gulp-amd-optimise/test/cyclic-modules.js')
+        .pipe amdOptimise()
+        .on 'error', (error) ->
+          expect(error.message).to.be('a can not come before b')
+          done()
+
   it 'should pass along non read file streams', (done) ->
     createObjectStream(new File(contents: null))
       .pipe through.obj (file, encoding, callback) ->
