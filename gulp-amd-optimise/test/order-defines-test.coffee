@@ -21,6 +21,7 @@ describe 'order-defines', ->
   it 'should return define when there is only one', (done) ->
     defines =
       module:
+        name: 'module',
         dependencyNames: []
         factory: 'factory'
 
@@ -33,8 +34,8 @@ describe 'order-defines', ->
 
   it 'should return defines when they dont have any dependencies', (done) ->
     defines =
-      moduleA: dependencyNames: []
-      moduleB: dependencyNames: []
+      moduleA: name: 'moduleA', dependencyNames: []
+      moduleB: name: 'moduleB', dependencyNames: []
 
     order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
@@ -46,8 +47,8 @@ describe 'order-defines', ->
 
   it 'should return defines in least constrained dependencies order when provided in order', (done) ->
     defines =
-      moduleA: dependencyNames: []
-      moduleB: dependencyNames: ['moduleA']
+      moduleA: name: 'moduleA', dependencyNames: []
+      moduleB: name: 'moduleB', dependencyNames: ['moduleA']
 
     order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
@@ -59,8 +60,8 @@ describe 'order-defines', ->
 
   it 'should return defines in least constrained dependencies order when provided out of order', (done) ->
     defines =
-      moduleB: dependencyNames: ['moduleA']
-      moduleA: dependencyNames: []
+      moduleB: name: 'moduleB', dependencyNames: ['moduleA']
+      moduleA: name: 'moduleA', dependencyNames: []
 
     order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(2)
@@ -72,10 +73,10 @@ describe 'order-defines', ->
 
   it 'should include disconnected module dependencies', (done) ->
     defines =
-      moduleA: dependencyNames: []
-      moduleB: dependencyNames: ['moduleA']
-      moduleD: dependencyNames: ['moduleC']
-      moduleC: dependencyNames: []
+      moduleA: name: 'moduleA', dependencyNames: []
+      moduleB: name: 'moduleB', dependencyNames: ['moduleA']
+      moduleD: name: 'moduleD', dependencyNames: ['moduleC']
+      moduleC: name: 'moduleC', dependencyNames: []
 
     order defines, (error, ordered) ->
       expect(Object.keys(ordered).length).to.be(4)
@@ -91,8 +92,8 @@ describe 'order-defines', ->
 
   it 'should throw error when there are cyclic dependencies', (done) ->
     defines =
-      moduleA: dependencyNames: ['moduleB']
-      moduleB: dependencyNames: ['moduleA']
+      moduleA: name: 'moduleA', dependencyNames: ['moduleB']
+      moduleB: name: 'moduleB', dependencyNames: ['moduleA']
 
     order defines, (error) ->
       expect(error.message).to.be('moduleA can not come before moduleB')

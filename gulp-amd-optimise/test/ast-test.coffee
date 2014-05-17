@@ -16,6 +16,7 @@ describe 'ast', ->
 
       defined = ast.defines()
       expect(Object.keys(defined).length).to.be(1)
+      expect(defined['module'].name).to.be('module')
       expect(defined['module'].dependencyNames).to.eql([])
       expect(defined['module'].factory.type).to.be('FunctionExpression')
 
@@ -47,7 +48,9 @@ describe 'ast', ->
 
       defined = ast.defines()
       expect(Object.keys(defined).length).to.be(2)
+      expect(defined['moduleA'].name).to.be('moduleA')
       expect(defined['moduleA'].dependencyNames).to.eql(['moduleC'])
+      expect(defined['moduleB'].name).to.be('moduleB')
       expect(defined['moduleB'].dependencyNames).to.eql(['moduleD', 'moduleE'])
 
     it 'should ignore source code that is not a define', ->

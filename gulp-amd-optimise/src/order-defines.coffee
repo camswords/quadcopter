@@ -14,17 +14,8 @@ module.exports = (defines, callback) ->
 
     edges.push(['start', moduleName])
 
-
   onEdge = (moduleName, next) ->
-    if moduleName != 'start'
-      module = defines[moduleName]
-      module.name = moduleName
-
-      ordered.push(module)
-
+    ordered.push defines[moduleName] if moduleName != 'start'
     next()
 
-
-  onDone = (error) -> callback(error, ordered)
-
-  dag(edges, 1, onEdge, onDone)
+  dag edges, 1, onEdge, (error) -> callback(error, ordered)

@@ -17,10 +17,12 @@ module.exports =
 
           if parameters.length == 2
             defines[name] =
+              name: name
               dependencyNames: []
               factory: parameters[1]
           else if parameters.length == 3
             defines[name] =
+              name: name
               dependencyNames: (element.value for element in parameters[1].elements)
               factory: parameters[2]
 
