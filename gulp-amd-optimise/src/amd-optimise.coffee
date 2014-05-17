@@ -6,11 +6,14 @@ order = require './order-defines'
 module.exports = ->
   through.obj (file, encoding, callback) ->
     stream = @
-#    if file.isNull()
-#      publish.content(null)
-#
-#    if file.isStream()
-#      publish.error('gulp-espruino does not support streaming. Barfing.')
+
+    if file.isNull()
+      stream.push(null)
+      callback()
+
+    if file.isStream()
+      stream.push(null)
+      callback('gulp-amd-optimise does not support streaming. Barfing.')
 
     if file.isBuffer()
       ast = astFactory.build file.contents.toString()
