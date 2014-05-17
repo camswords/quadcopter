@@ -49,3 +49,22 @@ describe 'ast', ->
       expect(Object.keys(defined).length).to.be(2)
       expect(defined['moduleA'].dependencyNames).to.eql(['moduleC'])
       expect(defined['moduleB'].dependencyNames).to.eql(['moduleD', 'moduleE'])
+
+    it 'should ignore source code that is not a define', ->
+      ast = astFactory.build(
+          'console.log("foo");
+           define("module", [], function() {});
+           console.log("bar");')
+
+      defined = ast.defines()
+      expect(Object.keys(defined).length).to.be(1)
+      expect(defined['module'].dependencyNames).to.eql([])
+
+    it 'should ignore defines that are called from within functions', ->
+      ast = astFactory.build(
+          'var myfunc = function() {
+            define("module", [], function() {});
+           };')
+
+      defined = ast.defines()
+      expect(Object.keys(defined).length).to.be(0)

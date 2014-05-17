@@ -26,6 +26,4 @@ module.exports =
 
       defines
 
-
-
     ast
