@@ -14,3 +14,5 @@ gulp.task 'performance-defined', ['clean'], -> gulps['performance-defined']()
 gulp.task 'performance-running', ['clean'], -> gulps['performance-running']()
 
 gulp.task 'deploy', ['clean'], -> gulps['deploy']()
+
+gulp.task 'test-optimise-amd', ['clean'], -> gulps['test-optimise-amd']()

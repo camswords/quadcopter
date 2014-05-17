@@ -6,7 +6,6 @@
     "coffee-script": "*",
     "serialport": "*",
     "q": "*",
-    "node-espruino": "*",
     "gulp": "*",
     "gulp-coffee": "*",
     "gulp-concat": "*",
@@ -28,6 +27,9 @@
     "require-dir": "*",
     "async": "*",
     "cli-table": "*",
-    "gulp-uglify": "*"
+    "gulp-uglify": "*",
+    "esprima": "*",
+    "gulp-mocha": "*",
+    "expect.js": "*"
   }
 }
