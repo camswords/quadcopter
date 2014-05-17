@@ -32,3 +32,20 @@ describe 'ast', ->
 
       defined = ast.defines()
       expect(Object.keys(defined).length).to.be(0)
+
+    it 'should return dependency names', ->
+      ast = astFactory.build('define("module", ["dependencyA", "dependencyB"], function() {});')
+
+      defined = ast.defines()
+      expect(Object.keys(defined).length).to.be(1)
+      expect(defined['module'].dependencyNames).to.eql(['dependencyA', 'dependencyB'])
+
+    it 'should return dependencies when there are multiple defines', ->
+      ast = astFactory.build(
+        'define("moduleA", ["moduleC"], function() {});
+         define("moduleB", ["moduleD", "moduleE"], function() {});')
+
+      defined = ast.defines()
+      expect(Object.keys(defined).length).to.be(2)
+      expect(defined['moduleA'].dependencyNames).to.eql(['moduleC'])
+      expect(defined['moduleB'].dependencyNames).to.eql(['moduleD', 'moduleE'])
