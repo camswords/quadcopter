@@ -944,22 +944,6 @@
       "from": "require-dir@",
       "resolved": "https://registry.npmjs.org/require-dir/-/require-dir-0.1.0.tgz"
     },
-    "async": {
-      "version": "0.8.0",
-      "from": "async@",
-      "resolved": "https://registry.npmjs.org/async/-/async-0.8.0.tgz"
-    },
-    "cli-table": {
-      "version": "0.3.0",
-      "from": "cli-table@",
-      "resolved": "https://registry.npmjs.org/cli-table/-/cli-table-0.3.0.tgz",
-      "dependencies": {
-        "colors": {
-          "version": "0.6.2",
-          "from": "colors@0.6.2"
-        }
-      }
-    },
     "gulp-uglify": {
       "version": "0.2.1",
       "from": "gulp-uglify@",
