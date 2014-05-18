@@ -8,5 +8,8 @@ module.exports = ->
     additionalSourceFiles: [
       './src/performance/instrument-memory-usage.coffee',
       './src/performance/sample-running-quadcopter.coffee']
+    optimiseAmd: true
+    recordMemoryUsage: true
+
   .pipe espruino.deploy(connection: { fakePath: '../Espruino/espruino' })
     .on 'data', (data) -> gutil.log(data.contents.toString())

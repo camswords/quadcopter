@@ -12,6 +12,7 @@ module.exports = (overrides) ->
     configuration: 'test'
     additionalSourceFiles: []
     optimiseAmd: false
+    recordMemoryUsage: false
   options = extend({}, defaults, overrides)
 
   src = []
@@ -27,7 +28,7 @@ module.exports = (overrides) ->
       .pipe gulpif(/[.]coffee/, coffee(bare: true).on('error', gutil.log))
       .pipe concat('application-unminified.js')
       .pipe gulp.dest('build')
-      .pipe gulpif(options.optimiseAmd, optimiseAmd().on('error', gutil.log))
+      .pipe gulpif(options.optimiseAmd, optimiseAmd(options).on('error', gutil.log))
       .pipe gulpif(options.optimiseAmd, concat('application-amd-optimised.js'))
       .pipe gulp.dest('build')
       .pipe minify()

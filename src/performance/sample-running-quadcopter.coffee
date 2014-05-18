@@ -1,9 +1,10 @@
 
-require ['utility/scheduler', 'quadcopter'], (scheduler, quadcopter) ->
-  scheduler.after(100).execute -> quadcopter.fly()
-  scheduler.after(500).execute ->
-    for moduleName in Object.keys(amdModuleMemory)
-      console.log 'module memory ', amdModuleMemory[moduleName], moduleName
+define 'performance-test', ['utility/scheduler', 'quadcopter'], (scheduler, quadcopter) ->
+  scheduler.after(1000).execute ->
+    console.log '   blocks', '  module name'
+
+    for moduleName in Object.keys(memoryUsage)
+        console.log '    ', memoryUsage[moduleName], '    ', moduleName
 
     console.log 'running memory:', process.memory().usage
     quadcopter.kill()

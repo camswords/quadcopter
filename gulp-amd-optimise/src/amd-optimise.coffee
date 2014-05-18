@@ -3,7 +3,7 @@ astFactory = require './ast'
 modules = require './generate-modules'
 order = require './order-defines'
 
-module.exports = ->
+module.exports = (options) ->
   through.obj (file, encoding, callback) ->
     stream = @
 
@@ -23,7 +23,7 @@ module.exports = ->
           stream.push(null)
           callback(error)
         else
-          file.contents = new Buffer(modules.generate(ordered))
+          file.contents = new Buffer(modules.generate(ordered, options))
           stream.push(file)
           callback()
 
