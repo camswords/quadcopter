@@ -52,3 +52,28 @@ describe 'generate-modules', ->
     expect(modules['moduleA']).to.be('a')
     expect(modules['moduleB']).to.be('ab')
     expect(modules['moduleC']).to.be('abac')
+
+  it 'should record amount of memory each module requires', ->
+    moduleA =
+      name: 'moduleA'
+      dependencyNames: []
+      factory: astOfFunction('function() { return 102; }')
+
+    moduleB =
+      name: 'moduleB'
+      dependencyNames: []
+      factory: astOfFunction('function(moduleA) { return "a string"; }')
+
+    processMemoryDefn = "
+      var timesCalled = 0;
+
+      process.memory = function() {
+        timesCalled++;
+        return { usage: timesCalled * timesCalled };
+      };
+    "
+    sourceCode = sourceCode.generate([moduleA, moduleB], recordMemoryUsage: true)
+    eval(processMemoryDefn + sourceCode)
+
+    expect(memoryUsage['moduleA']).to.be(3)
+    expect(memoryUsage['moduleB']).to.be(7)

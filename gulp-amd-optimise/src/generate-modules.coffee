@@ -1,58 +1,136 @@
 escodegen = require 'escodegen'
 
-defineModuleVariable = ->
-  type: "ExpressionStatement",
+instantiateObject = (variableName) ->
+  type: "ExpressionStatement"
   expression:
-    type: "AssignmentExpression",
-    operator: "=",
+    type: "AssignmentExpression"
+    operator: "="
     left:
-      type: "Identifier",
-      name: "modules"
+      type: "Identifier"
+      name: variableName
     right:
-      type: "ObjectExpression",
+      type: "ObjectExpression"
       properties: []
 
 callModuleFunction = (module) ->
   statement =
-    type: 'ExpressionStatement',
+    type: 'ExpressionStatement'
     expression:
-      type: 'AssignmentExpression',
-      operator: '=',
+      type: 'AssignmentExpression'
+      operator: '='
       left:
-        type: 'MemberExpression',
-        computed: true,
+        type: 'MemberExpression'
+        computed: true
         object:
-          type: 'Identifier',
+          type: 'Identifier'
           name: 'modules'
         property:
-          type: 'Literal',
-          value: module.name,
+          type: 'Literal'
+          value: module.name
           raw: module.name
       right:
-        type: 'CallExpression',
+        type: 'CallExpression'
         callee: module.factory
         arguments: []
 
   for dependencyName in module.dependencyNames
     statement.expression.right.arguments.push
-      type: 'MemberExpression',
-      computed: true,
+      type: 'MemberExpression'
+      computed: true
       object:
-        type: 'Identifier',
+        type: 'Identifier'
         name: 'modules'
       property:
-        type: 'Literal',
-        value: dependencyName,
+        type: 'Literal'
+        value: dependencyName
         raw: dependencyName
 
   statement
 
+recordMemoryBaseline = ->
+  type: 'VariableDeclaration'
+  declarations: [
+    type: 'VariableDeclarator'
+    id:
+      type: 'Identifier'
+      name: 'memoryBeforeModule'
+    init:
+      type: 'MemberExpression'
+      computed: false
+      object:
+        type: 'CallExpression'
+        callee:
+          type: 'MemberExpression'
+          computed: false
+          object:
+            type: 'Identifier'
+            name: 'process'
+          property:
+            type: 'Identifier'
+            name: 'memory'
+        arguments: []
+      property:
+        type: 'Identifier'
+        name: 'usage'
+  ]
+  kind: 'var'
+
+recordMemoryForModule = (module) ->
+  type: 'ExpressionStatement'
+  expression:
+    type: 'AssignmentExpression'
+    operator: '='
+    left:
+      type: 'MemberExpression'
+      computed: true
+      object:
+        type: 'Identifier'
+        name: 'memoryUsage'
+      property:
+        type: 'Literal'
+        value: module.name
+        raw: module.name
+    right:
+      type: 'BinaryExpression'
+      operator: '-'
+      left:
+        type: 'MemberExpression'
+        computed: false
+        object:
+          type: 'CallExpression'
+          callee:
+            type: 'MemberExpression'
+            computed: false
+            object:
+              type: 'Identifier'
+              name: 'process'
+            property:
+              type: 'Identifier'
+              name: 'memory'
+          arguments: []
+        property:
+          type: 'Identifier'
+          name: 'usage'
+      right:
+        type: 'Identifier'
+        name: 'memoryBeforeModule'
+
 module.exports =
-  generate: (modules) ->
-    ast = type: "Program", body: [defineModuleVariable()]
+  generate: (modules, options) ->
+    ast =
+      type: "Program"
+      body: [instantiateObject('modules')]
+
+    if options?.recordMemoryUsage
+      ast.body.push instantiateObject('memoryUsage')
 
     for module in modules
-      ast.body.push(callModuleFunction(module))
+      if options?.recordMemoryUsage
+        ast.body.push recordMemoryBaseline()
+      ast.body.push callModuleFunction(module)
+
+      if options?.recordMemoryUsage
+        ast.body.push recordMemoryForModule(module)
 
     escodegen.generate(ast)
 
