@@ -33,7 +33,7 @@ module.exports = ->
     .pipe concat('tests.js')
     .pipe gulp.dest('build')
 
-  app = application(excludeStartupScript: true, configuration: 'test')
+  app = application(configuration: 'test')
   eventStream.merge(app, tests)
     .pipe order(['**/application.js', '**/tests.js'])
     .pipe concat('all.js')

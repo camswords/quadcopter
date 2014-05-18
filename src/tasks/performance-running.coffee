@@ -5,7 +5,6 @@ gutil = require 'gulp-util'
 module.exports = ->
   application
     configuration: 'performance'
-    excludeStartupScript: true
     additionalSourceFiles: [
       './src/performance/instrument-memory-usage.coffee',
       './src/performance/sample-running-quadcopter.coffee']
