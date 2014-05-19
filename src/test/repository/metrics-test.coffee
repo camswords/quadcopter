@@ -30,3 +30,16 @@ define 'repository/metrics-test', ['spec-helper', 'mini-test-it'], (specHelper, 
 
       test.expect(metricsFile).toBe('metrics-ABCDE.txt')
       test.done()
+
+  it 'metrics repository should return saved metrics', (test) ->
+
+    stubs = {
+      'utility/random-string-generator': -> 'ABCDE'
+      'espruino/file': ->
+        append: (->)
+        read: -> 'my.file.contents'
+    }
+    specHelper.require 'repository/metrics', stubs, (metricsRepository) ->
+      fileContents = metricsRepository.get()
+      test.expect(fileContents).toBe 'my.file.contents'
+      test.done()
