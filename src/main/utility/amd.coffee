@@ -2,7 +2,6 @@ defined = {}
 overrides = {}
 waiting = {}
 cached = {}
-amdModuleMemory = {}
 
 load = (name) ->
   loaded = Deferred.create()
@@ -14,14 +13,7 @@ load = (name) ->
       loaded.resolve cached[name]
     else
       require defined[name].dependencyNames, ->
-        memoryBefore = process.memory().usage if define.config.recordMemory
         cached[name] = defined[name].factory.apply({}, arguments)
-        amdModuleMemory[name] = (process.memory().usage - memoryBefore) if define.config.recordMemory
-
-        if define.config.optimise
-          delete defined[name].dependencyNames
-          delete defined[name].factory
-
         loaded.resolve cached[name]
   else
     waiting[name] = waiting[name] && waiting || []
@@ -41,7 +33,6 @@ define = (name, dependencyNames, factory) ->
   if waiting[name]
     load(name).then (value) ->
       loaded.resolve(value) for loaded in waiting[name]
-      delete waiting[name] if define.config.optimise
 
 require = (dependencyNames, factory) ->
   loaded = dependencyNames.map (name) -> load(name)
