@@ -10,7 +10,7 @@ define 'utility/scheduler', ->
     execute: (name, command) ->
       self.jobs[name] = setInterval(command, milliseconds)
 
-  self.continuously = -> self.every(1)
+  self.continuously = -> self.every(0)
 
   self.stopAll = ->
     for job in Object.keys(self.jobs)

@@ -1,6 +1,6 @@
 
 define 'performance-test', ['utility/scheduler', 'quadcopter', 'repository/metrics'], (scheduler, quadcopter, metrics) ->
-  scheduler.after(2000).execute ->
+  scheduler.after(10000).execute ->
     console.log '-----------------MEMORY-------------------'
     console.log '   blocks', '  module name'
 
