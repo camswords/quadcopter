@@ -3,7 +3,7 @@ define 'configuration', ->
     digitalPulse: digitalPulse
     setWatch: setWatch
   throttle:
-    inputPin: A13
+    inputPin: A8
   propeller:
     frontLeft:
       outputPin: C6

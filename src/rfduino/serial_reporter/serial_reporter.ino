@@ -68,9 +68,10 @@ private:
 
 CircularBuffer<char, 1000> buffer;
 int connected = false;
+int loops = 0;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600, 1, 0);
   RFduinoBLE.begin();
 }
 
@@ -80,12 +81,9 @@ void RFduinoBLE_onConnect() {
 
 void loop() {
   unsigned long starttime = millis();
-
+  
   while((Serial.available() > 0) && ((millis() - starttime) < MAX_MILLIS_TO_WAIT) ) {
-    char value = Serial.read();
-    Serial.print(' read:');
-    Serial.print(value);
-    buffer.push(value);
+    buffer.push(Serial.read());
   }
 
   if (connected) {
@@ -94,15 +92,12 @@ void loop() {
     char buf[charactersToSend];
     for (int i = 0; i < charactersToSend; i++) {
       buf[i] = buffer.pop();
-      Serial.print(buf[i]);
     }
     
     if (charactersToSend > 0) {
       // send is queued (the ble stack delays send to the start of the next tx window)
       while (! RFduinoBLE.send(buf, charactersToSend))
         ;  // all tx buffers in use (can't send - try again later)
-      
-      Serial.println();
     }
   }
 }
