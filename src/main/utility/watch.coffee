@@ -1,10 +1,18 @@
 define 'utility/watch', ['espruino/set-watch', 'espruino/clear-watch', 'utility/fail-whale'], (setWatch, clearWatch, failWhale) ->
 
   toDuration = (onChange) ->
+    edgeUpTime = 0
+    
     (event) ->
-      duration = Math.floor((event.time - event.lastTime) * 1000000)
-      onChange(duration) unless isNaN(duration)
+      if event.state == true
+        edgeUpTime = event.time
 
+      if event.state == false
+        if edgeUpTime != 0
+          duration = Math.floor((event.time - edgeUpTime) * 1000000)
+          onChange(duration) if duration > 950 && duration < 2050
+
+        edgeUpTime = 0
 
   self = {}
 
