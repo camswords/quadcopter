@@ -1,10 +1,9 @@
 define 'quadcopter', [
-         'utility/watch', 'utility/scheduler', 'repository/throttle', 'flight/adjust-throttles', 'configuration'], (
-         watch, scheduler, throttleRepository, adjustThrottles, config) ->
+         'utility/pwm', 'utility/scheduler', 'repository/throttle', 'flight/adjust-throttles', 'configuration'], (
+         pwm, scheduler, throttleRepository, adjustThrottles, config) ->
 
   fly: ->
-    watch.fallingEdge
-      name: 'throttle'
+    pwm.watch
       pin: config.throttle.inputPin
       onChange: (throttle) -> throttleRepository.save(throttle)
 
