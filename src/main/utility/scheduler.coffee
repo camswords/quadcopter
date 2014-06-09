@@ -1,23 +1,10 @@
 
 define 'utility/scheduler', ->
-  self = {}
-  self.jobs = {}
 
-  self.after = (milliseconds) ->
+  after: (milliseconds) ->
     execute: (command) -> setTimeout(command, milliseconds)
 
-  self.every = (milliseconds) ->
-    execute: (name, command) ->
-      self.jobs[name] = setInterval(command, milliseconds)
+  every: (milliseconds) ->
+    execute: (name, command) -> setInterval(command, milliseconds)
 
-  self.continuously = -> self.every(0)
-
-  self.stopAll = ->
-    for job in Object.keys(self.jobs)
-      self.stop(job)
-
-  self.stop = (name) ->
-    clearInterval(self.jobs[name])
-    delete self.jobs[name]
-
-  self
+  stopAll: -> clearTimeout()

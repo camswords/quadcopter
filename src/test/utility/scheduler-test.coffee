@@ -8,7 +8,7 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
       scheduler.every(100).execute 'foo', ->
         timesCalled++
         if timesCalled == 5
-          scheduler.stop 'foo'
+          scheduler.stopAll()
 
           timeTaken = getTime() - startTime
           test.expect(timeTaken).toBeLessThan(0.505)
@@ -25,28 +25,12 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
         test.expect(timeTaken).toBeGreaterThan(0.199)
         test.done()
 
-  it "scheduler should stop a specific scheduled job", (test) ->
+  it "scheduler should stop all scheduled interval jobs", (test) ->
     specHelper.require 'utility/scheduler', (scheduler) ->
       timesCalled = 0
 
       waitABit = ->
         test.expect(timesCalled).toBe(1)
-        test.expect(scheduler.jobs['scheduledJob']).toBeFalsy()
-        test.done()
-
-      scheduler.every(50).execute 'scheduledJob', ->
-        timesCalled++
-
-        scheduler.stop 'scheduledJob'
-        setTimeout(waitABit, 300)
-
-  it "scheduler should stop all scheduled jobs", (test) ->
-    specHelper.require 'utility/scheduler', (scheduler) ->
-      timesCalled = 0
-
-      waitABit = ->
-        test.expect(timesCalled).toBe(1)
-        test.expect(scheduler.jobs['another.scheduled.job']).toBeFalsy()
         test.done()
 
       scheduler.every(50).execute 'another.scheduled.job', ->
@@ -55,7 +39,15 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
         scheduler.stopAll()
         setTimeout(waitABit, 300)
 
-  it "scheduler should continue unfased when stopping non existant scheduled job", (test) ->
+  it "scheduler should stop all scheduled timeout jobs", (test) ->
     specHelper.require 'utility/scheduler', (scheduler) ->
-      scheduler.stop 'not.a.real.job'
-      test.done()
+      timesCalled = 0
+
+      finishTest = ->
+        test.expect(timesCalled).toBe(0)
+        test.done()
+
+      scheduler.after(150).execute -> timesCalled++
+
+      scheduler.stopAll()
+      setTimeout(finishTest, 300)

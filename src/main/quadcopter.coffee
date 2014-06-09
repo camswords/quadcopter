@@ -12,4 +12,4 @@ define 'quadcopter', [
 
   kill: ->
     scheduler.stopAll()
-    watch.clearAll()
+    pwm.stopAllWatches()

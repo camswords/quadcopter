@@ -23,5 +23,5 @@ define 'configuration', ->
     rx: 6
     tx: 7
   features:
-    saveAnalyticsToFile: false
+    saveAnalyticsToFile: true
 
