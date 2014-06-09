@@ -9,6 +9,7 @@ define 'configuration', ->
     inputPin: 1
     updateIntervalMs: 200
   propeller:
+    pwmFrequency: 50
     frontLeft:
       outputPin: 2
     frontRight:

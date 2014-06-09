@@ -7,6 +7,7 @@ define 'configuration', ->
     inputPin: A8
     updateIntervalMs: 200
   propeller:
+    pwmFrequency: 50
     frontLeft:
       outputPin: C6
     frontRight:
