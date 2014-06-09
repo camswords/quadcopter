@@ -1,10 +1,11 @@
 
-define 'flight/propeller', ['espruino/digital-pulse', 'utility/fail-whale', 'utility/is-number'], (digitalPulse, failWhale, isNumber) ->
+define 'flight/propeller', [
+    'utility/fail-whale', 'espruino/analog-write'], (
+    failWhale, analogWrite) ->
+
   create: (pin) ->
     if !pin
       return failWhale("failed to create propeller, pin (#{pin}) was not specified.")
 
     accelerateTo: (throttle) ->
-      if isNumber(throttle)
-        safeThrottle = Math.max(1000, Math.min(throttle, 2000))
-        digitalPulse(pin, 1, safeThrottle / 1000)
+      analogWrite(pin, throttle / 10000 / 2, freq: 50)
