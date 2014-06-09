@@ -4,7 +4,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     calledWithArguments = null
     setWatch = -> calledWithArguments = arguments.slice(0)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 56,
@@ -18,7 +20,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
       callback(time: 1.737293958663, state: true)
       callback(time: 1.738292932510, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -33,7 +37,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
       callback(time: 5.500, state: false)
 
     # why is this 999 not 1000? Seems like an Espruino rounding problem
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -47,7 +53,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
       callback(time: 5.500, state: false)
       callback(time: 5.550, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -64,7 +72,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
 
     calledValues = []
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -76,14 +86,16 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
             test.expect(calledValues[1]).toBe(1999)
             test.done()
 
-  it "watch should ignore onChange when time for pulse up event is NaN", (test) ->
+  it "watch should ignore onChange when time for pulse up event is not a number", (test) ->
     setWatch = (callback) ->
       callback(time: NaN, state: true)
       callback(time: 1.738292932, state: false)
       callback(time: 1.739, state: true)
       callback(time: 1.740, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -91,14 +103,16 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
           test.expect(value).toBe(1000)
           test.done()
 
-  it "watch should ignore onChange when time for pulse down event is NaN", (test) ->
+  it "watch should ignore onChange when time for pulse down event is not a number", (test) ->
     setWatch = (callback) ->
       callback(time: 1.736082933, state: true)
       callback(time: NaN, state: false)
       callback(time: 1.739, state: true)
       callback(time: 1.740, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -113,7 +127,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
       callback(time: 1.739, state: true)
       callback(time: 1.740, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -128,7 +144,9 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
       callback(time: 1.739, state: true)
       callback(time: 1.740, state: false)
 
-    specHelper.require 'utility/watch', { 'espruino/set-watch': setWatch }, (watch) ->
+    stubs = 'espruino/set-watch': setWatch
+
+    specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge
         name: 'mywatch',
         pin: 1,
@@ -141,7 +159,10 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     setWatch = ->
     failWhale = (message) -> capturedMessage = message
 
-    stubs = { 'espruino/set-watch': setWatch, 'utility/fail-whale': failWhale }
+    stubs =
+      'espruino/set-watch': setWatch,
+      'utility/fail-whale': failWhale
+
     specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge()
       test.expect(capturedMessage).toBe('failed to start watch[undefined]. pin (undefined), onChange and name must be specified.')
@@ -152,7 +173,10 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     setWatch = ->
     failWhale = (message) -> capturedMessage = message
 
-    stubs = { 'espruino/set-watch': setWatch, 'utility/fail-whale': failWhale }
+    stubs =
+      'espruino/set-watch': setWatch,
+      'utility/fail-whale': failWhale
+
     specHelper.require 'utility/watch', stubs, (watch) ->
       watch.fallingEdge name: 'mywatch', onChange: ->
       test.expect(capturedMessage).toBe('failed to start watch[mywatch]. pin (undefined), onChange and name must be specified.')
@@ -162,7 +186,8 @@ define 'utility/watch-test', ['spec-helper', 'mini-test-it'], (specHelper, it) -
     called = false
     clearWatch = -> called = true
 
-    stubs = { 'espruino/clear-watch': clearWatch }
+    stubs = 'espruino/clear-watch': clearWatch
+
     specHelper.require 'utility/watch', stubs, (watch) ->
       watch.clearAll()
       test.expect(called).toBeTruthy()
