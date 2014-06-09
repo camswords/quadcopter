@@ -145,6 +145,8 @@ Error message and password prompt
 
 <li>Analytics</li>
 
+<li>bluetooth</li>
+
 <li>Commodity Flight Controllers</li>
 
 <li>Communicate to the ESCs using i2c</li>
@@ -3492,7 +3494,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Commodity Flight Controllers" modified="20140604083545965" title="$:/HistoryList" type="application/json">
+<div current-tiddler="bluetooth" modified="20140609004257502" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -4805,6 +4807,85 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Commodity Flight Controllers&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Quadcopter&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 215,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 76,
+            &quot;right&quot;: 161,
+            &quot;bottom&quot;: 231,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;PID Tuning&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 337,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 69,
+            &quot;right&quot;: 194,
+            &quot;bottom&quot;: 353,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'PID Tuning'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;PID Tuning&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Flying in formation&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 111,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 116,
+            &quot;right&quot;: 201,
+            &quot;bottom&quot;: 127,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;RfID&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 457,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 28,
+            &quot;right&quot;: 153,
+            &quot;bottom&quot;: 473,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Flying in formation'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Flying in formation&quot;
+    },
+    {
+        &quot;title&quot;: &quot;bluetooth&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 563,
+            &quot;left&quot;: 125,
+            &quot;width&quot;: 59,
+            &quot;right&quot;: 184,
+            &quot;bottom&quot;: 579,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'bluetooth'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;bluetooth&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'bluetooth'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;bluetooth&quot;
     }
 ]</pre>
 </div>
@@ -4838,7 +4919,7 @@ Error message and password prompt
 <div modified="20140515130148324" title="$:/state/tab/sidebar-{-1763509675}">
 <pre>$:/core/ui/SideBar/More</pre>
 </div>
-<div list="[[TW Quadcopter Project]] Quadcopter [[Commodity Flight Controllers]]" title="$:/StoryList">
+<div list="[[TW Quadcopter Project]] [[Flying in formation]] bluetooth" title="$:/StoryList">
 <pre></pre>
 </div>
 <div dependents="$:/themes/tiddlywiki/vanilla" description="A clean theme that emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.0.10-beta">
@@ -4889,6 +4970,12 @@ Error message and password prompt
 
 * Should we be using mavlink? http://qgroundcontrol.org/mavlink/start
 * Should we save information to sdcard, black box style?</pre>
+</div>
+<div created="20140609004237372" modified="20140609004257500" title="bluetooth">
+<pre>
+Decrease power of Bluetooth
+
+* http://forums.hackaday.com/viewtopic.php?f=4&amp;t=380&amp;sid=d46e496a8c1cdae3de50c798f24eb518&amp;start=10</pre>
 </div>
 <div created="20140502051455999" modified="20140604083545964" title="Commodity Flight Controllers">
 <pre>References:
@@ -4955,7 +5042,7 @@ b = new Int8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) :uses 12 storage RAM blocks.
 
 * event lastTime on setWatch is not accurate. Ignore it completely.</pre>
 </div>
-<div created="20140502040307784" modified="20140502052558220" title="Flying in formation">
+<div created="20140502040307784" modified="20140609004228290" title="Flying in formation">
 <pre>To explore regarding position:
 
 * Doppler effect
@@ -4973,7 +5060,7 @@ References:
 
 To explore regarding communcation:
 
-* bluetooth (rfduino)
+* [[bluetooth]] (rfduino)
 * wifi
 * [[mesh networking]]
 * CoAP
@@ -5069,10 +5156,11 @@ It is very easy to write code that will use more than the 45kb of memory. To mit
 
 * YOW talk at https://www.dropbox.com/s/fkbzkgezvx2xwgg/YOW-Night-Hands-on-with-the-IoT.pdf</pre>
 </div>
-<div created="20140502043604733" modified="20140502043609821" title="PID Tuning">
+<div created="20140502043604733" modified="20140609004156871" title="PID Tuning">
 <pre>References:
 
-* [[http://www.multiwii.com/wiki/index.php?title=PID]]</pre>
+* [[http://www.multiwii.com/wiki/index.php?title=PID]]
+* [[http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/]]</pre>
 </div>
 <div created="20140502033844755" modified="20140502051451373" title="Quadcopter">
 <pre>To achieve flight:
