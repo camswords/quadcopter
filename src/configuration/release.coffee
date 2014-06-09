@@ -1,7 +1,6 @@
 define 'configuration', ->
   overrides:
     analogWrite: analogWrite
-    digitalPulse: digitalPulse
     setWatch: setWatch
     serial: Serial4
   throttle:

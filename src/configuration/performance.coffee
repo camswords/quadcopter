@@ -1,7 +1,6 @@
 define 'configuration', ->
   overrides:
     analogWrite: (->)
-    digitalPulse: (->)
     setWatch: (->)
     serial:
       setup: (->)
