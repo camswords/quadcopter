@@ -11,5 +11,6 @@ gulp.task 'test-amd', ['clean'], -> gulps['test-amd']()
 gulp.task 'test-optimise-amd', ['clean'], -> gulps['test-optimise-amd']()
 
 gulp.task 'performance', ['clean'], -> gulps['performance']()
+gulp.task 'watch-analytics', ['clean'], -> gulps['watch-analytics']()
 
 gulp.task 'deploy', ['clean'], -> gulps['deploy']()
