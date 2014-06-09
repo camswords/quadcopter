@@ -1,21 +1,22 @@
-noble = require 'noble'
-through = require 'through2'
-
-recordMessage = (->
-  line = ''
-
-  (linePart) ->
-    unless linePart.indexOf("|") is -1
-      newLineIndex = linePart.indexOf("|") + 1
-      console.log line + linePart.slice(0, newLineIndex)
-      line = ''
-      recordMessage linePart.slice(newLineIndex)
-    else
-      line += linePart
-    return
-)()
 
 module.exports = ->
+  noble = require 'noble'
+  through = require 'through2'
+
+  recordMessage = (->
+    line = ''
+
+    (linePart) ->
+      unless linePart.indexOf("|") is -1
+        newLineIndex = linePart.indexOf("|") + 1
+        console.log line + linePart.slice(0, newLineIndex)
+        line = ''
+        recordMessage linePart.slice(newLineIndex)
+      else
+        line += linePart
+      return
+  )()
+
   console.log('looking for the quadcopter...')
 
   noble.startScanning ["2220"]
