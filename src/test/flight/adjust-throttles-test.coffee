@@ -9,7 +9,7 @@ define 'flight/adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHel
 
     stubs = {
       'flight/propeller': propeller
-      'observer/loop-frequency': notify: (->)
+      'repository/loop-frequency': increment: (->)
     }
 
     specHelper.require 'flight/adjust-throttles' , stubs, (adjustThrottles) ->
@@ -22,12 +22,12 @@ define 'flight/adjust-throttles-test', ['spec-helper', 'mini-test-it'], (specHel
       test.expect(acceleratedTo[3]).toBe(1234)
       test.done()
 
-  it 'adjust-throttles should notify loop frequency observer when it has adjusted throttles', (test) ->
+  it 'adjust-throttles should notify loop frequency repository when it has adjusted throttles', (test) ->
     timesNotified = 0
 
     stubs = {
       'flight/propeller': create: -> accelerateTo: (->)
-      'observer/loop-frequency': notify: -> timesNotified++
+      'repository/loop-frequency': increment: -> timesNotified++
     }
 
     specHelper.require 'flight/adjust-throttles' , stubs, (adjustThrottles) ->
