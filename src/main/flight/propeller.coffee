@@ -8,7 +8,4 @@ define 'flight/propeller', [
       return failWhale("failed to create propeller, pin (#{pin}) was not specified.")
 
     accelerateTo: (throttle) ->
-      dutyCycle = throttle / 10000 / 2
-      throttleOutput.save(dutyCycle)
-
-      analogWrite(pin, dutyCycle, freq: config.propeller.pwmFrequency)
+      analogWrite(pin, throttle, freq: config.propeller.pwmFrequency)
