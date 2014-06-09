@@ -20,3 +20,5 @@ define 'configuration', ->
     baudRate: 9600
     rx: 6
     tx: 7
+  features:
+    saveAnalyticsToFile: false

@@ -7,6 +7,7 @@ define 'repository/metrics-test', ['spec-helper', 'mini-test-it'], (specHelper, 
     stubs = {
       'espruino/time': (-> 56),
       'espruino/file': (-> append: (data) -> written = data)
+      'configuration': features: saveAnalyticsToFile: true
     }
 
     specHelper.require 'repository/metrics', stubs, (metricsRepository) ->
@@ -23,6 +24,7 @@ define 'repository/metrics-test', ['spec-helper', 'mini-test-it'], (specHelper, 
       'espruino/file': (filename) ->
         metricsFile = filename
         return append: (->)
+      'configuration': features: saveAnalyticsToFile: true
     }
 
     specHelper.require 'repository/metrics', stubs, (metricsRepository) ->
@@ -38,8 +40,25 @@ define 'repository/metrics-test', ['spec-helper', 'mini-test-it'], (specHelper, 
       'espruino/file': ->
         append: (->)
         read: -> 'my.file.contents'
+      'configuration': features: saveAnalyticsToFile: true
     }
     specHelper.require 'repository/metrics', stubs, (metricsRepository) ->
       fileContents = metricsRepository.get()
       test.expect(fileContents).toBe 'my.file.contents'
+      test.done()
+
+  it 'metrics repository should not save analytics to file when feature toggle is turned off', (test) ->
+    written = false
+
+    stubs = {
+      'utility/random-string-generator': -> 'ABCDE'
+      'espruino/file': ->
+        append: -> written = true
+        read: (->)
+      'configuration': features: saveAnalyticsToFile: false
+    }
+
+    specHelper.require 'repository/metrics', stubs, (metricsRepository) ->
+      metricsRepository.save('loop-frequency-hz', '407')
+      test.expect(written).toBe false
       test.done()
