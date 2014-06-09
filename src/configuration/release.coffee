@@ -3,6 +3,8 @@ define 'configuration', ->
     analogWrite: analogWrite
     setWatch: setWatch
     serial: Serial4
+  analytics:
+    sampleTimeMs: 1000
   throttle:
     inputPin: A8
     updateIntervalMs: 200

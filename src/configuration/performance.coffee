@@ -5,6 +5,8 @@ define 'configuration', ->
     serial:
       setup: (->)
       write: (->)
+  analytics:
+    sampleTimeMs: 1000
   throttle:
     inputPin: 1
     updateIntervalMs: 200
