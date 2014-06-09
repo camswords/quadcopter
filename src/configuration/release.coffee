@@ -5,6 +5,7 @@ define 'configuration', ->
     serial: Serial4
   throttle:
     inputPin: A8
+    updateIntervalMs: 200
   propeller:
     frontLeft:
       outputPin: C6

@@ -7,6 +7,7 @@ define 'configuration', ->
       write: (->)
   throttle:
     inputPin: 1
+    updateIntervalMs: 200
   propeller:
     frontLeft:
       outputPin: 2
