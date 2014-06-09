@@ -8,8 +8,7 @@ define 'observer/loop-frequency-test', ['spec-helper', 'mini-test-it'], (specHel
 
     stubs = {
       'utility/scheduler':
-        every: -> execute: (name, callback) ->
-          timeoutCallback = callback
+        every: (milliseconds, callback) -> timeoutCallback = callback
       'repository/metrics': save: (name, value) ->
         metricName = name
         metricValue = value
@@ -32,8 +31,7 @@ define 'observer/loop-frequency-test', ['spec-helper', 'mini-test-it'], (specHel
 
     stubs = {
       'utility/scheduler':
-        every: -> execute: (name, callback) ->
-          timeoutCallback = callback
+        every: (milliseconds, callback) -> timeoutCallback = callback
       'repository/metrics': save: (name, value) -> metricValues.push(value)
     }
 

@@ -5,10 +5,10 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
       timesCalled = 0
       startTime = getTime()
 
-      scheduler.every(100).execute 'foo', ->
+      scheduler.every 100, ->
         timesCalled++
         if timesCalled == 5
-          scheduler.stopAll()
+          scheduler.stop()
 
           timeTaken = getTime() - startTime
           test.expect(timeTaken).toBeLessThan(0.505)
@@ -19,7 +19,7 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
     specHelper.require 'utility/scheduler', (scheduler) ->
       startTime = getTime()
 
-      scheduler.after(200).execute ->
+      scheduler.after 200, ->
         timeTaken = getTime() - startTime
         test.expect(timeTaken).toBeLessThan(0.205)
         test.expect(timeTaken).toBeGreaterThan(0.199)
@@ -33,10 +33,10 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
         test.expect(timesCalled).toBe(1)
         test.done()
 
-      scheduler.every(50).execute 'another.scheduled.job', ->
+      scheduler.every 50, ->
         timesCalled++
 
-        scheduler.stopAll()
+        scheduler.stop()
         setTimeout(waitABit, 300)
 
   it "scheduler should stop all scheduled timeout jobs", (test) ->
@@ -47,7 +47,7 @@ define 'utility/scheduler-test', ['spec-helper', 'mini-test-it'], (specHelper, i
         test.expect(timesCalled).toBe(0)
         test.done()
 
-      scheduler.after(150).execute -> timesCalled++
+      scheduler.after 150, -> timesCalled++
 
-      scheduler.stopAll()
+      scheduler.stop()
       setTimeout(finishTest, 300)
