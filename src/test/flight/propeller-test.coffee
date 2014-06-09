@@ -45,6 +45,19 @@ define 'flight/propeller-test', ['spec-helper', 'mini-test-it'], (specHelper, it
       test.expect(calledWithArguments[2]?.freq).toBe(55)
       test.done()
 
+  it 'propeller should record throttle output', (test) ->
+    newThrottle = 0
+
+    stubs =
+      'espruino/analog-write': ->
+      'repository/throttle-output': save: (throttle) -> newThrottle = throttle
+
+    specHelper.require 'flight/propeller', stubs, (propeller) ->
+      propeller.create(1).accelerateTo(2000)
+
+      test.expect(newThrottle).toBe(0.1)
+      test.done()
+
   it 'propeller should fail when pin is not specified', (test) ->
     capturedMessage = null
     stubs = 'utility/fail-whale': (message) -> capturedMessage = message
