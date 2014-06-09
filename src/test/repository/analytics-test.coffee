@@ -1,29 +1,12 @@
 define 'repository/analytics-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
 
-  it 'analytics repository should get throttle value', (test) ->
+  it 'analytics repository should sample time, loop count and throttle', (test) ->
     stubs =
-      'repository/throttle': get: -> 2000
-      'repository/loop-frequency': count: -> 67
-
-    specHelper.require 'repository/analytics', stubs, (analytics) ->
-      test.expect(analytics.get()).toContainString('2000')
-      test.done()
-
-  it 'analytics repository should get loop count', (test) ->
-    stubs =
-      'repository/throttle': get: -> 1000
-      'repository/loop-frequency': count: -> 45
-
-    specHelper.require 'repository/analytics', stubs, (analytics) ->
-      test.expect(analytics.get()).toContainString('45')
-      test.done()
-
-  it 'analytics repository should return headers in the same order as the metrics', (test) ->
-    stubs =
-      'repository/throttle': get: -> 1
+      'espruino/time': -> 1
       'repository/loop-frequency': count: -> 2
+      'repository/throttle': get: -> 3
 
     specHelper.require 'repository/analytics', stubs, (analytics) ->
-      test.expect(analytics.headers()).toBe('loops,throttle')
-      test.expect(analytics.get()).toContainString('2,')
+      test.expect(analytics.headers()).toBe('time,loops,throttle')
+      test.expect(analytics.get()).toContainString('1,2,3')
       test.done()

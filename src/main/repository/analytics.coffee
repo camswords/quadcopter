@@ -1,5 +1,5 @@
 define 'repository/analytics', [
-       'repository/throttle', 'repository/loop-frequency'], (
-       throttle, loops) ->
-  headers: -> 'loops,throttle'
-  get: -> "#{loops.count()},#{throttle.get()}"
+       'espruino/time', 'repository/loop-frequency', 'repository/throttle'], (
+       time, loops, throttle) ->
+  headers: -> 'time,loops,throttle'
+  get: -> "#{time()},#{loops.count()},#{throttle.get()}"
