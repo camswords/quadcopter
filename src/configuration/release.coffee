@@ -4,7 +4,7 @@ define 'configuration', ->
     setWatch: setWatch
     serial: Serial4
   analytics:
-    sampleTimeMs: 1000
+    sampleTimeMs: 200
   throttle:
     inputPin: A8
     updateIntervalMs: 200

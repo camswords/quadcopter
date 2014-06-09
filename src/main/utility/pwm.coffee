@@ -11,9 +11,9 @@ define 'utility/pwm', [
 
       if event.state == false
         if edgeUpTime != 0
-          duration = Math.floor((event.time - edgeUpTime) * 1000000)
+          duration = (event.time - edgeUpTime) * 50
 
-          if isNumber(duration) && duration > 950 && duration < 2050
+          if isNumber(duration) && duration > 0.0475 && duration < 0.1025
             onChange(duration)
 
         edgeUpTime = 0

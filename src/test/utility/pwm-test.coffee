@@ -25,7 +25,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(998)
+          test.expect(value + '').toContainString('0.049948692')
           test.done()
 
   it "pwm should take the latest time when determining edge duration", (test) ->
@@ -34,14 +34,13 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       callback(time: 5.499, state: true)
       callback(time: 5.500, state: false)
 
-    # why is this 999 not 1000? Seems like an Espruino rounding problem
     stubs = 'espruino/set-watch': setWatch
 
     specHelper.require 'utility/pwm', stubs, (pwm) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(999)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should call onChange once when continuous pulse down events are found", (test) ->
@@ -56,7 +55,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(999)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should call onChange when multiple up down transitions are detected", (test) ->
@@ -77,8 +76,8 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
           calledValues.push(value)
 
           if calledValues.length == 2
-            test.expect(calledValues[0]).toBe(999)
-            test.expect(calledValues[1]).toBe(1999)
+            test.expect(calledValues[0] + '').toBe('0.05')
+            test.expect(calledValues[1] + '').toBe('0.1')
             test.done()
 
   it "pwm should ignore onChange when time for pulse up event is not a number", (test) ->
@@ -94,7 +93,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(1000)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should ignore onChange when time for pulse down event is not a number", (test) ->
@@ -110,7 +109,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(1000)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should ignore onChange when pulse duty cycle is more than two(ish) seconds", (test) ->
@@ -126,7 +125,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(1000)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should ignore onChange when pulse duty cycle is less than one(ish) seconds", (test) ->
@@ -142,7 +141,7 @@ define 'utility/pwm-test', ['spec-helper', 'mini-test-it'], (specHelper, it) ->
       pwm.watch
         pin: 1
         onChange: (value) ->
-          test.expect(value).toBe(1000)
+          test.expect(value + '').toBe('0.05')
           test.done()
 
   it "pwm should fail when options is not specified", (test) ->
