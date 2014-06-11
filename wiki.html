@@ -3498,7 +3498,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Installation on a Mac" modified="20140610131615273" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Installation on a Mac" modified="20140611104328410" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -5099,6 +5099,46 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Installation on a Mac&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Lua&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 147,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 24,
+            &quot;right&quot;: 109,
+            &quot;bottom&quot;: 163,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Installation on a Mac&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 525,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 132,
+            &quot;right&quot;: 217,
+            &quot;bottom&quot;: 541,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Installation on a Mac'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Installation on a Mac&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Installation on a Mac'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Installation on a Mac&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Installation on a Mac'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Installation on a Mac&quot;
     }
 ]</pre>
 </div>
@@ -5300,7 +5340,7 @@ Then you can:
 * http://www.naturalpoint.com/optitrack/
 * http://www.vicon.com/System/TSeries</pre>
 </div>
-<div created="20140609085303629" modified="20140610131615270" title="Installation on a Mac">
+<div created="20140609085303629" modified="20140611104328408" title="Installation on a Mac">
 <pre>This installation was performed using a Mac with Mavericks running. Note that if you have upgraded to Mavericks, you may need to remove and reinstall brew packages.
 
 * brew update
@@ -5314,19 +5354,9 @@ Then you can:
 * git clone https://github.com/elua/elua.git
 * ./build_elua.lua board=stm32f4discovery
 * arm-none-eabi-objcopy -O binary ./elua_lua_stm32f4discovery.elf ./elua_lua_stm32f4discovery.bin
-* brew install pkg-config
-* brew install automake
-* brew install libtool
-* brew install autoconf
-* `git clone git://git.code.sf.net/p/openocd/code openocd`
-* cd openocd
-* ./bootstrap
-* ./configure
-* make
-* make install
-
-
-</pre>
+* brew install dfu-util
+* put the STM32 in boot mode (connect BOOT0 to VDD, PB2 to GND and reset)
+* dfu-util --device 0483:df11 --cfg 1 --intf 0 --alt 0 --dfuse-address 0x08000000 -D elua_lua_stm32f4discovery.bin</pre>
 </div>
 <div created="20140502034231942" modified="20140502041757496" title="Interface with the Intertial Measurement Unit">
 <pre>* Will be done using the i2c interface
