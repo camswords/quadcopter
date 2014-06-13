@@ -151,6 +151,8 @@ Error message and password prompt
 
 <li>Communicate to the ESCs using i2c</li>
 
+<li>Deploying programs to the Stm32F4 discovery</li>
+
 <li>Determine Euler angles from IMU data</li>
 
 <li>Espruino Deploy System</li>
@@ -3498,7 +3500,7 @@ Error message and password prompt
 <div created="20140502035511037" modified="20140502042005669" title="$:/DefaultTiddlers">
 <pre>[[TW Quadcopter Project]]</pre>
 </div>
-<div current-tiddler="Installation on a Mac" modified="20140611104328410" title="$:/HistoryList" type="application/json">
+<div current-tiddler="Deploying programs to the Stm32F4 discovery" modified="20140613095938668" title="$:/HistoryList" type="application/json">
 <pre>[
     {
         &quot;title&quot;: &quot;Draft of 'GettingStarted'&quot;
@@ -5139,6 +5141,74 @@ Error message and password prompt
     },
     {
         &quot;title&quot;: &quot;Installation on a Mac&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Espruino Deploy System&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 317,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 155,
+            &quot;right&quot;: 240,
+            &quot;bottom&quot;: 333,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Lua&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 147,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 24,
+            &quot;right&quot;: 109,
+            &quot;bottom&quot;: 163,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Installation on a Mac&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 525,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 132,
+            &quot;right&quot;: 217,
+            &quot;bottom&quot;: 541,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Lua'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Lua&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Lua'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Lua&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Deploying programs to the Stm32F4 discovery&quot;,
+        &quot;fromPageRect&quot;: {
+            &quot;top&quot;: 139,
+            &quot;left&quot;: 85,
+            &quot;width&quot;: 292,
+            &quot;right&quot;: 377,
+            &quot;bottom&quot;: 155,
+            &quot;height&quot;: 16
+        }
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Deploying programs to the Stm32F4 discovery'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Deploying programs to the Stm32F4 discovery&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Draft of 'Deploying programs to the Stm32F4 discovery'&quot;
+    },
+    {
+        &quot;title&quot;: &quot;Deploying programs to the Stm32F4 discovery&quot;
     }
 ]</pre>
 </div>
@@ -5172,7 +5242,7 @@ Error message and password prompt
 <div modified="20140515130148324" title="$:/state/tab/sidebar-{-1763509675}">
 <pre>$:/core/ui/SideBar/More</pre>
 </div>
-<div list="[[TW Quadcopter Project]] Lua [[Installation on a Mac]]" title="$:/StoryList">
+<div list="[[TW Quadcopter Project]] Lua [[Deploying programs to the Stm32F4 discovery]] [[Installation on a Mac]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div dependents="$:/themes/tiddlywiki/vanilla" description="A clean theme that emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.0.10-beta">
@@ -5245,6 +5315,26 @@ Rfduino seems to be limited to 9600 buad rate when BLE is enabled :(.</pre>
 ** high frequency
 ** can get statistics back regarding the motors and their speed
 ** Buy some of these http://www.hobbyking.com/hobbyking/store/__42551__Afro_Slim_20Amp_Multi_rotor_Motor_Speed_Controller_SimonK_Firmware_.html</pre>
+</div>
+<div created="20140613095513359" modified="20140613095938666" title="Deploying programs to the Stm32F4 discovery">
+<pre>
+Option a) (reflash with rom files)
+
+* add lua / other files to the romfs directory
+* build the .elf / .bin file again
+* set the stm32f4 into bootloader mode
+* deploy!
+* files will in in the /rom folder on the device.  lua files will be optimised / compressed and or compiled. Files will be read only.
+
+Option b) (use an SD card)
+
+* connect an SD card (see [[http://www.seanet.com/~karllunt/TamingDiscovery.html]])
+* ensure your SD card has been formatted using a FAT (32?) file system
+* elua will connect to it using SPI
+* build elua using the MMC file system
+* files can be uploaded to /mmc without requiring reflashing the mcu
+
+</pre>
 </div>
 <div created="20140502035246906" modified="20140502044815961" title="Determine Euler angles from IMU data">
 <pre>How should this be done?
@@ -5367,8 +5457,10 @@ References
 * https://www.sparkfun.com/products/10724
 * https://github.com/ptrbrtz/razor-9dof-ahrs/tree/master/Arduino/Razor_AHRS</pre>
 </div>
-<div created="20140609085240806" modified="20140609085255016" title="Lua">
-<pre>[[Installation on a Mac]]</pre>
+<div created="20140609085240806" modified="20140613095509072" title="Lua">
+<pre>[[Installation on a Mac]]
+
+[[Deploying programs to the Stm32F4 discovery]]</pre>
 </div>
 <div created="20140502034418412" modified="20140515130310574" title="Memory Management">
 <pre>The Espruino only has 45kb of RAM. This is split into blocks of 20bytes. There are 1800 blocks allocated on a standard Espruino board (note that this doesnt add up. Is it more like 25bytes per block?).
