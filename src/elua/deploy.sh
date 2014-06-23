@@ -4,6 +4,7 @@ set -e
 
 # remove lua files from a previous build
 rm -f $ELUA_BUILD_DIRECTORY/romfs/*.lua
+rm -rf $ELUA_BUILD_DIRECTORY/.build
 
 # copy files to ROM directory, these end up being readonly files on the microcontroller
 cp -r *.lua $ELUA_BUILD_DIRECTORY/romfs/
