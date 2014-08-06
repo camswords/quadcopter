@@ -21,16 +21,22 @@ void InitialiseLEDs()
 
 void InitialiseTimer()
 {
-    uint16_t blinksPerSecond = 1;
-    uint16_t period = 50000;
-    uint16_t prescalar = SystemCoreClock / period / blinksPerSecond;
+    // according to the MCU clock configuration the
+    // timers have a clock speed of 84MHz
+    // see http://myembeddedtutorial.blogspot.com.au/2013/06/working-with-stm32f4-timers.html
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
     TIM_TimeBaseInitTypeDef timerInitStructure;
-    timerInitStructure.TIM_Prescaler = prescalar;
+
+    // -1 is used because it will count from 0, therefore we
+    // count up until 41999 to avoid the off by one error
+
+    // 84000000 / 42000 = 2000
+    // every second, it will count 2000 ticks
+    timerInitStructure.TIM_Prescaler = 42000 - 1;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    timerInitStructure.TIM_Period = period;
+    timerInitStructure.TIM_Period = 2000 - 1;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     timerInitStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM4, &timerInitStructure);
@@ -48,7 +54,9 @@ void InitialisePWMChannel()
 
     TIM_OCInitTypeDef outputChannelInit = {0,};
     outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-    outputChannelInit.TIM_Pulse = 10000;
+
+    // on for 1000 / 2000 of the time (half)
+    outputChannelInit.TIM_Pulse = 10;
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
