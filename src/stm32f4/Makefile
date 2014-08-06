@@ -1,4 +1,8 @@
 
+BUILD_DIR = build
+QUAD_ELF = $(BUILD_DIR)/quadcopter.elf
+QUAD_BIN = $(BUILD_DIR)/quadcopter.bin
+
 MCU = cortex-m4
 MCFLAGS = -mcpu=$(MCU) -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork -std=c99
 DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000
@@ -45,17 +49,17 @@ SRC = ./src/main.c \
 	./Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
 	./Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
 
-all: build build/quadcopter.bin
-	@echo "build/quadcopter.bin is ready to fly."
+all: $(BUILD_DIR) $(QUAD_BIN)
+	@echo "$(QUAD_BIN) is ready to fly."
 
-build:
-	mkdir -p build
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-build/quadcopter.bin: build/quadcopter.elf
-	arm-none-eabi-objcopy -O binary build/quadcopter.elf build/quadcopter.bin
+$(QUAD_BIN): $(QUAD_ELF)
+	arm-none-eabi-objcopy -O binary $(QUAD_ELF) $(QUAD_BIN)
 
-build/quadcopter.elf: $(SRC) $(STARTUP)
-	arm-none-eabi-gcc $(CFLAGS) $^ -lm -lc -lnosys -o build/quadcopter.elf
+$(QUAD_ELF): $(SRC) $(STARTUP)
+	arm-none-eabi-gcc $(CFLAGS) $^ -lm -lc -lnosys -o $(QUAD_ELF)
 
 clean:
 	rm -rf build
