@@ -45,14 +45,21 @@ SRC = ./src/main.c \
 	./Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c \
 	./Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
 
-all: build/quadcopter.bin
-	@echo "hello quadcopter"
+all: build build/quadcopter.bin
+	@echo "build/quadcopter.bin is ready to fly."
+
+build:
+	mkdir -p build
 
 build/quadcopter.bin: build/quadcopter.elf
 	arm-none-eabi-objcopy -O binary build/quadcopter.elf build/quadcopter.bin
 
 build/quadcopter.elf: $(SRC) $(STARTUP)
 	arm-none-eabi-gcc $(CFLAGS) $^ -lm -lc -lnosys -o build/quadcopter.elf
+
+clean:
+	rm -rf build
+
 
 
 
