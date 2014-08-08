@@ -55,7 +55,7 @@ void InitialisePWMChannel()
     outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
 
     // low throttle
-    outputChannelInit.TIM_Pulse = 2;
+    outputChannelInit.TIM_Pulse = 4;
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
