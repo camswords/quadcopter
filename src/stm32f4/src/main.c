@@ -28,17 +28,20 @@ void InitialiseTimer()
     // -1 is used because it will count from 0, therefore we
     // count up until 41999 to avoid the off by one error
 
-    // 84000000 / 42000 = 2000
-    // every second, it will count 2000 ticks
+    // 1000ms / 50Hz = an update every 20ms
+    // Unfortunately, we can't use 84000000 / 84000 = 1000 so that every second it will count 1000 ticks
+    // This is because the TIM_Prescaler is only 16bit, therefore can only count to 65535
+
+    // instead, we will use the 84000000 / 42000 = 2000 so that every second it will count 2000 ticks
+    // we will have to double the TIM_Period and the TIM_Pulse
     timerInitStructure.TIM_Prescaler = 42000 - 1;
     timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    timerInitStructure.TIM_Period = 2000 - 1;
+    timerInitStructure.TIM_Period = 40 - 1;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     timerInitStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM4, &timerInitStructure);
     TIM_Cmd(TIM4, ENABLE);
 }
-
 
 void InitialisePWMChannel()
 {
@@ -51,8 +54,8 @@ void InitialisePWMChannel()
     TIM_OCInitTypeDef outputChannelInit = {0,};
     outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
 
-    // on for 1000 / 2000 of the time (half)
-    outputChannelInit.TIM_Pulse = 1000;
+    // low throttle
+    outputChannelInit.TIM_Pulse = 2;
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
