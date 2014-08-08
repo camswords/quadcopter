@@ -67,12 +67,45 @@ void InitialisePWMChannel()
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4);
 }
 
+// 32 bit: this should be enough for about 68 years of continuous operation.
+uint32_t secondsElapsed = 0;
+uint16_t intermediateMillis = 0;
+
+void SysTick_Handler(void)
+{
+    intermediateMillis++;
+
+    if (intermediateMillis == 1000) {
+        intermediateMillis = 0;
+        secondsElapsed++;
+
+        if (secondsElapsed % 2 == 0) {
+          GPIOD->BSRRH = 0xE000;
+          GPIOD->BSRRL = 0x0000;
+        } else {
+          GPIOD->BSRRH = 0x0000;
+          GPIOD->BSRRL = 0xE000;
+        }
+    }
+}
 
 int main(void) {
   InitialiseLEDs();
   InitialiseTimer();
   InitialisePWMChannel();
 
-  GPIOD->BSRRH = 0x0000;
-  GPIOD->BSRRL = 0xE000;
+  // init the system ticker to trigger an interrupt every millisecond
+  // this will call the SysTick_Handler
+  // note that milliseconds are only used because calling it every second (ideal)
+  // fails. This is presumably due to the ideal number of ticks being too many to store
+  // in a register
+  if (SysTick_Config(SystemCoreClock / 1000)) {
+    GPIOD->BSRRH = 0x0000;
+    GPIOD->BSRRL = 0x2000;
+
+    // hard fault
+    while(1);
+  }
+
+  while(1);
 }
