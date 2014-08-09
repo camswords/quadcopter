@@ -61,6 +61,11 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
+  // make the red led turn on
+  // assumes that the leds have been setup
+  GPIOD->BSRRH = 0x0000;
+  GPIOD->BSRRL = 0x4000;
+
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {

@@ -19,21 +19,9 @@ void InitialiseLEDs()
 
 int main(void) {
   InitialiseLEDs();
+  InitialiseSysTick();
   InitialisePWM();
   InitialisePWMChannel();
-
-  // init the system ticker to trigger an interrupt every millisecond
-  // this will call the SysTick_Handler
-  // note that milliseconds are only used because calling it every second (ideal)
-  // fails. This is presumably due to the ideal number of ticks being too many to store
-  // in a register
-  if (SysTick_Config(SystemCoreClock / 1000)) {
-    GPIOD->BSRRH = 0x0000;
-    GPIOD->BSRRL = 0x2000;
-
-    // hard fault
-    while(1);
-  }
 
   while(1);
 }
