@@ -8,6 +8,8 @@ volatile unsigned int *SCB_DEMCR        = (volatile unsigned int *)0xE000EDFC; /
 
 //******************************************************************************
 
+#include <delay.h>
+
 void EnableTiming(void)
 {
     static int enabled = 0;
