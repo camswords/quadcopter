@@ -6,12 +6,13 @@
 
 
 int main(void) {
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
   InitialisePWM();
-  InitialisePWMChannel(GPIO_Pin_12, GPIO_PinSource12, 1);
-  InitialisePWMChannel(GPIO_Pin_13, GPIO_PinSource13, 2);
-  InitialisePWMChannel(GPIO_Pin_14, GPIO_PinSource14, 3);
-  InitialisePWMChannel(GPIO_Pin_15, GPIO_PinSource15, 4);
+  InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);
+  InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);
+  InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);
+  InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);
 
   while(1);
 }

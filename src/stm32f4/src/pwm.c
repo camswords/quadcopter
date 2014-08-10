@@ -7,7 +7,7 @@ void InitialisePWM()
     // timers have a clock speed of 84MHz
     // see http://myembeddedtutorial.blogspot.com.au/2013/06/working-with-stm32f4-timers.html
 
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
     TIM_TimeBaseInitTypeDef timerInitStructure;
 
@@ -27,18 +27,18 @@ void InitialisePWM()
     timerInitStructure.TIM_Period = 20000 - 1;
     timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     timerInitStructure.TIM_RepetitionCounter = 0;
-    TIM_TimeBaseInit(TIM4, &timerInitStructure);
-    TIM_Cmd(TIM4, ENABLE);
+    TIM_TimeBaseInit(TIM3, &timerInitStructure);
+    TIM_Cmd(TIM3, ENABLE);
 }
 
 
-void InitialisePWMChannel(uint16_t pin, uint8_t pinSource, uint8_t channel)
+void InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)
 {
     GPIO_InitTypeDef gpioStructure;
     gpioStructure.GPIO_Pin = pin;
     gpioStructure.GPIO_Mode = GPIO_Mode_AF;
     gpioStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(GPIOD, &gpioStructure);
+    GPIO_Init(GPIOx, &gpioStructure);
 
     TIM_OCInitTypeDef outputChannelInit = {0,};
     outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
@@ -49,19 +49,19 @@ void InitialisePWMChannel(uint16_t pin, uint8_t pinSource, uint8_t channel)
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
     if (channel == 1) {
-        TIM_OC1Init(TIM4, &outputChannelInit);
-        TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+        TIM_OC1Init(TIM3, &outputChannelInit);
+        TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 2) {
-        TIM_OC2Init(TIM4, &outputChannelInit);
-        TIM_OC2PreloadConfig(TIM4, TIM_OCPreload_Enable);
+        TIM_OC2Init(TIM3, &outputChannelInit);
+        TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 3) {
-        TIM_OC3Init(TIM4, &outputChannelInit);
-        TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable);
+        TIM_OC3Init(TIM3, &outputChannelInit);
+        TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 4) {
-        TIM_OC4Init(TIM4, &outputChannelInit);
-        TIM_OC4PreloadConfig(TIM4, TIM_OCPreload_Enable);
+        TIM_OC4Init(TIM3, &outputChannelInit);
+        TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
     }
 
 
-    GPIO_PinAFConfig(GPIOD, pinSource, GPIO_AF_TIM4);
+    GPIO_PinAFConfig(GPIOx, pinSource, GPIO_AF_TIM3);
 }
