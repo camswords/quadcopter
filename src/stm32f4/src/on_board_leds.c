@@ -1,6 +1,8 @@
 #include <on_board_leds.h>
 
 void InitialiseLeds() {
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+
     GPIO_InitTypeDef gpioStructure;
     gpioStructure.GPIO_Pin = YELLOW_LED | ORANGE_LED | RED_LED | BLUE_LED;
     gpioStructure.GPIO_Mode = GPIO_Mode_OUT;

@@ -6,10 +6,6 @@
 #include <on_board_leds.h>
 
 int main(void) {
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();

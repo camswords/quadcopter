@@ -3,6 +3,11 @@
 
 void InitialisePWM()
 {
+    // we need to enable the peripheral ports / pins
+    // enabling them more than once seems to have no measurable effect
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+
     // according to the MCU clock configuration the
     // timers have a clock speed of 84MHz
     // see http://myembeddedtutorial.blogspot.com.au/2013/06/working-with-stm32f4-timers.html
