@@ -29,6 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
+#include <on_board_leds.h>
 
 /** @addtogroup Template_Project
   * @{
@@ -52,6 +53,7 @@
   */
 void NMI_Handler(void)
 {
+  TurnOn(RED_LED);
 }
 
 /**
@@ -63,8 +65,7 @@ void HardFault_Handler(void)
 {
   // make the red led turn on
   // assumes that the leds have been setup
-  GPIOD->BSRRH = 0x0000;
-  GPIOD->BSRRL = 0x4000;
+  TurnOn(RED_LED);
 
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
@@ -79,6 +80,7 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
+  TurnOn(RED_LED);
   /* Go to infinite loop when Memory Manage exception occurs */
   while (1)
   {
@@ -92,6 +94,7 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
+  TurnOn(RED_LED);
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
   {
@@ -105,6 +108,7 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
+  TurnOn(RED_LED);
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
   {
@@ -118,6 +122,7 @@ void UsageFault_Handler(void)
   */
 void SVC_Handler(void)
 {
+  TurnOn(RED_LED);
 }
 
 /**
@@ -127,6 +132,7 @@ void SVC_Handler(void)
   */
 void DebugMon_Handler(void)
 {
+  TurnOn(RED_LED);
 }
 
 /**
@@ -136,6 +142,7 @@ void DebugMon_Handler(void)
   */
 void PendSV_Handler(void)
 {
+  TurnOn(RED_LED);
 }
 
 /******************************************************************************/
