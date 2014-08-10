@@ -37,6 +37,9 @@ void InitialiseSysTick() {
   // this will call the SysTick_Handler
   // note that milliseconds are only used because calling it every second (ideal) fails.
   // This is presumably due to the ideal number of ticks being too many to store in a register
+
+  // Note: you could probably configure this to only interrupt for the "next" callback.
+  // Would totally be way more efficient.
   if (SysTick_Config(SystemCoreClock / 1000)) {
     HardFault_Handler();
   }
