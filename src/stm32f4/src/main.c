@@ -17,11 +17,28 @@ void InitialiseLEDs()
     GPIO_Init(GPIOD, &gpioStructure);
 }
 
+void TurnOnLeds() {
+    GPIOD->BSRRH = 0x0000;
+    GPIOD->BSRRL = 0xE000;
+}
+
+void TurnOffLeds() {
+    GPIOD->BSRRH = 0xE000;
+    GPIOD->BSRRL = 0x0000;
+}
+
 int main(void) {
   InitialiseLEDs();
   InitialiseSysTick();
   InitialisePWM();
   InitialisePWMChannel();
+
+  AddCallback(1, &TurnOnLeds);
+  AddCallback(2, &TurnOffLeds);
+  AddCallback(3, &TurnOnLeds);
+  AddCallback(4, &TurnOffLeds);
+  AddCallback(5, &TurnOnLeds);
+  AddCallback(10, &TurnOffLeds);
 
   while(1);
 }
