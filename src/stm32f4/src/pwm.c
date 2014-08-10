@@ -32,10 +32,10 @@ void InitialisePWM()
 }
 
 
-void InitialisePWMChannel()
+void InitialisePWMChannel(uint16_t pin, uint8_t pinSource, uint8_t channel)
 {
     GPIO_InitTypeDef gpioStructure;
-    gpioStructure.GPIO_Pin = GPIO_Pin_12;
+    gpioStructure.GPIO_Pin = pin;
     gpioStructure.GPIO_Mode = GPIO_Mode_AF;
     gpioStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOD, &gpioStructure);
@@ -48,8 +48,20 @@ void InitialisePWMChannel()
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
-    TIM_OC1Init(TIM4, &outputChannelInit);
-    TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+    if (channel == 1) {
+        TIM_OC1Init(TIM4, &outputChannelInit);
+        TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+    } else if (channel == 2) {
+        TIM_OC2Init(TIM4, &outputChannelInit);
+        TIM_OC2PreloadConfig(TIM4, TIM_OCPreload_Enable);
+    } else if (channel == 3) {
+        TIM_OC3Init(TIM4, &outputChannelInit);
+        TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable);
+    } else if (channel == 4) {
+        TIM_OC4Init(TIM4, &outputChannelInit);
+        TIM_OC4PreloadConfig(TIM4, TIM_OCPreload_Enable);
+    }
 
-    GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4);
+
+    GPIO_PinAFConfig(GPIOD, pinSource, GPIO_AF_TIM4);
 }

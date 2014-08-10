@@ -1,7 +1,7 @@
-#include <stdint.h>
-
 #ifndef SYSTICK_H
 #define SYSTICK_H
+
+#include <stdint.h>
 
 typedef void (*callback)(void);
 
