@@ -36,8 +36,23 @@ void InitialisePWM()
     TIM_Cmd(TIM3, ENABLE);
 }
 
+void UpdateTim3Channel1(uint32_t pulse) {
+    TIM3->CCR1 = pulse;
+}
 
-void InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)
+void UpdateTim3Channel2(uint32_t pulse) {
+    TIM3->CCR2 = pulse;
+}
+
+void UpdateTim3Channel3(uint32_t pulse) {
+    TIM3->CCR3 = pulse;
+}
+
+void UpdateTim3Channel4(uint32_t pulse) {
+    TIM3->CCR4 = pulse;
+}
+
+DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)
 {
     GPIO_InitTypeDef gpioStructure;
     gpioStructure.GPIO_Pin = pin;
@@ -53,20 +68,32 @@ void InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, 
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
+    struct DutyCycle dutyCycle;
+
     if (channel == 1) {
+        dutyCycle.update = &UpdateTim3Channel1;
+
         TIM_OC1Init(TIM3, &outputChannelInit);
         TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 2) {
+        dutyCycle.update = &UpdateTim3Channel2;
+
         TIM_OC2Init(TIM3, &outputChannelInit);
         TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 3) {
+        dutyCycle.update = &UpdateTim3Channel3;
+
         TIM_OC3Init(TIM3, &outputChannelInit);
         TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 4) {
+        dutyCycle.update = &UpdateTim3Channel4;
+
         TIM_OC4Init(TIM3, &outputChannelInit);
         TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
     }
 
-
     GPIO_PinAFConfig(GPIOx, pinSource, GPIO_AF_TIM3);
+
+    // note that this will be copied - probably better off using the heap.
+    return dutyCycle;
 }
