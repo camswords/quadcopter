@@ -33,6 +33,11 @@ $(QUAD_ELF): $(SRC)
 clean:
 	rm -rf build
 
+deploy: all
+	openocd -f deploy.cfg
+
+.PHONY: clean, deploy
+
 
 
 
