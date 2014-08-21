@@ -3,6 +3,8 @@ BUILD_DIR = build
 QUAD_ELF = $(BUILD_DIR)/quadcopter.elf
 QUAD_BIN = $(BUILD_DIR)/quadcopter.bin
 
+CFLAGS="-ggdb -O0"
+
 SRC = \
 	./Libraries/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc_ride7/startup_stm32f40xx.s \
 	./src/*.c \
@@ -20,8 +22,8 @@ $(QUAD_BIN): $(QUAD_ELF)
 $(QUAD_ELF): $(SRC)
 	arm-none-eabi-gcc \
 		-mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb-interwork -std=c99 \
-		-Os \
 		-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000 \
+		-ggdb -O0 \
 		-I./src \
 		-I./Libraries/CMSIS/Include/ \
 		-I./Libraries/STM32F4xx_StdPeriph_Driver/inc/ \
@@ -36,7 +38,17 @@ clean:
 deploy: all
 	openocd -f deploy.cfg
 
-.PHONY: clean, deploy
+debugging-server:
+	@echo "Please ensure the SWDIO (PA13), SWCLK (PA14), RST (NRST), GND and 5V are connected to the ST-Link and that it is connected to your machine."
+	@echo "starting debugging server...\n\n"
+	openocd -f debug.cfg
+
+debugging-client:
+	@echo "Please ensure you have started the debugging server using [make debugging-server] first."
+	@echo "starting debugging client...\n\n"
+	arm-none-eabi-gdb --eval-command="target remote localhost:3333" build/quadcopter.elf
+
+.PHONY: clean, deploy, debugging-server, debugging-client
 
 
 
