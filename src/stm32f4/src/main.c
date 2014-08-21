@@ -4,11 +4,13 @@
 #include <pwm.h>
 #include <systick.h>
 #include <on_board_leds.h>
+#include <pwm_input.h>
 
 int main(void) {
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();
+  CapturePWMInput();    // captured on B7
 
   DutyCycle dutyCycle1 = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);
   DutyCycle dutyCycle2 = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);
