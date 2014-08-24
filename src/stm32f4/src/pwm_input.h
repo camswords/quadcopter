@@ -6,13 +6,12 @@
 #include <stm32f4xx_tim.h>
 
 typedef struct PWMInput {
-    uint16_t dutyCycle;
-    uint32_t frequency;
-
+    float dutyCycle;
+    float frequency;
 }PWMInput;
 
 struct PWMInput pwmInput;
 
-void BreakOnTimerCount();
+void MeasurePwmInput();
 
 #endif

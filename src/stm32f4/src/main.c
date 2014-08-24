@@ -7,7 +7,7 @@
 #include <pwm_input.h>
 
 int main(void) {
-  BreakOnTimerCount();    // captured on B7
+  MeasurePwmInput();    // captured on B6
 
   while(1);
 }
