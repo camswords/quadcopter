@@ -13,6 +13,6 @@ typedef struct PWMInput {
 
 struct PWMInput pwmInput;
 
-void CapturePWMInput();
+void BreakOnTimerCount();
 
 #endif
