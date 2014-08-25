@@ -8,10 +8,14 @@
 typedef struct PWMInput {
     float dutyCycle;
     float frequency;
+    uint8_t hclckDivisor;
 
 }PWMInput;
 
 struct PWMInput pwmInputTimer4;
+struct PWMInput pwmInputTimer5;
+struct PWMInput pwmInputTimer9;
+struct PWMInput pwmInputTimer12;
 
 struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint8_t GPIO_PinSource);
 

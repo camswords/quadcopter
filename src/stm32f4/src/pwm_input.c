@@ -12,14 +12,56 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 	uint32_t apbPeripheralTimer;
 	uint8_t nvicInterruptChannel;
 
+	/* Note all of these timers are on AHB1, whichs means they run at 80,000,000 Hz. */
 	if(TIMx == TIM4) {
 		pwmInput = &pwmInputTimer4;
 		ahbPeripheralPort = RCC_AHB1Periph_GPIOB;
 		gpioAlternateFunction = GPIO_AF_TIM4;
-		apbPeripheralTimer = RCC_APB1Periph_TIM4;
 		nvicInterruptChannel = TIM4_IRQn;
+
+		/* AHB1 Peripherals run at half the HCLK Speed */
+	    pwmInput->hclckDivisor = 2.0f;
+
+	    /* Enable the timer clock */
+	    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
+	} else if (TIMx == TIM5) {
+		pwmInput = &pwmInputTimer5;
+		ahbPeripheralPort = RCC_AHB1Periph_GPIOA;
+		gpioAlternateFunction = GPIO_AF_TIM5;
+		nvicInterruptChannel = TIM5_IRQn;
+
+		/* AHB1 Peripherals run at half the HCLK Speed */
+	    pwmInput->hclckDivisor = 2.0f;
+
+	    /* Enable the timer clock */
+	    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+
+	} else if (TIMx == TIM9) {
+		pwmInput = &pwmInputTimer9;
+		ahbPeripheralPort = RCC_AHB1Periph_GPIOE;
+		gpioAlternateFunction = GPIO_AF_TIM9;
+		nvicInterruptChannel = TIM1_BRK_TIM9_IRQn;
+
+		/* AHB2 Peripherals run at HCLK Speed */
+	    pwmInput->hclckDivisor = 1.0f;
+
+	    /* Enable the timer clock */
+	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM9, ENABLE);
+
+	} else if (TIMx == TIM12) {
+		pwmInput = &pwmInputTimer12;
+		ahbPeripheralPort = RCC_AHB1Periph_GPIOC;
+		gpioAlternateFunction = GPIO_AF_TIM12;
+		nvicInterruptChannel = TIM8_BRK_TIM12_IRQn;
+
+		/* AHB1 Peripherals run at half the HCLK Speed */
+	    pwmInput->hclckDivisor = 2.0f;
+
+	    /* Enable the timer clock */
+	    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
 	} else {
-		/* Can only handle timer four right now. */
+		/* Some timers just can't handle it. */
 	    HardFault_Handler();
 	}
 
@@ -31,7 +73,7 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 	/* Work out the system / bus / timer clock speed */
     RCC_GetClocksFreq(&RCC_Clocks);
 
-    /* Enable the clock to GPIOB */
+    /* Enable the clock to the GPIO Port */
     RCC_AHB1PeriphClockCmd(ahbPeripheralPort, ENABLE);
 
     /* Turn on PB06, it will be connected to Timer 4, Channel 1.
@@ -47,9 +89,6 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 
     /* Connect TIM pin to AF2 */
     GPIO_PinAFConfig(GPIOx, GPIO_PinSource, gpioAlternateFunction);
-
-    /* Enable the timer clock */
-    RCC_APB1PeriphClockCmd(apbPeripheralTimer, ENABLE);
 
     /* init the timer:
      * We expect 1,680,000 ticks every 20ms
@@ -113,8 +152,7 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 void TIM4_IRQHandler()
 {
 	/* makes sure the interrupt status is not reset (and therefore SET?) */
-    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
-    {
+    if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
     	/* ensure that the timer doesn't get triggered again */
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
@@ -126,7 +164,69 @@ void TIM4_IRQHandler()
 
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
-    	pwmInputTimer4.frequency = (RCC_Clocks.HCLK_Frequency) / 2.0f / (IC1Value * 1000);
+    	pwmInputTimer4.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
     }
 }
+
+void TIM5_IRQHandler() {
+	/* makes sure the interrupt status is not reset (and therefore SET?) */
+    if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET) {
+    	/* ensure that the timer doesn't get triggered again */
+        TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
+
+        uint32_t IC1Value = TIM_GetCapture1(TIM5);
+    	uint32_t IC2Value = TIM_GetCapture2(TIM5);
+
+    	/* As a percentage */
+    	pwmInputTimer5.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
+           factor of the System Clock (one, at the moment, hence is the same) */
+    	pwmInputTimer5.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
+    }
+}
+
+void TIM9_IRQHandler() {
+	/* makes sure the interrupt status is not reset (and therefore SET?) */
+    if (TIM_GetITStatus(TIM9, TIM_IT_Update) != RESET) {
+    	/* ensure that the timer doesn't get triggered again */
+        TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
+
+        uint32_t IC1Value = TIM_GetCapture1(TIM9);
+    	uint32_t IC2Value = TIM_GetCapture2(TIM9);
+
+    	/* As a percentage */
+    	pwmInputTimer9.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
+           factor of the System Clock (one, at the moment, hence is the same) */
+    	pwmInputTimer9.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
+    }
+}
+
+void TIM12_IRQHandler() {
+	/* makes sure the interrupt status is not reset (and therefore SET?) */
+    if (TIM_GetITStatus(TIM12, TIM_IT_Update) != RESET) {
+    	/* ensure that the timer doesn't get triggered again */
+        TIM_ClearITPendingBit(TIM12, TIM_IT_Update);
+
+        uint32_t IC1Value = TIM_GetCapture1(TIM12);
+    	uint32_t IC2Value = TIM_GetCapture2(TIM12);
+
+    	/* As a percentage */
+    	pwmInputTimer12.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
+           factor of the System Clock (one, at the moment, hence is the same) */
+    	pwmInputTimer12.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
+    }
+}
+
+
+
+
+
+
+
+
 

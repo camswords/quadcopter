@@ -94,6 +94,6 @@ DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSou
 
     GPIO_PinAFConfig(GPIOx, pinSource, GPIO_AF_TIM3);
 
-    // note that this will be copied - probably better off using the heap.
+    // note that this will be copied - probably better off using a reference.
     return dutyCycle;
 }
