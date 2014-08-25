@@ -1,35 +1,55 @@
 #include <pwm_input.h>
 #include <stm32f4xx_gpio.h>
+#include <stm32f4xx_it.h>
 
 RCC_ClocksTypeDef RCC_Clocks;
 
-struct PWMInput* MeasurePWMInput() {
+struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint8_t GPIO_PinSource) {
+
+	struct PWMInput* pwmInput;
+	uint32_t ahbPeripheralPort;
+	uint8_t gpioAlternateFunction;
+	uint32_t apbPeripheralTimer;
+	uint8_t nvicInterruptChannel;
+
+	if(TIMx == TIM4) {
+		pwmInput = &pwmInputTimer4;
+		ahbPeripheralPort = RCC_AHB1Periph_GPIOB;
+		gpioAlternateFunction = GPIO_AF_TIM4;
+		apbPeripheralTimer = RCC_APB1Periph_TIM4;
+		nvicInterruptChannel = TIM4_IRQn;
+	} else {
+		/* Can only handle timer four right now. */
+	    HardFault_Handler();
+	}
+
+
     /* Initialise duty cycle and freq to zero, surely there is a better place to do this? */
-	pwmInputTimer4.dutyCycle = 0.0;
-	pwmInputTimer4.frequency = 0.0;
+	pwmInput->dutyCycle = 0.0;
+	pwmInput->frequency = 0.0;
 
 	/* Work out the system / bus / timer clock speed */
     RCC_GetClocksFreq(&RCC_Clocks);
 
     /* Enable the clock to GPIOB */
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+    RCC_AHB1PeriphClockCmd(ahbPeripheralPort, ENABLE);
 
     /* Turn on PB06, it will be connected to Timer 4, Channel 1.
      * Timer Channel 2 will also be used, I believe this renders pin PB7 unusable.
      */
     GPIO_InitTypeDef GPIO_InitStructure;
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP ;
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    GPIO_Init(GPIOx, &GPIO_InitStructure);
 
     /* Connect TIM pin to AF2 */
-    GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_TIM4);
+    GPIO_PinAFConfig(GPIOx, GPIO_PinSource, gpioAlternateFunction);
 
     /* Enable the timer clock */
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+    RCC_APB1PeriphClockCmd(apbPeripheralTimer, ENABLE);
 
     /* init the timer:
      * We expect 1,680,000 ticks every 20ms
@@ -42,10 +62,10 @@ struct PWMInput* MeasurePWMInput() {
 	timerInitStructure.TIM_Period = 65535;
 	timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(TIM4, &timerInitStructure);
+	TIM_TimeBaseInit(TIMx, &timerInitStructure);
 
 	/* Enable the Timer counter */
-	TIM_Cmd(TIM4, ENABLE);
+	TIM_Cmd(TIMx, ENABLE);
 
 	/* We're attempting to not have a prescalar, that is, not divide the incoming signal.
 	 * I wonder this prescalar differs from the above prescalar.
@@ -57,7 +77,7 @@ struct PWMInput* MeasurePWMInput() {
 	TIM_ICInitStructure1.TIM_ICSelection = TIM_ICSelection_DirectTI;
 	TIM_ICInitStructure1.TIM_ICPrescaler = 0;
 	TIM_ICInitStructure1.TIM_ICFilter = 0;
-	TIM_ICInit(TIM4, &TIM_ICInitStructure1);
+	TIM_ICInit(TIMx, &TIM_ICInitStructure1);
 
 	/*
 	 * Channel 2 is configured to capture on the falling edge.
@@ -68,25 +88,25 @@ struct PWMInput* MeasurePWMInput() {
 	TIM_ICInitStructure2.TIM_ICSelection = TIM_ICSelection_IndirectTI;
 	TIM_ICInitStructure2.TIM_ICPrescaler = 0;
 	TIM_ICInitStructure2.TIM_ICFilter = 0;
-	TIM_ICInit(TIM4, &TIM_ICInitStructure2);
+	TIM_ICInit(TIMx, &TIM_ICInitStructure2);
 
 	/* Ensure that Channel two is set up as a slave, and that it resets the counters on a falling edge */
-	TIM_SelectInputTrigger(TIM4, TIM_TS_TI1FP1);
-	TIM_SelectSlaveMode(TIM4, TIM_SlaveMode_Reset);
-	TIM_SelectMasterSlaveMode(TIM4, TIM_MasterSlaveMode_Enable);
+	TIM_SelectInputTrigger(TIMx, TIM_TS_TI1FP1);
+	TIM_SelectSlaveMode(TIMx, TIM_SlaveMode_Reset);
+	TIM_SelectMasterSlaveMode(TIMx, TIM_MasterSlaveMode_Enable);
 
 	/* Enable the interrupt that gets fired when the timer counter hits the period */
-	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+	TIM_ITConfig(TIMx, TIM_IT_Update, ENABLE);
 
 	/* Enable the Timer interrupts */
 	NVIC_InitTypeDef nvicStructure;
-	nvicStructure.NVIC_IRQChannel = TIM4_IRQn;
+	nvicStructure.NVIC_IRQChannel = nvicInterruptChannel;
 	nvicStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	nvicStructure.NVIC_IRQChannelSubPriority = 1;
 	nvicStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nvicStructure);
 
-	return &pwmInputTimer4;
+	return pwmInput;
 }
 
 /* Timer 4 interrupt handler */

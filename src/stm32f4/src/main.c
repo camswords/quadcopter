@@ -13,7 +13,7 @@ int main(void) {
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();
-  struct PWMInput* throttle = MeasurePWMInput();    // captured on B6
+  struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6);
 
   DutyCycle dutyCycle1 = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);
   DutyCycle dutyCycle2 = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);
