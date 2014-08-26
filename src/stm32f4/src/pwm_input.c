@@ -51,7 +51,7 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 
 	} else if (TIMx == TIM12) {
 		pwmInput = &pwmInputTimer12;
-		ahbPeripheralPort = RCC_AHB1Periph_GPIOC;
+		ahbPeripheralPort = RCC_AHB1Periph_GPIOB;
 		gpioAlternateFunction = GPIO_AF_TIM12;
 		nvicInterruptChannel = TIM8_BRK_TIM12_IRQn;
 
@@ -186,7 +186,7 @@ void TIM5_IRQHandler() {
     }
 }
 
-void TIM9_IRQHandler() {
+void TIM1_BRK_TIM9_IRQHandler() {
 	/* makes sure the interrupt status is not reset (and therefore SET?) */
     if (TIM_GetITStatus(TIM9, TIM_IT_Update) != RESET) {
     	/* ensure that the timer doesn't get triggered again */
@@ -204,7 +204,7 @@ void TIM9_IRQHandler() {
     }
 }
 
-void TIM12_IRQHandler() {
+void TIM8_BRK_TIM12_IRQHandler() {
 	/* makes sure the interrupt status is not reset (and therefore SET?) */
     if (TIM_GetITStatus(TIM12, TIM_IT_Update) != RESET) {
     	/* ensure that the timer doesn't get triggered again */
