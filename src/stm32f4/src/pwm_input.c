@@ -2,6 +2,9 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_it.h>
 
+/* Todo: This probably should account for startup, and for when the ICValues are 0 (when will this happen?) */
+/* Todo: The clock speed stuff should be moved out into it's own file / class / struct */
+
 RCC_ClocksTypeDef RCC_Clocks;
 
 struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint8_t GPIO_PinSource) {
