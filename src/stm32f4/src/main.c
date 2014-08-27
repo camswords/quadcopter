@@ -5,6 +5,7 @@
 #include <systick.h>
 #include <on_board_leds.h>
 #include <pwm_input.h>
+#include <i2c.h>
 
 
 int main(void) {
@@ -12,6 +13,7 @@ int main(void) {
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();
+  InitialiseI2C();
 
   /* throttle: all together now! power (collective pitch?) */
   struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
