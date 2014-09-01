@@ -69,8 +69,8 @@ void InitialiseI2C() {
 	/* Only useful for slave mode (will we do this later? maybe) */
 	I2C_InitStruct.I2C_OwnAddress1 = 0x00;
 
-	/* Disable this for now, though we might need to turn on later */
-	I2C_InitStruct.I2C_Ack = I2C_Ack_Enable;
+	/* Acknowledgement on read is disabled here as it is explicitly enabled / disabled when retrieving data. */
+	I2C_InitStruct.I2C_Ack = I2C_Ack_Disable;
 
 	/* 7 bit acknowledge addresses, hmm strange. */
 	I2C_InitStruct.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
@@ -94,7 +94,11 @@ void SendAddress(uint8_t address, uint8_t direction) {
 	I2C_Send7bitAddress(I2C1, address, direction);
 
 	/* Wait for peripheral to acknowledge (own up) to the sent address */
-	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+	if (direction == I2C_Direction_Transmitter) {
+		while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+	} else {
+		while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
+	}
 }
 
 void SendData(uint8_t data) {
@@ -104,6 +108,33 @@ void SendData(uint8_t data) {
 	/* wait for confirmation */
 	/* Testing on this event over I2C_EVENT_MASTER_BYTE_TRANSMITTING is more reliable, and slower. */
 	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+}
+
+void SendStop() {
+	/* Communication is over for now */
+	I2C_GenerateSTOP(I2C1, ENABLE);
+}
+
+uint8_t ReadDataExpectingMore() {
+	/* automatically reply "yes, more!" */
+	I2C_AcknowledgeConfig(I2C1, ENABLE);
+
+	/* wait till the data is ready */
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
+
+	/* return the read data */
+	return I2C_ReceiveData(I2C1);
+}
+
+uint8_t ReadDataExpectingEnd() {
+	/* don't automatically reply "yes, more". Instead, we will send a NACK to indicate no more. */
+	I2C_AcknowledgeConfig(I2C1, DISABLE);
+
+	/* wait till the data is ready */
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
+
+	/* return the read data */
+	return I2C_ReceiveData(I2C1);
 }
 
 void InitialiseGyroscope() {
@@ -138,5 +169,35 @@ void InitialiseGyroscope() {
 	 */
 	SendData(0x3E);
 	SendData(0x03);
+
+	SendStop();
 };
+
+void ReadGyroscopeValues() {
+	SendStart();
+
+	/* Let the gyro know which register to read from the temperature (high) register */
+	/* The idea is to start at the temperature and read / nack until the z (low) register has been read */
+	/* This way we don't need to send multiple start / stop commands */
+	SendAddress(0xD0, I2C_Direction_Transmitter);
+	SendData(0x1B);
+
+	/* implicit stop, start next communication which will be a read */
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Receiver);
+
+	/* The following are read in 2's complement form */
+	uint8_t temperatureHigh = ReadDataExpectingMore();
+	uint8_t temperatureLow = ReadDataExpectingMore();
+	uint8_t xHigh = ReadDataExpectingMore();
+	uint8_t xLow = ReadDataExpectingMore();
+	uint8_t yHigh = ReadDataExpectingMore();
+	uint8_t yLow = ReadDataExpectingMore();
+	uint8_t zHigh = ReadDataExpectingMore();
+	uint8_t zLow = ReadDataExpectingEnd();
+
+	/* Are we not sending a NACK, or will this STOP automatically generate a NACK? */
+	/* How do you say "do nothing" for a beat? */
+	SendStop();
+}
 
