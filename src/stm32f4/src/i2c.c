@@ -2,29 +2,10 @@
 #include <stm32f4xx_i2c.h>
 
 /* Note: could PEC positioning help ensure correctness? */
-
-/* Events:
-	I2C_EVENT_SLAVE_TRANSMITTER_ADDRESS_MATCHED: EV1
-	I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED: EV1
-	I2C_EVENT_SLAVE_TRANSMITTER_SECONDADDRESS_MATCHED: EV1
-	I2C_EVENT_SLAVE_RECEIVER_SECONDADDRESS_MATCHED: EV1
-	I2C_EVENT_SLAVE_GENERALCALLADDRESS_MATCHED: EV1
-	I2C_EVENT_SLAVE_BYTE_RECEIVED: EV2
-	(I2C_EVENT_SLAVE_BYTE_RECEIVED | I2C_FLAG_DUALF): EV2
-	(I2C_EVENT_SLAVE_BYTE_RECEIVED | I2C_FLAG_GENCALL): EV2
-	I2C_EVENT_SLAVE_BYTE_TRANSMITTED: EV3
-	(I2C_EVENT_SLAVE_BYTE_TRANSMITTED | I2C_FLAG_DUALF): EV3
-	(I2C_EVENT_SLAVE_BYTE_TRANSMITTED | I2C_FLAG_GENCALL): EV3
-	I2C_EVENT_SLAVE_ACK_FAILURE: EV3_2
-	I2C_EVENT_SLAVE_STOP_DETECTED: EV4
-	I2C_EVENT_MASTER_MODE_SELECT: EV5
-	I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED: EV6
-	I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED: EV6
-	I2C_EVENT_MASTER_BYTE_RECEIVED: EV7
-	I2C_EVENT_MASTER_BYTE_TRANSMITTING: EV8
-	I2C_EVENT_MASTER_BYTE_TRANSMITTED: EV8_2
-	I2C_EVENT_MASTER_MODE_ADDRESS10: EV9
-*/
+/* Note: could improve speed by reading from multiple registers one after the other */
+/* Note: The 9DOF sensor has internal resistors */
+/* Note: should convert the while loops to not loop forever */
+/* Note: the power (SDA, SCL, VDD) lines on the i2c bus should be checked for random voltage spikes. I have heard reports a tantalum cap might be needed */
 
 void InitialiseI2C() {
 
@@ -54,7 +35,6 @@ void InitialiseI2C() {
 	 */
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource8, GPIO_AF_I2C1);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource9, GPIO_AF_I2C1);
-
 
 	I2C_InitTypeDef I2C_InitStruct;
 	/* note that the clock speed should be able to go up to 400kHz */
@@ -102,6 +82,9 @@ void SendAddress(uint8_t address, uint8_t direction) {
 }
 
 void SendData(uint8_t data) {
+	/* make sure that the bus is not transmitting */
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTING));
+
 	/* send the data */
 	I2C_SendData(I2C1, data);
 
@@ -115,17 +98,6 @@ void SendStop() {
 	I2C_GenerateSTOP(I2C1, ENABLE);
 }
 
-uint8_t ReadDataExpectingMore() {
-	/* automatically reply "yes, more!" */
-	I2C_AcknowledgeConfig(I2C1, ENABLE);
-
-	/* wait till the data is ready */
-	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
-
-	/* return the read data */
-	return I2C_ReceiveData(I2C1);
-}
-
 uint8_t ReadDataExpectingEnd() {
 	/* don't automatically reply "yes, more". Instead, we will send a NACK to indicate no more. */
 	I2C_AcknowledgeConfig(I2C1, DISABLE);
@@ -137,67 +109,90 @@ uint8_t ReadDataExpectingEnd() {
 	return I2C_ReceiveData(I2C1);
 }
 
-void InitialiseGyroscope() {
+uint8_t ReadFromAddressRegister(uint8_t peripheralAddress, uint8_t registerAddress) {
 	SendStart();
+	SendAddress(peripheralAddress, I2C_Direction_Transmitter);
+	SendData(registerAddress);
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Receiver);
+	uint8_t data = ReadDataExpectingEnd();
+	SendStop();
+	return data;
+}
 
-	/* Talk to the Gyro */
+
+void InitialiseGyroscope() {
+	/* wait until the line is not busy */
+	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
+
+	/* Reset the Gyro.
+	 * Note that 0xD0 is the address of the Gyro on the bus.
+	 */
+	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);
-
-	/* Reset the Gyro */
 	SendData(0x3E);
 	SendData(0x80);
+	SendStop();
 
 	/* Setup:
 	 * the full scale range of the gyro should be +/-2000 degrees / second
 	 * digital low pass filter bandwidth is 42Hz, internal sample rate is 1kHz.
 	 * Note: we could adjust the low pass filter in future to see the impact.
 	 */
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Transmitter);
 	SendData(0x16);
 	SendData(0x1B);
+	SendStop();
 
 	/* Set the sample rate
 	 * Sample rate = internal sample rate / (divider + 1)
 	 * Setting divider to 4 to give a sample rate of 200Hz.
 	 * The gyro values will update every 5ms.
 	 */
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Transmitter);
 	SendData(0x15);
 	SendData(0x04);
+	SendStop();
 
 	/* Set the clock source to PLL with Z Gyro as the reference.
 	 * This should be more stable / accurate than an internal oscillator (which would be greatly affected by temperature)
 	 * Probably not as good as an external oscillator though.
 	 */
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Transmitter);
 	SendData(0x3E);
 	SendData(0x03);
-
 	SendStop();
 };
 
-void ReadGyroscopeValues() {
-	SendStart();
 
-	/* Let the gyro know which register to read from the temperature (high) register */
-	/* The idea is to start at the temperature and read / nack until the z (low) register has been read */
-	/* This way we don't need to send multiple start / stop commands */
-	SendAddress(0xD0, I2C_Direction_Transmitter);
-	SendData(0x1B);
+void ReadGyroscopeValues(struct AngularPosition* angularPosition) {
+	uint8_t temperatureHigh = ReadFromAddressRegister(0xD0, 0x1B);
+	uint8_t temperatureLow = ReadFromAddressRegister(0xD0, 0x1C);
+	uint8_t xHigh = ReadFromAddressRegister(0xD0, 0x1D);
+	uint8_t xLow = ReadFromAddressRegister(0xD0, 0x1E);
+	uint8_t yHigh = ReadFromAddressRegister(0xD0, 0x1F);
+	uint8_t yLow = ReadFromAddressRegister(0xD0, 0x20);
+	uint8_t zHigh = ReadFromAddressRegister(0xD0, 0x21);
+	uint8_t zLow = ReadFromAddressRegister(0xD0, 0x22);
 
-	/* implicit stop, start next communication which will be a read */
-	SendStart();
-	SendAddress(0xD0, I2C_Direction_Receiver);
+	/* To explain the crazy temperature calculation,
+	 * see the comments by ErieRider at https://www.sparkfun.com/products/10724 */
+	int16_t temperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
+	angularPosition->gyroscopeTemperature = 35 + (temperature + 13200) / 280;
+	angularPosition->x = (((int16_t) xHigh << 8) | xLow);
+	angularPosition->y = (((int16_t) yHigh << 8) | yLow);
+	angularPosition->z = (((int16_t) zHigh << 8) | zLow);
 
-	/* The following are read in 2's complement form */
-	uint8_t temperatureHigh = ReadDataExpectingMore();
-	uint8_t temperatureLow = ReadDataExpectingMore();
-	uint8_t xHigh = ReadDataExpectingMore();
-	uint8_t xLow = ReadDataExpectingMore();
-	uint8_t yHigh = ReadDataExpectingMore();
-	uint8_t yLow = ReadDataExpectingMore();
-	uint8_t zHigh = ReadDataExpectingMore();
-	uint8_t zLow = ReadDataExpectingEnd();
-
-	/* Are we not sending a NACK, or will this STOP automatically generate a NACK? */
-	/* How do you say "do nothing" for a beat? */
-	SendStop();
 }
 
+struct AngularPosition CreateInitialAngularPosition() {
+	struct AngularPosition angularPosition;
+	angularPosition.gyroscopeTemperature = 0;
+	angularPosition.x = 0;
+	angularPosition.y = 0;
+	angularPosition.z = 0;
+	return angularPosition;
+}

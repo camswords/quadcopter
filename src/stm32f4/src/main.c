@@ -14,6 +14,9 @@ int main(void) {
   InitialiseSysTick();
   InitialisePWM();
   InitialiseI2C();
+  InitialiseGyroscope();
+  struct AngularPosition angularPosition = CreateInitialAngularPosition();
+
 
   /* throttle: all together now! power (collective pitch?) */
   struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
@@ -34,14 +37,16 @@ int main(void) {
   DutyCycle dutyCycle4 = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);
 
   dutyCycle1.update(1100);	// 10%  throttle
-  dutyCycle2.update(1200);  // 20%  throttle
-  dutyCycle3.update(1800);  // 80%  throttle
+  dutyCycle2.update(1200);	// 20%  throttle
+  dutyCycle3.update(1800);	// 80%  throttle
   dutyCycle4.update(2000);	// 100% throttle
+
 
   TurnOn(BLUE_LED);
 
   while(1) {
 	  // wait a second!
 	  TimingDelay(160000000);
+	  ReadGyroscopeValues(&angularPosition);
   }
 }
