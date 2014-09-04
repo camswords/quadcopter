@@ -2,10 +2,10 @@
 #include <stm32f4xx_i2c.h>
 
 /* Note: could PEC positioning help ensure correctness? */
-/* Note: could improve speed by reading from multiple registers one after the other */
 /* Note: The 9DOF sensor has internal resistors */
 /* Note: should convert the while loops to not loop forever */
 /* Note: the power (SDA, SCL, VDD) lines on the i2c bus should be checked for random voltage spikes. I have heard reports a tantalum cap might be needed */
+/* Hmm: what about when a client needs more time and attempts to extend the acknowledgement? */
 
 void InitialiseI2C() {
 
@@ -98,6 +98,17 @@ void SendStop() {
 	I2C_GenerateSTOP(I2C1, ENABLE);
 }
 
+uint8_t ReadDataExpectingMore() {
+	/* automatically reply "yes, more" to tell the peripheral to move to the next register. */
+	I2C_AcknowledgeConfig(I2C1, ENABLE);
+
+	/* wait till the data is ready */
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
+
+	/* return the read data */
+	return I2C_ReceiveData(I2C1);
+}
+
 uint8_t ReadDataExpectingEnd() {
 	/* don't automatically reply "yes, more". Instead, we will send a NACK to indicate no more. */
 	I2C_AcknowledgeConfig(I2C1, DISABLE);
@@ -108,18 +119,6 @@ uint8_t ReadDataExpectingEnd() {
 	/* return the read data */
 	return I2C_ReceiveData(I2C1);
 }
-
-uint8_t ReadFromAddressRegister(uint8_t peripheralAddress, uint8_t registerAddress) {
-	SendStart();
-	SendAddress(peripheralAddress, I2C_Direction_Transmitter);
-	SendData(registerAddress);
-	SendStart();
-	SendAddress(0xD0, I2C_Direction_Receiver);
-	uint8_t data = ReadDataExpectingEnd();
-	SendStop();
-	return data;
-}
-
 
 void InitialiseGyroscope() {
 	/* wait until the line is not busy */
@@ -169,14 +168,27 @@ void InitialiseGyroscope() {
 
 
 void ReadGyroscopeValues(struct AngularPosition* angularPosition) {
-	uint8_t temperatureHigh = ReadFromAddressRegister(0xD0, 0x1B);
-	uint8_t temperatureLow = ReadFromAddressRegister(0xD0, 0x1C);
-	uint8_t xHigh = ReadFromAddressRegister(0xD0, 0x1D);
-	uint8_t xLow = ReadFromAddressRegister(0xD0, 0x1E);
-	uint8_t yHigh = ReadFromAddressRegister(0xD0, 0x1F);
-	uint8_t yLow = ReadFromAddressRegister(0xD0, 0x20);
-	uint8_t zHigh = ReadFromAddressRegister(0xD0, 0x21);
-	uint8_t zLow = ReadFromAddressRegister(0xD0, 0x22);
+	/* Start reading from the high temperature register */
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Transmitter);
+	SendData(0x1B);
+	SendStart();
+	SendAddress(0xD0, I2C_Direction_Receiver);
+
+	/* Read the data and ACK on response. This will cause the peripheral to get ready
+	 * to return the next register's data
+	 */
+	uint8_t temperatureHigh = ReadDataExpectingMore();
+	uint8_t temperatureLow = ReadDataExpectingMore();
+	uint8_t xHigh = ReadDataExpectingMore();
+	uint8_t xLow = ReadDataExpectingMore();
+	uint8_t yHigh = ReadDataExpectingMore();
+	uint8_t yLow = ReadDataExpectingMore();
+	uint8_t zHigh = ReadDataExpectingMore();
+
+	/* Finally read the data and NACK on response. This lets the peripheral know that we are finished reading */
+	uint8_t zLow = ReadDataExpectingEnd();
+	SendStop();
 
 	/* To explain the crazy temperature calculation,
 	 * see the comments by ErieRider at https://www.sparkfun.com/products/10724 */
