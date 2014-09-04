@@ -65,6 +65,7 @@ void SendStart() {
 	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
 }
 
+/* Address should be the nominal write address of the peripheral. */
 void SendAddress(uint8_t address, uint8_t direction) {
 	/* send the address */
 	I2C_Send7bitAddress(I2C1, address, direction);

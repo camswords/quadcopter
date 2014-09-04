@@ -61,8 +61,32 @@ void InitialiseAccelerometer() {
 
 struct AccelerometerReading CreateAccelerometerReading() {
 	struct AccelerometerReading accelerometerReading;
+	accelerometerReading.x = 0;
+	accelerometerReading.y = 0;
+	accelerometerReading.z = 0;
 	return accelerometerReading;
 }
 
 void ReadAccelerometer(struct AccelerometerReading* accelerometerReading) {
+	/* Start reading from the x low register */
+	SendStart();
+	SendAddress(0xA6, I2C_Direction_Transmitter);
+	SendData(0x32);
+	SendStart();
+	SendAddress(0xA6, I2C_Direction_Receiver);
+
+	/* Read the data and ACK on response. This will cause the peripheral to get ready to return the next register's data.
+	 * Note that the multibyte read strategy will prevent the sensor updating half of the values in between a read.
+	 */
+	uint8_t xLow = ReadDataExpectingMore();
+	uint8_t xHigh = ReadDataExpectingMore();
+	uint8_t yLow = ReadDataExpectingMore();
+	uint8_t yHigh = ReadDataExpectingMore();
+	uint8_t zLow = ReadDataExpectingMore();
+	uint8_t zHigh = ReadDataExpectingEnd();
+	SendStop();
+
+	accelerometerReading->x = (((int16_t) xHigh << 8) | xLow);
+	accelerometerReading->y = (((int16_t) yHigh << 8) | yLow);
+	accelerometerReading->z = (((int16_t) zHigh << 8) | zLow);
 }

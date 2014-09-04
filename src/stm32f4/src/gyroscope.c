@@ -71,7 +71,7 @@ void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 
 	/* Read the data and ACK on response. This will cause the peripheral to get ready
 	 * to return the next register's data
-	 * Note that the multibyte read strategy should minimise (prevent?) the sensor updating
+	 * Note that the multibyte read strategy will prevent the sensor updating
 	 * half of the values in between a read.
 	 */
 	uint8_t temperatureHigh = ReadDataExpectingMore();
