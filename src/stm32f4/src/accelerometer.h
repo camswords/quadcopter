@@ -16,6 +16,4 @@ void InitialiseAccelerometer();
 
 void ReadAccelerometer(struct AccelerometerReading* accelerometerReading);
 
-
-
 #endif
