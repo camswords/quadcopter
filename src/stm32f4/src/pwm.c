@@ -63,8 +63,8 @@ DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSou
     TIM_OCInitTypeDef outputChannelInit = {0,};
     outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
 
-    // high throttle
-    outputChannelInit.TIM_Pulse = 2000;
+    // initial throttle is 0% (1000)
+    outputChannelInit.TIM_Pulse = 1000;
     outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
     outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
 
