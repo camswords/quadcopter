@@ -7,7 +7,7 @@
 #include <pwm_input.h>
 #include <i2c.h>
 #include <gyroscope.h>
-
+#include <accelerometer.h>
 
 int main(void) {
   EnableTiming();
@@ -16,8 +16,9 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();
   InitialiseGyroscope();
+  InitialiseAccelerometer();
   struct GyroscopeReading gyroscopeReading = CreateGyroscopeReading();
-
+  struct AccelerometerReading accelerometerReading = CreateAccelerometerReading();
 
   /* throttle: all together now! power (collective pitch?) */
   struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
@@ -49,5 +50,6 @@ int main(void) {
 	  // wait a second!
 	  TimingDelay(160000000);
 	  ReadGyroscope(&gyroscopeReading);
+	  ReadAccelerometer(&accelerometerReading);
   }
 }
