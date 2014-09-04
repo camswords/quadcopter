@@ -6,6 +6,7 @@
 #include <on_board_leds.h>
 #include <pwm_input.h>
 #include <i2c.h>
+#include <gyroscope.h>
 
 
 int main(void) {
@@ -15,7 +16,7 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();
   InitialiseGyroscope();
-  struct AngularPosition angularPosition = CreateInitialAngularPosition();
+  struct GyroscopeReading gyroscopeReading = CreateGyroscopeReading();
 
 
   /* throttle: all together now! power (collective pitch?) */
@@ -47,6 +48,6 @@ int main(void) {
   while(1) {
 	  // wait a second!
 	  TimingDelay(160000000);
-	  ReadGyroscopeValues(&angularPosition);
+	  ReadGyroscope(&gyroscopeReading);
   }
 }
