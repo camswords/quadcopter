@@ -50,8 +50,7 @@ int main(void) {
   TurnOn(BLUE_LED);
 
   while(1) {
-	  // wait a second!
-	  TimingDelay(160000000);
+	  WaitASecond();
 	  ReadGyroscope(&gyroscopeReading);
 	  ReadAccelerometer(&accelerometerReading);
 	  ReadMagnetometer(&magnetometerReading);

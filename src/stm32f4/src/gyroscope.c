@@ -1,11 +1,16 @@
 
 
 #include <gyroscope.h>
+#include <delay.h>
 
 /* Note: could PEC positioning help ensure correctness? */
 /* Note: The 9DOF sensor has internal resistors */
 /* Note: the power (SDA, SCL, VDD) lines on the i2c bus should be checked for random voltage spikes. I have heard reports a tantalum cap might be needed */
-
+/* Note that typically as you increase range sensitivity suffers causing reduced resolution.
+/* Note that a gyro suffers from drift error. Note that temperature greatly affects the drift.
+ * One way to calibrate is whenever you know the quadcopter is stationary, zero out the current measured values.
+ *
+ */
 void InitialiseGyroscope() {
 	/* wait until the line is not busy */
 	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
@@ -21,6 +26,7 @@ void InitialiseGyroscope() {
 
 	/* Setup:
 	 * the full scale range of the gyro should be +/-2000 degrees / second
+	 * In theory 2000 degrees / second means the quad would be completely rotating 5 times per second! Probably higher than required.
 	 * digital low pass filter bandwidth is 42Hz, internal sample rate is 1kHz.
 	 * Note: we could adjust the low pass filter in future to see the impact.
 	 */
@@ -50,6 +56,9 @@ void InitialiseGyroscope() {
 	SendData(0x3E);
 	SendData(0x03);
 	SendStop();
+
+	/* The gyro takes 50 milliseconds for zero settling */
+	WaitAFewMillis(50);
 };
 
 struct GyroscopeReading CreateGyroscopeReading() {
@@ -87,7 +96,9 @@ void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 	SendStop();
 
 	/* To explain the crazy temperature calculation,
-	 * see the comments by ErieRider at https://www.sparkfun.com/products/10724 */
+	 * see the comments by ErieRider at https://www.sparkfun.com/products/10724
+	 * You can also see the temperature sensor readings in the datasheet
+	 */
 	int16_t temperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
 	gyroscopeReading->gyroscopeTemperature = 35 + (temperature + 13200) / 280;
 	gyroscopeReading->x = (((int16_t) xHigh << 8) | xLow);

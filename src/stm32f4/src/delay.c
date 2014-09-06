@@ -39,3 +39,11 @@ void TimingDelay(unsigned int tick)
 }
 
 //******************************************************************************
+
+void WaitASecond() {
+	TimingDelay(160000000);
+}
+
+void WaitAFewMillis(int16_t millis) {
+	TimingDelay(160000000 / 1000 * millis);
+}
