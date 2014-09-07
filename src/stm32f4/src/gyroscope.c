@@ -9,7 +9,10 @@
 /* Note that typically as you increase range sensitivity suffers causing reduced resolution.
 /* Note that a gyro suffers from drift error. Note that temperature greatly affects the drift.
  * One way to calibrate is whenever you know the quadcopter is stationary, zero out the current measured values.
- *
+ * Note: on startup, we should zero out what is measured. Apparently a "zero" position is a "stressful" position for the device,
+ *   each individual sensor will have different readings. Just average the first few readings.
+ * Note: I probably shouldn't be afraid of longish (seconds) startup time. It may lead to better bias averaging.
+ * Initial ZRO Tolerance is + / - 40 degrees / second. This depends a lot on temperature.
  */
 void InitialiseGyroscope() {
 	/* wait until the line is not busy */
@@ -50,6 +53,7 @@ void InitialiseGyroscope() {
 	/* Set the clock source to PLL with Z Gyro as the reference.
 	 * This should be more stable / accurate than an internal oscillator (which would be greatly affected by temperature)
 	 * Probably not as good as an external oscillator though.
+	 * Accuracy of internal gyro MEMS oscillators are +/- 2% over temperature.
 	 */
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);
@@ -59,6 +63,9 @@ void InitialiseGyroscope() {
 
 	/* The gyro takes 50 milliseconds for zero settling */
 	WaitAFewMillis(50);
+
+	/* And will take a further (or is this included?) 20ms for register read / write warm up */
+	WaitAFewMillis(20);
 };
 
 struct GyroscopeReading CreateGyroscopeReading() {
@@ -95,13 +102,15 @@ void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 	uint8_t zLow = ReadDataExpectingEnd();
 	SendStop();
 
-	/* To explain the crazy temperature calculation,
-	 * see the comments by ErieRider at https://www.sparkfun.com/products/10724
-	 * You can also see the temperature sensor readings in the datasheet
+	/* Temperature offset: -13200 LSB
+	 * Temperature sensitivity: 280 LSB / degrees celcius
 	 */
 	int16_t temperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
 	gyroscopeReading->gyroscopeTemperature = 35 + (temperature + 13200) / 280;
-	gyroscopeReading->x = (((int16_t) xHigh << 8) | xLow);
-	gyroscopeReading->y = (((int16_t) yHigh << 8) | yLow);
-	gyroscopeReading->z = (((int16_t) zHigh << 8) | zLow);
+
+	/* gyro sensitivity: 14.375 LSB / (degrees / second)
+	 */
+	gyroscopeReading->x = (((int16_t) xHigh << 8) | xLow) / 14.375;
+	gyroscopeReading->y = (((int16_t) yHigh << 8) | yLow) / 14.375;
+	gyroscopeReading->z = (((int16_t) zHigh << 8) | zLow) / 14.375;
 }
