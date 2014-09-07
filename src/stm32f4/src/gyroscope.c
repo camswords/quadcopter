@@ -66,16 +66,38 @@ void InitialiseGyroscope() {
 
 	/* And will take a further (or is this included?) 20ms for register read / write warm up */
 	WaitAFewMillis(20);
-};
 
-struct GyroscopeReading CreateGyroscopeReading() {
-	struct GyroscopeReading gyroscopeReading;
+	/* initialise the gyroscope reading */
 	gyroscopeReading.gyroscopeTemperature = 0;
 	gyroscopeReading.x = 0;
 	gyroscopeReading.y = 0;
 	gyroscopeReading.z = 0;
-	return gyroscopeReading;
-}
+	gyroscopeReading.xOffset = 0;
+	gyroscopeReading.yOffset = 0;
+	gyroscopeReading.zOffset = 0;
+
+	/* calibrate:
+	 * collect samples for two seconds while at a "zero" position
+	 * average out reading, use this as an offset value.
+	 * Note that I should really look at this again once the temperature has been visualised using analytics
+	 */
+	uint16_t samples = 2000;
+	float summedX = 0.0;
+	float summedY = 0.0;
+	float summedZ = 0.0;
+
+	for (uint16_t i = 0; i < samples; i++) {
+		ReadGyroscope(&gyroscopeReading);
+
+		summedX += gyroscopeReading.x;
+		summedY += gyroscopeReading.y;
+		summedZ += gyroscopeReading.z;
+	}
+
+	gyroscopeReading.xOffset = summedX / samples;
+	gyroscopeReading.yOffset = summedY / samples;
+	gyroscopeReading.zOffset = summedZ / samples;
+};
 
 void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 	/* Start reading from the high temperature register */
@@ -105,12 +127,15 @@ void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 	/* Temperature offset: -13200 LSB
 	 * Temperature sensitivity: 280 LSB / degrees celcius
 	 */
-	int16_t temperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
-	gyroscopeReading->gyroscopeTemperature = 35 + (temperature + 13200) / 280;
+	int16_t rawTemperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
+	gyroscopeReading->gyroscopeTemperature = 35 + (rawTemperature + 13200) / 280;
 
-	/* gyro sensitivity: 14.375 LSB / (degrees / second)
-	 */
-	gyroscopeReading->x = (((int16_t) xHigh << 8) | xLow) / 14.375;
-	gyroscopeReading->y = (((int16_t) yHigh << 8) | yLow) / 14.375;
-	gyroscopeReading->z = (((int16_t) zHigh << 8) | zLow) / 14.375;
+	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
+	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
+	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
+
+	/* gyro sensitivity: 14.375 LSB / (degrees / second) */
+	gyroscopeReading->x = (rawX - gyroscopeReading->xOffset) / 14.375;
+	gyroscopeReading->y = (rawY - gyroscopeReading->yOffset) / 14.375;
+	gyroscopeReading->z = (rawZ - gyroscopeReading->zOffset) / 14.375;
 }

@@ -19,7 +19,6 @@ int main(void) {
   InitialiseGyroscope();
   InitialiseAccelerometer();
   InitialiseMagnetometer();
-  struct GyroscopeReading gyroscopeReading = CreateGyroscopeReading();
   struct AccelerometerReading accelerometerReading = CreateAccelerometerReading();
   struct MagnetometerReading magnetometerReading = CreateMagnetometerReading();
 

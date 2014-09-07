@@ -9,9 +9,12 @@ typedef struct GyroscopeReading {
 	float y;
 	float z;
 	float gyroscopeTemperature;
+	float xOffset;
+	float yOffset;
+	float zOffset;
 }GyroscopeReading;
 
-struct GyroscopeReading CreateGyroscopeReading();
+struct GyroscopeReading gyroscopeReading;
 
 void InitialiseGyroscope();
 
