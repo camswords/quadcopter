@@ -2,6 +2,22 @@
 
 /* Note: should convert the while loops to not loop forever */
 /* Hmm: what about when a client needs more time and attempts to extend the acknowledgement? */
+/* Some useful error statuses:
+ *   Start bit sent (Master) SB
+ *   Address sent (Master) or Address matched (Slave) ADDR
+ *   10-bit header sent (Master) ADD10
+ *   Stop received (Slave) STOPF
+ *   Data byte transfer finished BTF
+ *   Receive buffer not empty RxNE
+ *   Transmit buffer empty TxE
+ *   Bus error BERR
+ *   Arbitration loss (Master) ARLO
+ *   Acknowledge failure AF
+ *   Overrun/Underrun OVR
+ *   PEC error PECERR
+ *   Timeout/Tlow error TIMEOUT
+ *   SMBus Alert SMBALERT
+ */
 
 void InitialiseI2C() {
 
