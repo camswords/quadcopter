@@ -9,13 +9,15 @@
 #include <gyroscope.h>
 #include <accelerometer.h>
 #include <magnetometer.h>
+#include <serial_output.h>
 
 int main(void) {
   EnableTiming();
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();
-  InitialiseI2C();
+  InitialiseI2C();	// PB.08, PB.09
+  InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
   InitialiseGyroscope();
   InitialiseAccelerometer();
   InitialiseMagnetometer();
@@ -45,7 +47,6 @@ int main(void) {
   dutyCycle3.update(1800);	// 80%  throttle
   dutyCycle4.update(2000);	// 100% throttle
 
-
   TurnOn(BLUE_LED);
 
   while(1) {
@@ -53,5 +54,6 @@ int main(void) {
 	  ReadGyroscope(&gyroscopeReading);
 	  ReadAccelerometer(&accelerometerReading);
 	  ReadMagnetometer(&magnetometerReading);
+	  WriteOut("Hello World!|");
   }
 }

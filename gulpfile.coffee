@@ -1,3 +1,5 @@
+# To run this, call gulp [task] --require coffee-script/register
+
 gulp = require 'gulp'
 gulps = require('require-dir')('./src/tasks')
 
