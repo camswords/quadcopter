@@ -3,19 +3,22 @@ module.exports = ->
   noble = require 'noble'
   through = require 'through2'
 
-  recordMessage = (->
-    line = ''
+  concatenate = (bufferA, bufferB) ->
+    newBuffer = new Buffer(bufferA.length + bufferB.length)
+    bufferA.copy(newBuffer)
+    bufferB.copy(newBuffer, bufferA.length)
+    newBuffer
 
-    (linePart) ->
-      unless linePart.indexOf("|") is -1
-        newLineIndex = linePart.indexOf("|") + 1
-        console.log line + linePart.slice(0, newLineIndex)
-        line = ''
-        recordMessage linePart.slice(newLineIndex)
-      else
-        line += linePart
-      return
-  )()
+  process = (data) ->
+    if data.length == 18
+      name = data.toString('ascii', 0, 9)
+      format = data.toString('ascii', 10, 11)
+      timeInSeconds = data.readUInt32BE(12)
+      value = data.readUInt16BE(16)
+
+      console.log("#{name}: #{timeInSeconds}, #{value}")
+    else
+      console.log "failed to parse message #{data.toString()} of length #{data.length}"
 
   console.log('looking for the quadcopter...')
 
@@ -33,9 +36,19 @@ module.exports = ->
 
       peripheral.on "connect", -> peripheral.discoverServices ["2220"]
 
+      buffer = new Buffer(0)
+
       peripheral.on "servicesDiscover", (services) ->
         services[0].on "characteristicsDiscover", (characteristics) ->
-          characteristics[0].on "read", (data) -> recordMessage(data.toString())
+          characteristics[0].on "read", (data) ->
+            stopBit = data.toString().indexOf('|')
+
+            if stopBit != -1
+              buffer = concatenate(buffer, data.slice(0, stopBit))
+              process(buffer)
+              buffer = data.slice(stopBit + 1)
+            else
+              buffer = concatenate(buffer, data)
 
           console.log "requesting data..."
           characteristics[0].notify(true)

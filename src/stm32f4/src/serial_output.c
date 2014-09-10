@@ -56,7 +56,20 @@ void WriteOut(char* value) {
 void RecordAnalytics(char* name, uint32_t timeInSeconds, uint16_t value) {
 	WriteOut(name);
 	WriteOut(":I:");
-	WriteData((timeInSeconds >> 16) && 0xFFFF); /* high part of the time in seconds */
-	WriteData((timeInSeconds >> 0) && 0xFFFF);  /* low part of the time in seconds */
-	WriteData(value);
+
+	uint8_t timeHighest = (timeInSeconds >> 24) & 0xFF;
+	uint8_t timeHigh = (timeInSeconds >> 16) & 0xFF;
+	uint8_t timeLow = (timeInSeconds >> 8) & 0xFF;
+	uint8_t timeLowest = (timeInSeconds >> 0) & 0xFF;
+
+	uint8_t valueyHigh = (value >> 8) & 0xFF;
+	uint8_t valueyLow = (value >> 0) & 0xFF;
+
+	WriteData(timeHighest); /* high part of the time in seconds */
+	WriteData(timeHigh); /* high part of the time in seconds */
+	WriteData(timeLow); /* high part of the time in seconds */
+	WriteData(timeLowest);  /* low part of the time in seconds */
+	WriteData(valueyHigh);
+	WriteData(valueyLow);
+	WriteData('|');
 }

@@ -55,7 +55,7 @@ int main(void) {
   while(1) {
 	  if(secondsElapsed != mySeconds) {
 		  mySeconds = secondsElapsed;
-		  RecordAnalytics("loops.freq", secondsElapsed, loopFrequency);
+		  RecordAnalytics("loop.freq", secondsElapsed, loopFrequency);
 		  loopFrequency = 0;
 	  }
 
