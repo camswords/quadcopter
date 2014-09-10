@@ -10,15 +10,28 @@ module.exports = ->
     newBuffer
 
   process = (data) ->
-    if data.length == 18
       name = data.toString('ascii', 0, 9)
       format = data.toString('ascii', 10, 11)
-      timeInSeconds = data.readUInt32BE(12)
-      value = data.readUInt16BE(16)
 
-      console.log("#{name}: #{timeInSeconds}, #{value}")
-    else
-      console.log "failed to parse message #{data.toString()} of length #{data.length}"
+      if format == 'I'
+        if data.length == 18
+          timeInSeconds = data.readUInt32BE(12)
+          value = data.readUInt16BE(16)
+          console.log("#{name}: #{timeInSeconds}, #{value}")
+        else
+          console.log "failed to parse message #{data.toString()} - expected integer messages to be length 18 but was #{data.length}"
+
+      else if format == 'F'
+        if data.length == 20
+          timeInSeconds = data.readUInt32BE(12)
+          value = data.readFloatBE(16)
+          console.log("#{name}: #{timeInSeconds}, #{value}")
+        else
+          console.log "failed to parse message #{data.toString()} - expected float messages to be length 20 but was #{data.length}"
+      else
+        console.log "failed to parse message #{data.toString()} - unknown format #{format}"
+
+
 
   console.log('looking for the quadcopter...')
 

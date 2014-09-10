@@ -5,6 +5,11 @@
 
 uint8_t transmittingStarted;
 
+typedef union float2bytes {
+	float floatValue;
+	char byteValue[sizeof(float)];
+} FloatToBytes;
+
 void InitialiseSerialOutput() {
 	/* enable the clock to the GPIO C ports */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
@@ -71,5 +76,29 @@ void RecordAnalytics(char* name, uint32_t timeInSeconds, uint16_t value) {
 	WriteData(timeLowest);  /* low part of the time in seconds */
 	WriteData(valueyHigh);
 	WriteData(valueyLow);
+	WriteData('|');
+}
+
+void RecordFloatAnalytics(char* name, uint32_t timeInSeconds, float value) {
+	WriteOut(name);
+	WriteOut(":F:");
+
+	uint8_t timeHighest = (timeInSeconds >> 24) & 0xFF;
+	uint8_t timeHigh = (timeInSeconds >> 16) & 0xFF;
+	uint8_t timeLow = (timeInSeconds >> 8) & 0xFF;
+	uint8_t timeLowest = (timeInSeconds >> 0) & 0xFF;
+
+
+	FloatToBytes f2b;
+	f2b.floatValue = value;
+
+	WriteData(timeHighest);
+	WriteData(timeHigh);
+	WriteData(timeLow);
+	WriteData(timeLowest);
+	WriteData(f2b.byteValue[0]);
+	WriteData(f2b.byteValue[1]);
+	WriteData(f2b.byteValue[2]);
+	WriteData(f2b.byteValue[3]);
 	WriteData('|');
 }

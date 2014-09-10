@@ -11,6 +11,11 @@
 #include <magnetometer.h>
 #include <serial_output.h>
 
+/* Performance fun tips:
+ * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
+ */
+
+
 int main(void) {
   EnableTiming();
   InitialiseLeds();
@@ -56,6 +61,7 @@ int main(void) {
 	  if(secondsElapsed != mySeconds) {
 		  mySeconds = secondsElapsed;
 		  RecordAnalytics("loop.freq", secondsElapsed, loopFrequency);
+		  RecordFloatAnalytics("gyro.xval", secondsElapsed, gyroscopeReading.x);
 		  loopFrequency = 0;
 	  }
 
