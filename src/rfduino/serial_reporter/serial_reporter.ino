@@ -71,7 +71,8 @@ int connected = false;
 int loops = 0;
 
 void setup() {
-  Serial.begin(9600, 1, 0);
+  /* RX is Pin 0, TX is Pin 1 */
+  Serial.begin(9600, 0, 1);
   RFduinoBLE.begin();
 }
 
