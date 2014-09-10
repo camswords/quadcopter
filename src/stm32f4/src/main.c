@@ -49,11 +49,20 @@ int main(void) {
 
   TurnOn(BLUE_LED);
 
+  uint16_t loopFrequency = 0;
+  uint32_t mySeconds = 0;
+
   while(1) {
-	  WaitASecond();
+	  if(secondsElapsed != mySeconds) {
+		  mySeconds = secondsElapsed;
+		  RecordAnalytics("loops.freq", secondsElapsed, loopFrequency);
+		  loopFrequency = 0;
+	  }
+
+	  loopFrequency++;
+	  WaitAFewMillis(100);
 	  ReadGyroscope(&gyroscopeReading);
 	  ReadAccelerometer(&accelerometerReading);
 	  ReadMagnetometer(&magnetometerReading);
-	  WriteOut("Hello World!|");
   }
 }

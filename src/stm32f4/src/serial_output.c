@@ -39,13 +39,24 @@ void InitialiseSerialOutput() {
 	USART_Cmd(UART4, ENABLE);
 }
 
+void WriteData(uint16_t data) {
+	while(USART_GetFlagStatus(UART4, USART_FLAG_TXE) == RESET);
+	USART_SendData(UART4, data);
+}
+
 void WriteOut(char* value) {
 	char* letter = value;
 
 	while(*letter) {
-		while(USART_GetFlagStatus(UART4, USART_FLAG_TXE) == RESET);
-
-		USART_SendData(UART4, *letter);
+		WriteData(*letter);
 		*letter++;
 	}
+}
+
+void RecordAnalytics(char* name, uint32_t timeInSeconds, uint16_t value) {
+	WriteOut(name);
+	WriteOut(":I:");
+	WriteData((timeInSeconds >> 16) && 0xFFFF); /* high part of the time in seconds */
+	WriteData((timeInSeconds >> 0) && 0xFFFF);  /* low part of the time in seconds */
+	WriteData(value);
 }
