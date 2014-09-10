@@ -60,7 +60,7 @@ int main(void) {
 	  }
 
 	  loopFrequency++;
-	  WaitAFewMillis(100);
+
 	  ReadGyroscope(&gyroscopeReading);
 	  ReadAccelerometer(&accelerometerReading);
 	  ReadMagnetometer(&magnetometerReading);
