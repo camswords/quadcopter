@@ -59,22 +59,48 @@ module.exports = ->
       else
         data.errors = data.errors + 1
 
-  serialPort = new SerialPort "/dev/cu.usbserial-A9WZZTHD", baudrate: 9600
+  serialPort = new SerialPort "/dev/cu.usbserial-A9WZZTHD", { baudrate: 115200 }, false
 
-  serialPort.on "open", ->
-    console.log "connected to serial port"
+  serialPort.open (error) ->
+    throw "failed to open serial port due to #{error}" if error
+    console.log "connected..."
 
     buffer = new Buffer(0)
 
     serialPort.on 'data', (data) ->
-      stopBit = data.toString().indexOf('|')
+      buffer = concatenate(buffer, data)
 
-      if stopBit != -1
-        buffer = concatenate(buffer, data.slice(0, stopBit))
-        processData(buffer)
-        buffer = data.slice(stopBit + 1)
-      else
-        buffer = concatenate(buffer, data)
+
+
+
+
+#      stopBit = data.toString().indexOf('|')
+#
+#      if stopBit != -1
+#        buffer = concatenate(buffer, data.slice(0, stopBit))
+#        processData(buffer)
+#        buffer = data.slice(stopBit + 1)
+#      else
+#        buffer = concatenate(buffer, data)
+
+    parseBuffer = ->
+      i = 0
+      metricStartPosition = 0
+
+      while i < buffer.length
+        if buffer[i] == '|'.charCodeAt(0)
+          processData buffer.slice(metricStartPosition, i)
+          metricStartPosition = i + 1
+
+        i++
+
+
+      # unfinish metrics should be added back to the buffer
+      buffer = buffer.slice(metricStartPosition, buffer.length)
+
+
+    setInterval(parseBuffer, 1000)
+
 
   # return a stream, but never call the callback.
   # this is designed to run forever.
