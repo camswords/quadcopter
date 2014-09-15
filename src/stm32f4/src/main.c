@@ -54,19 +54,7 @@ int main(void) {
 
   TurnOn(BLUE_LED);
 
-  uint16_t loopFrequency = 0;
-  uint32_t mySeconds = 0;
-
   while(1) {
-	  if(secondsElapsed != mySeconds) {
-		  mySeconds = secondsElapsed;
-		  RecordAnalytics("loop.freq", secondsElapsed, loopFrequency);
-		  RecordFloatAnalytics("gyro.xval", secondsElapsed, gyroscopeReading.x);
-		  loopFrequency = 0;
-	  }
-
-	  loopFrequency++;
-
 	  ReadGyroscope(&gyroscopeReading);
 	  ReadAccelerometer(&accelerometerReading);
 	  ReadMagnetometer(&magnetometerReading);
