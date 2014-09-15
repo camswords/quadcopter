@@ -3,6 +3,25 @@ module.exports = ->
   SerialPort = require('serialport').SerialPort
   through = require 'through2'
 
+  analytics =
+    time: 0
+    errors: 0
+    angularPosition:
+      x: 0
+      y: 0
+      z: 0
+
+
+  printResults = ->
+    console.log "#{analytics.time}:
+                 angular position (#{analytics.angularPosition.x},
+                                   #{analytics.angularPosition.y},
+                                   #{analytics.angularPosition.z}),
+                 errors: #{analytics.errors}"
+
+  setInterval printResults, 500
+
+
   concatenate = (bufferA, bufferB) ->
     newBuffer = new Buffer(bufferA.length + bufferB.length)
     bufferA.copy(newBuffer)
@@ -26,7 +45,11 @@ module.exports = ->
           timeInSeconds = data.readUInt32BE(12)
           value = data.readInt32BE(16) / 1000000
 
-          console.log "#{name}, #{timeInSeconds}, #{value}"
+          analytics.time = timeInSeconds
+          analytics.angularPosition.x = value if name == 'angu.posx'
+          analytics.angularPosition.y = value if name == 'angu.posy'
+          analytics.angularPosition.z = value if name == 'angu.posz'
+
         else
           data.errors = data.errors + 1
       else
