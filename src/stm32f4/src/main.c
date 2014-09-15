@@ -48,14 +48,22 @@ int main(void) {
 
   TurnOn(BLUE_LED);
 
+  uint16_t loopsPerSecond = 0;
+  uint32_t thisSecond = 0;
 
   while(1) {
 	  ReadAngularPosition();
 
-	  if (intermediateMillis % 100 == 0) {
-		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
-		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
-		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
+	  loopsPerSecond++;
+
+	  if (thisSecond != secondsElapsed) {
+		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
+		  loopsPerSecond = 0;
+		  thisSecond = secondsElapsed;
 	  }
+
+	  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
+	  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
+	  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
   }
 }

@@ -10,10 +10,11 @@ module.exports = ->
       x: 0
       y: 0
       z: 0
-
+    loopFrequency: 0
 
   printResults = ->
     console.log "#{analytics.time}:
+                 loopsPerSecond: #{analytics.loopFrequency}, 
                  angular position (#{analytics.angularPosition.x},
                                    #{analytics.angularPosition.y},
                                    #{analytics.angularPosition.z}),
@@ -36,7 +37,10 @@ module.exports = ->
         if data.length == 18
           timeInSeconds = data.readUInt32BE(12)
           value = data.readUInt16BE(16)
-          console.log("#{name}: #{timeInSeconds}, #{value}")
+
+          analytics.time = timeInSeconds
+          analytics.loopFrequency = value if name == 'loop.freq'
+
         else
           data.errors = data.errors + 1
 
