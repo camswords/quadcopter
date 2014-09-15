@@ -10,10 +10,10 @@ typedef struct AccelerometerReading {
 	int16_t z;
 }AccelerometerReading;
 
-struct AccelerometerReading CreateAccelerometerReading();
+struct AccelerometerReading accelerometerReading;
 
 void InitialiseAccelerometer();
 
-void ReadAccelerometer(struct AccelerometerReading* accelerometerReading);
+void ReadAccelerometer();
 
 #endif

@@ -57,17 +57,14 @@ void InitialiseAccelerometer() {
 	SendData(0x31);
 	SendData(0x4F);
 	SendStop();
-};
 
-struct AccelerometerReading CreateAccelerometerReading() {
-	struct AccelerometerReading accelerometerReading;
+	/* initialise the accelerometer at zero position */
 	accelerometerReading.x = 0;
 	accelerometerReading.y = 0;
 	accelerometerReading.z = 0;
-	return accelerometerReading;
-}
+};
 
-void ReadAccelerometer(struct AccelerometerReading* accelerometerReading) {
+void ReadAccelerometer() {
 	/* Start reading from the x low register */
 	SendStart();
 	SendAddress(0xA6, I2C_Direction_Transmitter);
@@ -86,7 +83,7 @@ void ReadAccelerometer(struct AccelerometerReading* accelerometerReading) {
 	uint8_t zHigh = ReadDataExpectingEnd();
 	SendStop();
 
-	accelerometerReading->x = (((int16_t) xHigh << 8) | xLow);
-	accelerometerReading->y = (((int16_t) yHigh << 8) | yLow);
-	accelerometerReading->z = (((int16_t) zHigh << 8) | zLow);
+	accelerometerReading.x = (((int16_t) xHigh << 8) | xLow);
+	accelerometerReading.y = (((int16_t) yHigh << 8) | yLow);
+	accelerometerReading.z = (((int16_t) zHigh << 8) | zLow);
 }

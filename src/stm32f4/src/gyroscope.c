@@ -99,7 +99,7 @@ void InitialiseGyroscope() {
 	gyroscopeReading.zOffset = summedZ / samples;
 };
 
-void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
+void ReadGyroscope() {
 	/* Start reading from the high temperature register */
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);
@@ -128,14 +128,14 @@ void ReadGyroscope(struct GyroscopeReading* gyroscopeReading) {
 	 * Temperature sensitivity: 280 LSB / degrees celcius
 	 */
 	int16_t rawTemperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
-	gyroscopeReading->gyroscopeTemperature = 35 + (rawTemperature + 13200) / 280;
+	gyroscopeReading.gyroscopeTemperature = 35 + (rawTemperature + 13200) / 280;
 
 	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
 
 	/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-	gyroscopeReading->x = (rawX - gyroscopeReading->xOffset) / 14.375;
-	gyroscopeReading->y = (rawY - gyroscopeReading->yOffset) / 14.375;
-	gyroscopeReading->z = (rawZ - gyroscopeReading->zOffset) / 14.375;
+	gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375;
+	gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375;
+	gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375;
 }

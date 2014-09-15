@@ -1,11 +1,6 @@
 
 #include <magnetometer.h>
 
-struct MagnetometerReading CreateMagnetometerReading() {
-	struct MagnetometerReading magnetometerReading;
-	return magnetometerReading;
-}
-
 void InitialiseMagnetometer() {
 	/* wait until the line is not busy */
 	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
@@ -40,7 +35,7 @@ void InitialiseMagnetometer() {
 	SendStop();
 }
 
-void ReadMagnetometer(struct MagnetometerReading* magnetometerReading) {
+void ReadMagnetometer() {
 	/* Start reading from the x high register */
 	SendStart();
 	SendAddress(0xA6, I2C_Direction_Transmitter);
@@ -60,7 +55,7 @@ void ReadMagnetometer(struct MagnetometerReading* magnetometerReading) {
 	SendStop();
 
 	/* Note that a read value of -4096 is used for math over/under flow for the channel / bias measurement */
-	magnetometerReading->x = (((int16_t) xHigh << 8) | xLow);
-	magnetometerReading->y = (((int16_t) yHigh << 8) | yLow);
-	magnetometerReading->z = (((int16_t) zHigh << 8) | zLow);
+	magnetometerReading.x = (((int16_t) xHigh << 8) | xLow);
+	magnetometerReading.y = (((int16_t) yHigh << 8) | yLow);
+	magnetometerReading.z = (((int16_t) zHigh << 8) | zLow);
 }

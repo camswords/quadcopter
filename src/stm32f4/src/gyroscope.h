@@ -18,6 +18,6 @@ struct GyroscopeReading gyroscopeReading;
 
 void InitialiseGyroscope();
 
-void ReadGyroscope(struct GyroscopeReading* gyroscopeReading);
+void ReadGyroscope();
 
 #endif

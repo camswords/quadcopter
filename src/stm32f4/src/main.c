@@ -6,10 +6,8 @@
 #include <on_board_leds.h>
 #include <pwm_input.h>
 #include <i2c.h>
-#include <gyroscope.h>
-#include <accelerometer.h>
-#include <magnetometer.h>
 #include <serial_output.h>
+#include <angular_position.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -23,11 +21,7 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08, PB.09
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  InitialiseGyroscope();
-  InitialiseAccelerometer();
-  InitialiseMagnetometer();
-  struct AccelerometerReading accelerometerReading = CreateAccelerometerReading();
-  struct MagnetometerReading magnetometerReading = CreateMagnetometerReading();
+  InitialiseAngularPosition();
 
   /* throttle: all together now! power (collective pitch?) */
   struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
@@ -55,8 +49,6 @@ int main(void) {
   TurnOn(BLUE_LED);
 
   while(1) {
-	  ReadGyroscope(&gyroscopeReading);
-	  ReadAccelerometer(&accelerometerReading);
-	  ReadMagnetometer(&magnetometerReading);
+	  ReadAngularPosition();
   }
 }

@@ -10,10 +10,10 @@ typedef struct MagnetometerReading {
 	int16_t z;
 }MagnetometerReading;
 
-struct MagnetometerReading CreateMagnetometerReading();
+struct MagnetometerReading magnetometerReading;
 
 void InitialiseMagnetometer();
 
-void ReadMagnetometer(struct MagnetometerReading* magnetometerReading);
+void ReadMagnetometer();
 
 #endif
