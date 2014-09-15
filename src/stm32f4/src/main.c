@@ -58,12 +58,12 @@ int main(void) {
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
+		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
+		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
+		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
+
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
 	  }
-
-	  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
-	  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
-	  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
   }
 }

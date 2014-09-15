@@ -70,19 +70,6 @@ module.exports = ->
     serialPort.on 'data', (data) ->
       buffer = concatenate(buffer, data)
 
-
-
-
-
-#      stopBit = data.toString().indexOf('|')
-#
-#      if stopBit != -1
-#        buffer = concatenate(buffer, data.slice(0, stopBit))
-#        processData(buffer)
-#        buffer = data.slice(stopBit + 1)
-#      else
-#        buffer = concatenate(buffer, data)
-
     parseBuffer = ->
       i = 0
       metricStartPosition = 0
@@ -93,7 +80,6 @@ module.exports = ->
           metricStartPosition = i + 1
 
         i++
-
 
       # unfinish metrics should be added back to the buffer
       buffer = buffer.slice(metricStartPosition, buffer.length)
