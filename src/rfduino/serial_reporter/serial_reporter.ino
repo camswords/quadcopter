@@ -1,6 +1,6 @@
 #include <RFduinoBLE.h>
 
-char data[100];
+char data[1000];
 int connected = false;
 
 void setup() {
@@ -24,18 +24,19 @@ void loop() {
   char bytesRead = 0;
   
   /* Read in 100 bytes of data */
-  while(bytesRead < 100) {
+  while(bytesRead < 1000 && (bytesRead == 0 || data[bytesRead - 1] != '|')) {
     if (Serial.available()) {
-      data[bytesRead++] = Serial.read();
+      char characterRead = Serial.read();
+      data[bytesRead++] = characterRead;
     }
-    
+      
     /* best not to thrash */
     delay(5);
-  }
+ }
 
   if (connected) {
     /* send is queued (the ble stack delays send to the start of the next tx window) */
-    while (! RFduinoBLE.send(data, charactersToSend))
+    while (! RFduinoBLE.send(data, bytesRead))
       ;  /* all tx buffers in use (can't send - try again later) */
   }
 }
