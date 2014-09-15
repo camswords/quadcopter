@@ -3,8 +3,6 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_usart.h>
 
-uint8_t transmittingStarted;
-
 typedef union float2bytes {
 	float floatValue;
 	char byteValue[sizeof(float)];
@@ -40,7 +38,7 @@ void InitialiseSerialOutput() {
 	USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
 	USART_Init(UART4, &USART_InitStruct);
 
-	/* Finally, enable the UART */
+	/* enable the UART */
 	USART_Cmd(UART4, ENABLE);
 }
 
@@ -87,7 +85,6 @@ void RecordFloatAnalytics(char* name, uint32_t timeInSeconds, float value) {
 	uint8_t timeHigh = (timeInSeconds >> 16) & 0xFF;
 	uint8_t timeLow = (timeInSeconds >> 8) & 0xFF;
 	uint8_t timeLowest = (timeInSeconds >> 0) & 0xFF;
-
 
 	FloatToBytes f2b;
 	f2b.floatValue = value;

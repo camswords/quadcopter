@@ -48,14 +48,12 @@ int main(void) {
 
   TurnOn(BLUE_LED);
 
-  uint32_t mySeconds = 0;
 
   while(1) {
 	  ReadAngularPosition();
 
-	  if (mySeconds != secondsElapsed) {
+	  if (intermediateMillis % 100 == 0) {
 		  RecordFloatAnalytics("angu.posi", secondsElapsed, angularPosition.x);
-		  mySeconds = secondsElapsed;
 	  }
   }
 }
