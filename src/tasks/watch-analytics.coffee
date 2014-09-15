@@ -18,8 +18,8 @@ module.exports = ->
           timeInSeconds = data.readUInt32BE(12)
           value = data.readUInt16BE(16)
           console.log("#{name}: #{timeInSeconds}, #{value}")
-#        else
-#          console.log "failed to parse message #{data.toString()} - expected integer messages to be length 18 but was #{data.length}"
+        else
+          console.log "failed to parse message #{data.toString()} - expected integer messages to be length 18 but was #{data.length}"
 
       else if format == 'F'
         if data.length == 20
