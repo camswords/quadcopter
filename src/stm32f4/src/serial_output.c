@@ -3,11 +3,6 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_usart.h>
 
-typedef union float2bytes {
-	float floatValue;
-	char byteValue[sizeof(float)];
-} FloatToBytes;
-
 void InitialiseSerialOutput() {
 	/* enable the clock to the GPIO C ports */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
@@ -86,16 +81,20 @@ void RecordFloatAnalytics(char* name, uint32_t timeInSeconds, float value) {
 	uint8_t timeLow = (timeInSeconds >> 8) & 0xFF;
 	uint8_t timeLowest = (timeInSeconds >> 0) & 0xFF;
 
-	FloatToBytes f2b;
-	f2b.floatValue = value;
+	int32_t roundedValue = (value * 1000000);
+
+	uint8_t valueHighest = (roundedValue >> 24) & 0xFF;
+	uint8_t valueHigh = (roundedValue >> 16) & 0xFF;
+	uint8_t valueLow = (roundedValue >> 8) & 0xFF;
+	uint8_t valueLowest = (roundedValue >> 0) & 0xFF;
 
 	WriteData(timeHighest);
 	WriteData(timeHigh);
 	WriteData(timeLow);
 	WriteData(timeLowest);
-	WriteData(f2b.byteValue[0]);
-	WriteData(f2b.byteValue[1]);
-	WriteData(f2b.byteValue[2]);
-	WriteData(f2b.byteValue[3]);
+	WriteData(valueHighest);
+	WriteData(valueHigh);
+	WriteData(valueLow);
+	WriteData(valueLowest);
 	WriteData('|');
 }

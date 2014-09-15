@@ -53,7 +53,9 @@ int main(void) {
 	  ReadAngularPosition();
 
 	  if (intermediateMillis % 100 == 0) {
-		  RecordFloatAnalytics("angu.posi", secondsElapsed, angularPosition.x);
+		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
+		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
+		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
 	  }
   }
 }

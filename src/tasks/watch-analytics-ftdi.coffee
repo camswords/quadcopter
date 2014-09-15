@@ -19,17 +19,18 @@ module.exports = ->
           value = data.readUInt16BE(16)
           console.log("#{name}: #{timeInSeconds}, #{value}")
         else
-          console.log "failed to parse message #{data.toString()} - expected integer messages to be length 18 but was #{data.length}"
+          data.errors = data.errors + 1
 
       else if format == 'F'
         if data.length == 20
           timeInSeconds = data.readUInt32BE(12)
-          value = data.readFloatBE(16)
-          console.log("#{name}: #{timeInSeconds}, #{value}")
+          value = data.readInt32BE(16) / 1000000
+
+          console.log "#{name}, #{timeInSeconds}, #{value}"
         else
-          console.log "failed to parse message #{data.toString()} - expected float messages to be length 20 but was #{data.length}"
+          data.errors = data.errors + 1
       else
-        console.log "failed to parse message #{data.toString()} - unknown format #{format}"
+        data.errors = data.errors + 1
 
   serialPort = new SerialPort "/dev/cu.usbserial-A9WZZTHD", baudrate: 9600
 
