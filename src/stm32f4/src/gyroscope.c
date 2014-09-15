@@ -2,6 +2,7 @@
 
 #include <gyroscope.h>
 #include <delay.h>
+#include <systick.h>
 
 /* Note: could PEC positioning help ensure correctness? */
 /* Note: The 9DOF sensor has internal resistors */
@@ -75,11 +76,12 @@ void InitialiseGyroscope() {
 	gyroscopeReading.xOffset = 0;
 	gyroscopeReading.yOffset = 0;
 	gyroscopeReading.zOffset = 0;
+	gyroscopeReading.sampleTime = 0;
 
 	/* calibrate:
-	 * collect samples for two seconds while at a "zero" position
-	 * average out reading, use this as an offset value.
+	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
 	 * Note that I should really look at this again once the temperature has been visualised using analytics
+	 * This is also a chance to let the temperature stabalise before defining the zero position / offset.
 	 */
 	uint16_t samples = 2000;
 	float summedX = 0.0;
@@ -97,6 +99,7 @@ void InitialiseGyroscope() {
 	gyroscopeReading.xOffset = summedX / samples;
 	gyroscopeReading.yOffset = summedY / samples;
 	gyroscopeReading.zOffset = summedZ / samples;
+	gyroscopeReading.sampleTime = intermediateMillis;
 };
 
 void ReadGyroscope() {
@@ -138,4 +141,7 @@ void ReadGyroscope() {
 	gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375;
 	gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375;
 	gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375;
+
+	/* update the sample time, this will be used to determine angular position (as opposed to degrees per second) */
+	gyroscopeReading.sampleTime = intermediateMillis;
 }

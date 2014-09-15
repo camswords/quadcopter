@@ -12,6 +12,7 @@ typedef struct GyroscopeReading {
 	float xOffset;
 	float yOffset;
 	float zOffset;
+	uint32_t sampleTime;
 }GyroscopeReading;
 
 struct GyroscopeReading gyroscopeReading;

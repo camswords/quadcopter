@@ -19,7 +19,7 @@ int main(void) {
   InitialiseLeds();
   InitialiseSysTick();
   InitialisePWM();
-  InitialiseI2C();	// PB.08, PB.09
+  InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
   InitialiseAngularPosition();
 
@@ -48,7 +48,14 @@ int main(void) {
 
   TurnOn(BLUE_LED);
 
+  uint32_t mySeconds = 0;
+
   while(1) {
 	  ReadAngularPosition();
+
+	  if (mySeconds != secondsElapsed) {
+		  RecordFloatAnalytics("angu.posi", secondsElapsed, angularPosition.x);
+		  mySeconds = secondsElapsed;
+	  }
   }
 }
