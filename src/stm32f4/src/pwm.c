@@ -37,19 +37,19 @@ void InitialisePWM()
 }
 
 void UpdateTim3Channel1(uint32_t pulse) {
-    TIM3->CCR1 = pulse;
+    TIM3->CCR1 += pulse;
 }
 
 void UpdateTim3Channel2(uint32_t pulse) {
-    TIM3->CCR2 = pulse;
+    TIM3->CCR2 += pulse;
 }
 
 void UpdateTim3Channel3(uint32_t pulse) {
-    TIM3->CCR3 = pulse;
+    TIM3->CCR3 += pulse;
 }
 
 void UpdateTim3Channel4(uint32_t pulse) {
-    TIM3->CCR4 = pulse;
+    TIM3->CCR4 += pulse;
 }
 
 DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)

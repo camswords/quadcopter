@@ -11,8 +11,13 @@
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
+ * compile using hard float support
  */
 
+/* Before attempting to fly:
+ * understand the maximum and minimum airleron / elevator / rudder / throttle values
+ * build a start motors sequence
+ */
 
 int main(void) {
   EnableTiming();
@@ -22,6 +27,8 @@ int main(void) {
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
   InitialiseAngularPosition();
+  Pid xAxisPid = InitialisePid(1, 0, 0);
+  Pid yAxisPid = InitialisePid(1, 0, 0);
 
   /* throttle: all together now! power (collective pitch?) */
   struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
@@ -36,15 +43,15 @@ int main(void) {
   struct PWMInput* elevator = MeasurePWMInput(TIM12, GPIOB, GPIO_Pin_14, GPIO_PinSource14); // channel 2 - PB.15
 
   // Uses Timer #3
-  DutyCycle dutyCycle1 = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);
-  DutyCycle dutyCycle2 = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);
-  DutyCycle dutyCycle3 = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);
-  DutyCycle dutyCycle4 = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);
+  DutyCycle topLeftProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
+  DutyCycle bottomRightProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
+  DutyCycle topRightProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
+  DutyCycle bottomLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
 
-  dutyCycle1.update(1100);	// 10%  throttle
-  dutyCycle2.update(1200);	// 20%  throttle
-  dutyCycle3.update(1800);	// 80%  throttle
-  dutyCycle4.update(2000);	// 100% throttle
+  topLeftProp.update(1100);	    // 10%  throttle
+  bottomRightProp.update(1200);	// 20%  throttle
+  topRightProp.update(1800);	// 80%  throttle
+  bottomLeftProp.update(2000);	// 100% throttle
 
   TurnOn(BLUE_LED);
 
@@ -52,9 +59,17 @@ int main(void) {
   uint32_t thisSecond = 0;
 
   while(1) {
-	  ReadAngularPosition();
-
 	  loopsPerSecond++;
+
+	  ReadAngularPosition();
+	  uint32_t xAdjustment = CalculatePidAdjustment(xAxisPid, angularPosition.x, 0.0);
+	  uint32_t yAdjustment = CalculatePidAdjustment(yAxisPid, angularPosition.y, 0.0);
+	  float scaledThrottle = (2000 - throttle) * 0.1;
+
+	  topLeftProp.update(xAdjustment * scaledThrottle);
+	  bottomRightProp.update(-xAdjustment * scaledThrottle);
+	  topRightProp.update(yAdjustment * scaledThrottle);
+	  bottomLeftProp.update(-yAdjustment * scaledThrottle);
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
