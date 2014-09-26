@@ -83,7 +83,7 @@ void InitialiseGyroscope() {
 	 * Note that I should really look at this again once the temperature has been visualised using analytics
 	 * This is also a chance to let the temperature stabalise before defining the zero position / offset.
 	 */
-	uint16_t samples = 2000;
+	uint16_t samples = 1000;
 	float summedX = 0.0;
 	float summedY = 0.0;
 	float summedZ = 0.0;
@@ -94,6 +94,7 @@ void InitialiseGyroscope() {
 		summedX += gyroscopeReading.x;
 		summedY += gyroscopeReading.y;
 		summedZ += gyroscopeReading.z;
+		WaitAFewMillis(5);
 	}
 
 	gyroscopeReading.xOffset = summedX / samples;

@@ -26,14 +26,14 @@ void ReadAngularPosition() {
 
 	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
 
-	/* hmm we have issues if ever we get here. die! */
-	if (sampleTime < 0 || sampleTime == 0 || sampleTime > 1000) {
-		HardFault_Handler();
+	/* if we get here, we're going too fast (or something spectacular has gone wrong).
+	 * Skip, it will sort it self out for the next time.
+	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
+	if (sampleTime > 0  && sampleTime < 1000) {
+		float sampleRateHz = 1000.0 / (gyroscopeReading.sampleTime - previousSampleTime);
+		angularPosition.x += gyroscopeReading.x / sampleRateHz;
+		angularPosition.y += gyroscopeReading.y / sampleRateHz;
+		angularPosition.z += gyroscopeReading.z / sampleRateHz;
 	}
-
-	float sampleRateHz = 1000.0 / (gyroscopeReading.sampleTime - previousSampleTime);
-	angularPosition.x += gyroscopeReading.x / sampleRateHz;
-	angularPosition.y += gyroscopeReading.y / sampleRateHz;
-	angularPosition.z += gyroscopeReading.z / sampleRateHz;
 }
 
