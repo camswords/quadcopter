@@ -48,11 +48,23 @@ int main(void) {
   DutyCycle topRightProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
   DutyCycle bottomLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
 
-  topLeftProp.update(1100);	    // 10%  throttle
-  bottomRightProp.update(1200);	// 20%  throttle
-  topRightProp.update(1800);	// 80%  throttle
-  bottomLeftProp.update(2000);	// 100% throttle
+  /* full throttle for two seconds */
+  topLeftProp.update(2000);
+  bottomRightProp.update(2000);
+  topRightProp.update(2000);
+  bottomLeftProp.update(2000);
 
+  WaitAFewMillis(2000);
+
+  /* low throttle for two seconds */
+  topLeftProp.update(1000);
+  bottomRightProp.update(1000);
+  topRightProp.update(1000);
+  bottomLeftProp.update(1000);
+
+  WaitAFewMillis(2000);
+
+  /* go go go! */
   TurnOn(BLUE_LED);
 
   uint16_t loopsPerSecond = 0;
