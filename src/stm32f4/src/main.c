@@ -27,7 +27,6 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  InitialiseAngularPosition();
   Pid xAxisPid = InitialisePid(1, 0, 0);
   Pid yAxisPid = InitialisePid(1, 0, 0);
 
@@ -64,6 +63,9 @@ int main(void) {
   bottomLeftProp.update(1000);
 
   WaitAFewMillis(2000);
+
+  /* intitalise after the motors, this should give it some time for the temparature to stabalise */
+  InitialiseAngularPosition();
 
   /* go go go! */
   TurnOn(BLUE_LED);

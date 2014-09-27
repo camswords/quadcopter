@@ -13,6 +13,9 @@ typedef struct GyroscopeReading {
 	float yOffset;
 	float zOffset;
 	uint32_t sampleTime;
+	float xAngleDriftPerSecond;
+	float yAngleDriftPerSecond;
+	float zAngleDriftPerSecond;
 }GyroscopeReading;
 
 struct GyroscopeReading gyroscopeReading;
