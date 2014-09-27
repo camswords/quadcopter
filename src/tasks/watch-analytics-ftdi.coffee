@@ -20,7 +20,7 @@ module.exports = ->
                                    #{analytics.angularPosition.z}),
                  errors: #{analytics.errors}"
 
-  setInterval printResults, 500
+  setInterval printResults, 1000
 
 
   concatenate = (bufferA, bufferB) ->
