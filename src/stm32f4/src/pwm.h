@@ -8,7 +8,6 @@ typedef void (*DutyCycleModifier)(uint32_t);
 
 typedef struct DutyCycle {
     DutyCycleModifier update;
-    DutyCycleReader value;
 }DutyCycle;
 
 void InitialisePWM();

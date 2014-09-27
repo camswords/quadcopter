@@ -8,6 +8,7 @@
 #include <i2c.h>
 #include <serial_output.h>
 #include <angular_position.h>
+#include <pid.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -74,9 +75,9 @@ int main(void) {
 	  loopsPerSecond++;
 
 	  ReadAngularPosition();
-	  uint32_t xAdjustment = CalculatePidAdjustment(xAxisPid, angularPosition.x, 0.0);
-	  uint32_t yAdjustment = CalculatePidAdjustment(yAxisPid, angularPosition.y, 0.0);
-	  float scaledThrottle = (2000 - throttle) * 0.1;
+	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
+	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
+	  float scaledThrottle = (2000 - throttle->dutyCycle) * 0.1;
 
 	  topLeftProp.update(xAdjustment * scaledThrottle);
 	  bottomRightProp.update(-xAdjustment * scaledThrottle);
