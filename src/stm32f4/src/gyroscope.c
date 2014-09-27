@@ -77,9 +77,9 @@ void InitialiseGyroscope() {
 	gyroscopeReading.yOffset = 0;
 	gyroscopeReading.zOffset = 0;
 	gyroscopeReading.sampleTime = 0;
-	gyroscopeReading.xAngleDriftPerSecond = 2.0;
-	gyroscopeReading.yAngleDriftPerSecond = 3.0;
-	gyroscopeReading.zAngleDriftPerSecond = 0.5;
+	gyroscopeReading.xAngleDriftPerSecond = 1.9;
+	gyroscopeReading.yAngleDriftPerSecond = 3.1;
+	gyroscopeReading.zAngleDriftPerSecond = 0.35;
 
 	/* calibrate:
 	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
