@@ -15,9 +15,9 @@ module.exports = ->
   printResults = ->
     console.log "#{analytics.time}:
                  loopsPerSecond: #{analytics.loopFrequency}, 
-                 angular position (#{analytics.angularPosition.x},
-                                   #{analytics.angularPosition.y},
-                                   #{analytics.angularPosition.z}),
+                 angle: (#{analytics.angularPosition.x.toFixed(2)},
+                                   #{analytics.angularPosition.y.toFixed(2)},
+                                   #{analytics.angularPosition.z.toFixed(2)}),
                  errors: #{analytics.errors}"
 
   setInterval printResults, 1000
