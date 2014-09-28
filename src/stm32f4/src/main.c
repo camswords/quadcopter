@@ -47,18 +47,18 @@ int main(void) {
   DutyCycle backLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
 
   /* full throttle for two seconds */
-  frontLeftProp.update(2000);
-  backRightProp.update(2000);
-  frontRightProp.update(2000);
-  backLeftProp.update(2000);
+  frontLeftProp.set(2000);
+  backRightProp.set(2000);
+  frontRightProp.set(2000);
+  backLeftProp.set(2000);
 
   WaitAFewMillis(2000);
 
   /* low throttle for two seconds */
-  frontLeftProp.update(1000);
-  backRightProp.update(1000);
-  frontRightProp.update(1000);
-  backLeftProp.update(1000);
+  frontLeftProp.set(1000);
+  backRightProp.set(1000);
+  frontRightProp.set(1000);
+  backLeftProp.set(1000);
 
   WaitAFewMillis(2000);
 
@@ -91,6 +91,12 @@ int main(void) {
 		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
 		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
 		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
+		  RecordFloatAnalytics("frle.prop", secondsElapsed, frontLeftProp.get());
+		  RecordFloatAnalytics("bari.prop", secondsElapsed, backRightProp.get());
+		  RecordFloatAnalytics("frri.prop", secondsElapsed, frontRightProp.get());
+		  RecordFloatAnalytics("bale.prop", secondsElapsed, backLeftProp.get());
+		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
+		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;

@@ -10,15 +10,26 @@ module.exports = ->
       x: 0
       y: 0
       z: 0
+    props:
+      frontRight: 0
+      frontLeft: 0
+      backRight: 0
+      backLeft: 0
+    pid:
+      xAdjustement: 0
+      yAdjustement: 0
     loopFrequency: 0
 
   printResults = ->
-    console.log "#{analytics.time}:
-                 loopsPerSecond: #{analytics.loopFrequency}, 
+    console.log "#{analytics.time}: #{analytics.loopFrequency}Hz,
                  angle: (#{analytics.angularPosition.x.toFixed(2)},
                                    #{analytics.angularPosition.y.toFixed(2)},
                                    #{analytics.angularPosition.z.toFixed(2)}),
-                 errors: #{analytics.errors}"
+                 props: (FL: #{analytics.props.frontLeft.toFixed(2)}, BR: #{analytics.props.backRight.toFixed(2)}),
+                        (FR: #{analytics.props.frontRight.toFixed(2)}, BL: #{analytics.props.backLeft.toFixed(2)}),
+                 pid: ~x: #{analytics.pid.xAdjustement.toFixed(2)}, ~y: #{analytics.pid.xAdjustement.toFixed(2)}"
+
+    console.log "errors found: #{analytics.errors}" if analytics.errors > 0
 
   setInterval printResults, 1000
 
@@ -53,6 +64,12 @@ module.exports = ->
           analytics.angularPosition.x = value if name == 'angu.posx'
           analytics.angularPosition.y = value if name == 'angu.posy'
           analytics.angularPosition.z = value if name == 'angu.posz'
+          analytics.props.frontRight = value if name == 'frri.prop'
+          analytics.props.frontLeft = value if name == 'frle.prop'
+          analytics.props.backRight = value if name == 'bari.prop'
+          analytics.props.backLeft = value if name == 'bale.prop'
+          analytics.pid.xAdjustement = value if name == 'xadj.pid-'
+          analytics.pid.yAdjustement = value if name == 'yadj.pid-'
 
         else
           data.errors = data.errors + 1

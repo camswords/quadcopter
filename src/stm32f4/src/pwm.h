@@ -5,9 +5,13 @@
 #include <stm32f4xx_gpio.h>
 
 typedef void (*DutyCycleModifier)(uint32_t);
+typedef void (*DutyCycleSetter)(uint32_t);
+typedef uint32_t (*DutyCycleReader)();
 
 typedef struct DutyCycle {
+	DutyCycleSetter set;
     DutyCycleModifier update;
+    DutyCycleReader get;
 }DutyCycle;
 
 void InitialisePWM();

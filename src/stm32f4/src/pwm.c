@@ -36,6 +36,22 @@ void InitialisePWM()
     TIM_Cmd(TIM3, ENABLE);
 }
 
+void SetTim3Channel1(uint32_t pulse) {
+    TIM3->CCR1 = pulse;
+}
+
+void SetTim3Channel2(uint32_t pulse) {
+    TIM3->CCR2 = pulse;
+}
+
+void SetTim3Channel3(uint32_t pulse) {
+    TIM3->CCR3 = pulse;
+}
+
+void SetTim3Channel4(uint32_t pulse) {
+    TIM3->CCR4 = pulse;
+}
+
 void UpdateTim3Channel1(uint32_t pulse) {
     TIM3->CCR1 += pulse;
 }
@@ -50,6 +66,22 @@ void UpdateTim3Channel3(uint32_t pulse) {
 
 void UpdateTim3Channel4(uint32_t pulse) {
     TIM3->CCR4 += pulse;
+}
+
+uint32_t ReadTim3Channel1Pulse() {
+	return TIM3->CCR1;
+}
+
+uint32_t ReadTim3Channel2Pulse() {
+	return TIM3->CCR2;
+}
+
+uint32_t ReadTim3Channel3Pulse() {
+	return TIM3->CCR3;
+}
+
+uint32_t ReadTim3Channel4Pulse() {
+	return TIM3->CCR4;
 }
 
 DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)
@@ -71,22 +103,30 @@ DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSou
     struct DutyCycle dutyCycle;
 
     if (channel == 1) {
+    	dutyCycle.set = &SetTim3Channel1;
         dutyCycle.update = &UpdateTim3Channel1;
+        dutyCycle.get = &ReadTim3Channel1Pulse;
 
         TIM_OC1Init(TIM3, &outputChannelInit);
         TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 2) {
+    	dutyCycle.set = &SetTim3Channel2;
         dutyCycle.update = &UpdateTim3Channel2;
+        dutyCycle.get = &ReadTim3Channel2Pulse;
 
         TIM_OC2Init(TIM3, &outputChannelInit);
         TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 3) {
+    	dutyCycle.set = &SetTim3Channel3;
         dutyCycle.update = &UpdateTim3Channel3;
+        dutyCycle.get = &ReadTim3Channel3Pulse;
 
         TIM_OC3Init(TIM3, &outputChannelInit);
         TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
     } else if (channel == 4) {
+    	dutyCycle.set = &SetTim3Channel4;
         dutyCycle.update = &UpdateTim3Channel4;
+        dutyCycle.get = &ReadTim3Channel4Pulse;
 
         TIM_OC4Init(TIM3, &outputChannelInit);
         TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
