@@ -78,8 +78,10 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  /* Half-on throttle should leave the adjustment the same, no throttle will half it, full throttle time 1.5 */
-	  float scaledThrottle = (ReadRemoteThrottle() + 50.0) / 100.0;
+	  float throttlePowerPercentage = ReadRemoteThrottle();
+
+	  /* for the moment, don't scale the values using the throttle */
+	  float scaledThrottle = 1;
 
 	  frontLeftProp.update(xAdjustment * scaledThrottle);
 	  backRightProp.update(-xAdjustment * scaledThrottle);
@@ -97,6 +99,8 @@ int main(void) {
 		  RecordFloatAnalytics("bale.prop", secondsElapsed, backLeftProp.get());
 		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
+		  RecordFloatAnalytics("thro.remo", secondsElapsed, throttlePowerPercentage);
+
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;

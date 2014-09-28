@@ -16,8 +16,10 @@ module.exports = ->
       backRight: 0
       backLeft: 0
     pid:
-      xAdjustement: 0
-      yAdjustement: 0
+      xAdjustment: 0
+      yAdjustment: 0
+    remoteControl:
+      throttle: 0
     loopFrequency: 0
 
   printResults = ->
@@ -27,7 +29,8 @@ module.exports = ->
                                    #{analytics.angularPosition.z.toFixed(2)}),
                  props: (FL: #{analytics.props.frontLeft.toFixed(2)}, BR: #{analytics.props.backRight.toFixed(2)}),
                         (FR: #{analytics.props.frontRight.toFixed(2)}, BL: #{analytics.props.backLeft.toFixed(2)}),
-                 pid: ~x: #{analytics.pid.xAdjustement.toFixed(2)}, ~y: #{analytics.pid.xAdjustement.toFixed(2)}"
+                 pid: (~x: #{analytics.pid.xAdjustment.toFixed(2)}, ~y: #{analytics.pid.yAdjustment.toFixed(2)}),
+                 throttle: #{analytics.remoteControl.throttle.toFixed(2)}%"
 
     console.log "errors found: #{analytics.errors}" if analytics.errors > 0
 
@@ -68,8 +71,9 @@ module.exports = ->
           analytics.props.frontLeft = value if name == 'frle.prop'
           analytics.props.backRight = value if name == 'bari.prop'
           analytics.props.backLeft = value if name == 'bale.prop'
-          analytics.pid.xAdjustement = value if name == 'xadj.pid-'
-          analytics.pid.yAdjustement = value if name == 'yadj.pid-'
+          analytics.pid.xAdjustment = value if name == 'xadj.pid-'
+          analytics.pid.yAdjustment = value if name == 'yadj.pid-'
+          analytics.remoteControl.throttle = value if name == 'thro.remo'
 
         else
           data.errors = data.errors + 1
