@@ -9,6 +9,7 @@
 #include <serial_output.h>
 #include <angular_position.h>
 #include <pid.h>
+#include <remote_controls.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -30,17 +31,14 @@ int main(void) {
   Pid xAxisPid = InitialisePid(1, 0, 0);
   Pid yAxisPid = InitialisePid(1, 0, 0);
 
-  /* throttle: all together now! power (collective pitch?) */
-  struct PWMInput* throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
 
-  /* rudder: spin to the left or right on a flat plane */
-  struct PWMInput* rudder = MeasurePWMInput(TIM5, GPIOA, GPIO_Pin_0, GPIO_PinSource0); 		// channel 2 - PA.01
-
-  /* airleron: fly sideways left or right */
-  struct PWMInput* airleron = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
-
-  /* elevator: fly forwards or backwards */
-  struct PWMInput* elevator = MeasurePWMInput(TIM12, GPIOB, GPIO_Pin_14, GPIO_PinSource14); // channel 2 - PB.15
+  /*
+   * Throttle: PB.06 (TIM4),  Channel 1 (PB.07 indirectly used)
+   * Rudder:   PA.00 (TIM5),  Channel 4 (PA.01 indirectly used)
+   * Airleron: PE.05 (TIM9),  Channel 2 (PE.06 indirectly used)
+   * Elevator: PB.14 (TIM12), Channel 3 (PB.15 indirectly used)
+   */
+  InitialiseRemoteControls();
 
   // Uses Timer #3
   DutyCycle topLeftProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
@@ -79,7 +77,9 @@ int main(void) {
 	  ReadAngularPosition();
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
-	  float scaledThrottle = (2000 - throttle->dutyCycle) * 0.1;
+
+	  /* Half-on throttle should leave the adjustment the same, no throttle will half it, full throttle time 1.5 */
+	  float scaledThrottle = (ReadRemoteThrottle() + 50.0) / 100.0;
 
 	  topLeftProp.update(xAdjustment * scaledThrottle);
 	  bottomRightProp.update(-xAdjustment * scaledThrottle);

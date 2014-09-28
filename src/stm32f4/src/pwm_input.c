@@ -94,8 +94,8 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
     GPIO_PinAFConfig(GPIOx, GPIO_PinSource, gpioAlternateFunction);
 
     /* init the timer:
-     * We expect 1,680,000 ticks every 20ms
-     * 1680 prescalar will ensure that there are 1000 ticks per 20ms
+     * It doesn't really matter what prescaler we use, because the duty cycle is calculated as a percentage.
+     *    (as long as the prescalar ensures that the counter will not overflow)
      * The maximum (16bit) period should never be reached, as we will reset the counter before we get there.
      */
 	TIM_TimeBaseInitTypeDef timerInitStructure;
