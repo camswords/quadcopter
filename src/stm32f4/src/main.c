@@ -41,24 +41,24 @@ int main(void) {
   InitialiseRemoteControls();
 
   // Uses Timer #3
-  DutyCycle topLeftProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
-  DutyCycle bottomRightProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
-  DutyCycle topRightProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
-  DutyCycle bottomLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
+  DutyCycle frontLeftProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
+  DutyCycle backRightProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
+  DutyCycle frontRightProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
+  DutyCycle backLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
 
   /* full throttle for two seconds */
-  topLeftProp.update(2000);
-  bottomRightProp.update(2000);
-  topRightProp.update(2000);
-  bottomLeftProp.update(2000);
+  frontLeftProp.update(2000);
+  backRightProp.update(2000);
+  frontRightProp.update(2000);
+  backLeftProp.update(2000);
 
   WaitAFewMillis(2000);
 
   /* low throttle for two seconds */
-  topLeftProp.update(1000);
-  bottomRightProp.update(1000);
-  topRightProp.update(1000);
-  bottomLeftProp.update(1000);
+  frontLeftProp.update(1000);
+  backRightProp.update(1000);
+  frontRightProp.update(1000);
+  backLeftProp.update(1000);
 
   WaitAFewMillis(2000);
 
@@ -81,10 +81,10 @@ int main(void) {
 	  /* Half-on throttle should leave the adjustment the same, no throttle will half it, full throttle time 1.5 */
 	  float scaledThrottle = (ReadRemoteThrottle() + 50.0) / 100.0;
 
-	  topLeftProp.update(xAdjustment * scaledThrottle);
-	  bottomRightProp.update(-xAdjustment * scaledThrottle);
-	  topRightProp.update(yAdjustment * scaledThrottle);
-	  bottomLeftProp.update(-yAdjustment * scaledThrottle);
+	  frontLeftProp.update(xAdjustment * scaledThrottle);
+	  backRightProp.update(-xAdjustment * scaledThrottle);
+	  frontRightProp.update(yAdjustment * scaledThrottle);
+	  backLeftProp.update(-yAdjustment * scaledThrottle);
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
