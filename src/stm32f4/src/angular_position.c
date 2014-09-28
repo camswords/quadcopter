@@ -38,3 +38,9 @@ void ReadAngularPosition() {
 	}
 }
 
+void ResetToAngularZeroPosition() {
+	angularPosition.x = 0.0;
+	angularPosition.y = 0.0;
+	angularPosition.z = 0.0;
+}
+

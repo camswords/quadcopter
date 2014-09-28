@@ -10,6 +10,7 @@
 #include <angular_position.h>
 #include <pid.h>
 #include <remote_controls.h>
+#include <gyroscope.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -104,6 +105,10 @@ int main(void) {
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
+
+		  if (secondsElapsed % 10 == 0) {
+			  ResetToAngularZeroPosition();
+		  }
 	  }
   }
 }

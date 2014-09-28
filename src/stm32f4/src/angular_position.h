@@ -15,4 +15,6 @@ void InitialiseAngularPosition();
 
 void ReadAngularPosition();
 
+void ResetToAngularZeroPosition();
+
 #endif
