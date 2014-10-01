@@ -4,9 +4,14 @@
 #include <stdint.h>
 #include <stm32f4xx_gpio.h>
 
-typedef void (*DutyCycleModifier)(int32_t);
-typedef void (*DutyCycleSetter)(uint32_t);
-typedef uint32_t (*DutyCycleReader)();
+typedef void (*DutyCycleModifier)(float);
+typedef void (*DutyCycleSetter)(float);
+typedef float (*DutyCycleReader)();
+
+float channel1Pulse;
+float channel2Pulse;
+float channel3Pulse;
+float channel4Pulse;
 
 typedef struct DutyCycle {
 	DutyCycleSetter set;

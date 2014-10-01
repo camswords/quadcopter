@@ -3,6 +3,12 @@
 
 void InitialisePWM()
 {
+	/* set all of the pulse values to 0% */
+	channel1Pulse = 1000;
+	channel2Pulse = 1000;
+	channel3Pulse = 1000;
+	channel4Pulse = 1000;
+
     // we need to enable the peripheral ports / pins
     // enabling them more than once seems to have no measurable effect
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
@@ -36,60 +42,64 @@ void InitialisePWM()
     TIM_Cmd(TIM3, ENABLE);
 }
 
-void SetTim3Channel1(uint32_t pulse) {
+void SetTim3Channel1(float pulse) {
 	if (pulse >= 1000 && pulse <= 2000) {
-	    TIM3->CCR1 = pulse;
+		channel1Pulse = pulse;
+	    TIM3->CCR1 = (uint32_t) pulse;
 	}
 }
 
-void SetTim3Channel2(uint32_t pulse) {
+void SetTim3Channel2(float pulse) {
 	if (pulse >= 1000 && pulse <= 2000) {
-	    TIM3->CCR2 = pulse;
+		channel2Pulse = pulse;
+	    TIM3->CCR2 = (uint32_t) pulse;
 	}
 }
 
-void SetTim3Channel3(uint32_t pulse) {
+void SetTim3Channel3(float pulse) {
 	if (pulse >= 1000 && pulse <= 2000) {
-		TIM3->CCR3 = pulse;
+		channel3Pulse = pulse;
+		TIM3->CCR3 = (uint32_t) pulse;
 	}
 }
 
-void SetTim3Channel4(uint32_t pulse) {
+void SetTim3Channel4(float pulse) {
 	if (pulse >= 1000 && pulse <= 2000) {
-		TIM3->CCR4 = pulse;
+		channel4Pulse = pulse;
+		TIM3->CCR4 = (uint32_t) pulse;
 	}
 }
 
-void UpdateTim3Channel1(int32_t pulse) {
-	SetTim3Channel1(TIM3->CCR1 + pulse);
+void UpdateTim3Channel1(float pulse) {
+	SetTim3Channel1(channel1Pulse + pulse);
 }
 
-void UpdateTim3Channel2(int32_t pulse) {
-	SetTim3Channel2(TIM3->CCR2 + pulse);
+void UpdateTim3Channel2(float pulse) {
+	SetTim3Channel2(channel2Pulse + pulse);
 }
 
-void UpdateTim3Channel3(int32_t pulse) {
-	SetTim3Channel3(TIM3->CCR3 + pulse);
+void UpdateTim3Channel3(float pulse) {
+	SetTim3Channel3(channel3Pulse + pulse);
 }
 
-void UpdateTim3Channel4(int32_t pulse) {
-	SetTim3Channel4(TIM3->CCR4 + pulse);
+void UpdateTim3Channel4(float pulse) {
+	SetTim3Channel4(channel4Pulse + pulse);
 }
 
-uint32_t ReadTim3Channel1Pulse() {
-	return TIM3->CCR1;
+float ReadTim3Channel1Pulse() {
+	return channel1Pulse;
 }
 
-uint32_t ReadTim3Channel2Pulse() {
-	return TIM3->CCR2;
+float ReadTim3Channel2Pulse() {
+	return channel2Pulse;
 }
 
-uint32_t ReadTim3Channel3Pulse() {
-	return TIM3->CCR3;
+float ReadTim3Channel3Pulse() {
+	return channel3Pulse;
 }
 
-uint32_t ReadTim3Channel4Pulse() {
-	return TIM3->CCR4;
+float ReadTim3Channel4Pulse() {
+	return channel4Pulse;
 }
 
 DutyCycle InitialisePWMChannel(GPIO_TypeDef* GPIOx, uint16_t pin, uint8_t pinSource, uint8_t channel)

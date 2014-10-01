@@ -80,10 +80,10 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  bProp.update((int32_t) yAdjustment);
-	  eProp.update((int32_t) -yAdjustment);
-	  cProp.update((int32_t) xAdjustment);
-	  aProp.update((int32_t) -xAdjustment);
+	  bProp.update(yAdjustment);
+	  eProp.update(-yAdjustment);
+	  cProp.update(xAdjustment);
+	  aProp.update(-xAdjustment);
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
@@ -101,8 +101,12 @@ int main(void) {
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
 
-		  if (secondsElapsed % 10 == 0) {
+		  if (secondsElapsed % 60 == 0) {
 			  ResetToAngularZeroPosition();
+			  bProp.set(1000);
+			  eProp.set(1000);
+			  cProp.set(1000);
+			  aProp.set(1000);
 		  }
 	  }
   }
