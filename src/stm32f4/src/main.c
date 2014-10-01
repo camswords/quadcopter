@@ -80,22 +80,6 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float funA = 0.005;
-	  float funB = 0.99;
-	  float funC = 145.305;
-	  float funD = -56.205;
-
-	  int32_t funnyA = (int32_t) funA;
-	  int32_t funnyB = (int32_t) funB;
-	  int32_t funnyC = (int32_t) funC;
-	  int32_t funnyD = (int32_t) funD;
-
-	  uint32_t dudeA = 1000 + funnyA;
-	  uint32_t dudeB = 1000 + funnyB;
-	  uint32_t dudeC = 1000 + funnyC;
-	  uint32_t dudeD = 1000 + funnyD;
-
-
 	  bProp.update((int32_t) yAdjustment);
 	  eProp.update((int32_t) -yAdjustment);
 	  cProp.update((int32_t) xAdjustment);

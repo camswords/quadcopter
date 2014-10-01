@@ -37,35 +37,43 @@ void InitialisePWM()
 }
 
 void SetTim3Channel1(uint32_t pulse) {
-    TIM3->CCR1 = pulse;
+	if (pulse >= 1000 && pulse <= 2000) {
+	    TIM3->CCR1 = pulse;
+	}
 }
 
 void SetTim3Channel2(uint32_t pulse) {
-    TIM3->CCR2 = pulse;
+	if (pulse >= 1000 && pulse <= 2000) {
+	    TIM3->CCR2 = pulse;
+	}
 }
 
 void SetTim3Channel3(uint32_t pulse) {
-    TIM3->CCR3 = pulse;
+	if (pulse >= 1000 && pulse <= 2000) {
+		TIM3->CCR3 = pulse;
+	}
 }
 
 void SetTim3Channel4(uint32_t pulse) {
-    TIM3->CCR4 = pulse;
+	if (pulse >= 1000 && pulse <= 2000) {
+		TIM3->CCR4 = pulse;
+	}
 }
 
 void UpdateTim3Channel1(int32_t pulse) {
-    TIM3->CCR1 += pulse;
+	SetTim3Channel1(TIM3->CCR1 + pulse);
 }
 
 void UpdateTim3Channel2(int32_t pulse) {
-    TIM3->CCR2 += pulse;
+	SetTim3Channel2(TIM3->CCR2 + pulse);
 }
 
 void UpdateTim3Channel3(int32_t pulse) {
-    TIM3->CCR3 += pulse;
+	SetTim3Channel3(TIM3->CCR3 + pulse);
 }
 
 void UpdateTim3Channel4(int32_t pulse) {
-    TIM3->CCR4 += pulse;
+	SetTim3Channel4(TIM3->CCR4 + pulse);
 }
 
 uint32_t ReadTim3Channel1Pulse() {
