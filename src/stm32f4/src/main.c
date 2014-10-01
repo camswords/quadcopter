@@ -30,8 +30,8 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  Pid xAxisPid = InitialisePid(0.04, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
-  Pid yAxisPid = InitialisePid(0.01, 0, 0);
+  Pid xAxisPid = InitialisePid(10, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
+  Pid yAxisPid = InitialisePid(10, 0, 0);
 
 
   /*
@@ -83,13 +83,14 @@ int main(void) {
 	  loopsPerSecond++;
 
 	  ReadAngularPosition();
+	  /* ideally, we want this to return a value between -500 and 500 */
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  bProp.update(yAdjustment);
-	  eProp.update(-yAdjustment);
-	  cProp.update(xAdjustment);
-	  aProp.update(-xAdjustment);
+	  bProp.set(yAdjustment + 1500);
+	  eProp.set(-yAdjustment + 1500);
+	  cProp.set(-xAdjustment + 1500);
+	  aProp.set(xAdjustment + 1500);
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
@@ -106,14 +107,6 @@ int main(void) {
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
-
-		  if (secondsElapsed % 60 == 0) {
-			  ResetToAngularZeroPosition();
-			  bProp.set(1500);
-			  eProp.set(1500);
-			  cProp.set(1500);
-			  aProp.set(1500);
-		  }
 	  }
   }
 }
