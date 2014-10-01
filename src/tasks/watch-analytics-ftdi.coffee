@@ -27,8 +27,8 @@ module.exports = ->
                  angle: (#{analytics.angularPosition.x.toFixed(2)},
                                    #{analytics.angularPosition.y.toFixed(2)},
                                    #{analytics.angularPosition.z.toFixed(2)}),
-                 props: x- (b: #{analytics.props.b.toFixed(2)}, e: #{analytics.props.e.toFixed(2)}),
-                        y- (c: #{analytics.props.c.toFixed(2)}, a: #{analytics.props.a.toFixed(2)}),
+                 props: x- (c: #{analytics.props.c.toFixed(2)}, a: #{analytics.props.a.toFixed(2)}),
+                        y- (b: #{analytics.props.b.toFixed(2)}, e: #{analytics.props.e.toFixed(2)}),
                  pid: (~x: #{analytics.pid.xAdjustment.toFixed(2)}, ~y: #{analytics.pid.yAdjustment.toFixed(2)}),
                  throttle: #{analytics.remoteControl.throttle.toFixed(2)}%"
 

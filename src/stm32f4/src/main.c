@@ -30,8 +30,8 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  Pid xAxisPid = InitialisePid(0.1, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
-  Pid yAxisPid = InitialisePid(0.1, 0, 0);
+  Pid xAxisPid = InitialisePid(0.04, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
+  Pid yAxisPid = InitialisePid(0.01, 0, 0);
 
 
   /*
@@ -63,6 +63,12 @@ int main(void) {
   aProp.set(1000);
 
   WaitAFewMillis(2000);
+
+  /* move the throttle to a neutral (50%) position */
+  bProp.set(1500);
+  eProp.set(1500);
+  cProp.set(1500);
+  aProp.set(1500);
 
   /* intitalise after the motors, this should give it some time for the temparature to stabalise */
   InitialiseAngularPosition();
@@ -103,10 +109,10 @@ int main(void) {
 
 		  if (secondsElapsed % 60 == 0) {
 			  ResetToAngularZeroPosition();
-			  bProp.set(1000);
-			  eProp.set(1000);
-			  cProp.set(1000);
-			  aProp.set(1000);
+			  bProp.set(1500);
+			  eProp.set(1500);
+			  cProp.set(1500);
+			  aProp.set(1500);
 		  }
 	  }
   }
