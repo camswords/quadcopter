@@ -30,8 +30,8 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  Pid xAxisPid = InitialisePid(1, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
-  Pid yAxisPid = InitialisePid(1, 0, 0);
+  Pid xAxisPid = InitialisePid(0.1, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
+  Pid yAxisPid = InitialisePid(0.1, 0, 0);
 
 
   /*

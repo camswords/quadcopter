@@ -10,14 +10,14 @@
  * Derivative: relating to the prediction of future errors (based on the current rate of change)
  */
 typedef struct Pid {
-	uint32_t proportional;
-	uint32_t integral;
-	uint32_t differential;
+	float proportional;
+	float integral;
+	float differential;
 	float lastError;
 	float cumulativeError;
 }Pid;
 
-struct Pid InitialisePid(uint32_t proportional, uint32_t integral, uint32_t differential);
+struct Pid InitialisePid(float proportional, float integral, float differential);
 
 float CalculatePidAdjustment(Pid* pid, float current, float target);
 

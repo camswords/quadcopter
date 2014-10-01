@@ -1,7 +1,7 @@
 
 #include <pid.h>
 
-struct Pid InitialisePid(uint32_t proportional, uint32_t integral, uint32_t differential) {
+struct Pid InitialisePid(float proportional, float integral, float differential) {
 	Pid pid;
 
 	pid.proportional = proportional;
