@@ -11,10 +11,10 @@ module.exports = ->
       y: 0
       z: 0
     props:
-      frontRight: 0
-      frontLeft: 0
-      backRight: 0
-      backLeft: 0
+      c: 0
+      b: 0
+      e: 0
+      a: 0
     pid:
       xAdjustment: 0
       yAdjustment: 0
@@ -27,8 +27,8 @@ module.exports = ->
                  angle: (#{analytics.angularPosition.x.toFixed(2)},
                                    #{analytics.angularPosition.y.toFixed(2)},
                                    #{analytics.angularPosition.z.toFixed(2)}),
-                 props: (FL: #{analytics.props.frontLeft.toFixed(2)}, BR: #{analytics.props.backRight.toFixed(2)}),
-                        (FR: #{analytics.props.frontRight.toFixed(2)}, BL: #{analytics.props.backLeft.toFixed(2)}),
+                 props: x- (b: #{analytics.props.b.toFixed(2)}, e: #{analytics.props.e.toFixed(2)}),
+                        y- (c: #{analytics.props.c.toFixed(2)}, a: #{analytics.props.a.toFixed(2)}),
                  pid: (~x: #{analytics.pid.xAdjustment.toFixed(2)}, ~y: #{analytics.pid.yAdjustment.toFixed(2)}),
                  throttle: #{analytics.remoteControl.throttle.toFixed(2)}%"
 
@@ -67,10 +67,10 @@ module.exports = ->
           analytics.angularPosition.x = value if name == 'angu.posx'
           analytics.angularPosition.y = value if name == 'angu.posy'
           analytics.angularPosition.z = value if name == 'angu.posz'
-          analytics.props.frontRight = value if name == 'frri.prop'
-          analytics.props.frontLeft = value if name == 'frle.prop'
-          analytics.props.backRight = value if name == 'bari.prop'
-          analytics.props.backLeft = value if name == 'bale.prop'
+          analytics.props.a = value if name == 'a---.prop'
+          analytics.props.b = value if name == 'b---.prop'
+          analytics.props.c = value if name == 'c---.prop'
+          analytics.props.e = value if name == 'e---.prop'
           analytics.pid.xAdjustment = value if name == 'xadj.pid-'
           analytics.pid.yAdjustment = value if name == 'yadj.pid-'
           analytics.remoteControl.throttle = value if name == 'thro.remo'

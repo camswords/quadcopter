@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stm32f4xx_gpio.h>
 
-typedef void (*DutyCycleModifier)(uint32_t);
+typedef void (*DutyCycleModifier)(int32_t);
 typedef void (*DutyCycleSetter)(uint32_t);
 typedef uint32_t (*DutyCycleReader)();
 

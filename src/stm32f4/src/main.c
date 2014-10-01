@@ -11,6 +11,7 @@
 #include <pid.h>
 #include <remote_controls.h>
 #include <gyroscope.h>
+#include <stdint.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -29,7 +30,7 @@ int main(void) {
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
-  Pid xAxisPid = InitialisePid(1, 0, 0);
+  Pid xAxisPid = InitialisePid(1, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
   Pid yAxisPid = InitialisePid(1, 0, 0);
 
 
@@ -42,24 +43,24 @@ int main(void) {
   InitialiseRemoteControls();
 
   // Uses Timer #3
-  DutyCycle frontLeftProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
-  DutyCycle backRightProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
-  DutyCycle frontRightProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
-  DutyCycle backLeftProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
+  DutyCycle bProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
+  DutyCycle eProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
+  DutyCycle cProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
+  DutyCycle aProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
 
   /* full throttle for two seconds */
-  frontLeftProp.set(2000);
-  backRightProp.set(2000);
-  frontRightProp.set(2000);
-  backLeftProp.set(2000);
+  bProp.set(2000);
+  eProp.set(2000);
+  cProp.set(2000);
+  aProp.set(2000);
 
   WaitAFewMillis(2000);
 
   /* low throttle for two seconds */
-  frontLeftProp.set(1000);
-  backRightProp.set(1000);
-  frontRightProp.set(1000);
-  backLeftProp.set(1000);
+  bProp.set(1000);
+  eProp.set(1000);
+  cProp.set(1000);
+  aProp.set(1000);
 
   WaitAFewMillis(2000);
 
@@ -79,29 +80,39 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float throttlePowerPercentage = ReadRemoteThrottle();
+	  float funA = 0.005;
+	  float funB = 0.99;
+	  float funC = 145.305;
+	  float funD = -56.205;
 
-	  /* for the moment, don't scale the values using the throttle */
-	  float scaledThrottle = 1;
+	  int32_t funnyA = (int32_t) funA;
+	  int32_t funnyB = (int32_t) funB;
+	  int32_t funnyC = (int32_t) funC;
+	  int32_t funnyD = (int32_t) funD;
 
-	  frontLeftProp.update(xAdjustment * scaledThrottle);
-	  backRightProp.update(-xAdjustment * scaledThrottle);
-	  frontRightProp.update(yAdjustment * scaledThrottle);
-	  backLeftProp.update(-yAdjustment * scaledThrottle);
+	  uint32_t dudeA = 1000 + funnyA;
+	  uint32_t dudeB = 1000 + funnyB;
+	  uint32_t dudeC = 1000 + funnyC;
+	  uint32_t dudeD = 1000 + funnyD;
+
+
+	  bProp.update((int32_t) yAdjustment);
+	  eProp.update((int32_t) -yAdjustment);
+	  cProp.update((int32_t) xAdjustment);
+	  aProp.update((int32_t) -xAdjustment);
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
 		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
 		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
 		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
-		  RecordFloatAnalytics("frle.prop", secondsElapsed, frontLeftProp.get());
-		  RecordFloatAnalytics("bari.prop", secondsElapsed, backRightProp.get());
-		  RecordFloatAnalytics("frri.prop", secondsElapsed, frontRightProp.get());
-		  RecordFloatAnalytics("bale.prop", secondsElapsed, backLeftProp.get());
+		  RecordFloatAnalytics("b---.prop", secondsElapsed, bProp.get());
+		  RecordFloatAnalytics("e---.prop", secondsElapsed, eProp.get());
+		  RecordFloatAnalytics("c---.prop", secondsElapsed, cProp.get());
+		  RecordFloatAnalytics("a---.prop", secondsElapsed, aProp.get());
 		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordFloatAnalytics("thro.remo", secondsElapsed, throttlePowerPercentage);
-
+		  RecordFloatAnalytics("thro.remo", secondsElapsed, ReadRemoteThrottle());
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
