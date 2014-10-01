@@ -87,10 +87,21 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  bProp.set(yAdjustment + 1500);
-	  eProp.set(-yAdjustment + 1500);
-	  cProp.set(-xAdjustment + 1500);
-	  aProp.set(xAdjustment + 1500);
+	  float currentThrottle = ReadRemoteThrottle();
+
+	  if (currentThrottle == 0.0) {
+		  bProp.set(1000);
+		  eProp.set(1000);
+		  cProp.set(1000);
+		  aProp.set(1000);
+	  } else {
+		  float normalisedThrottle = (1000 * currentThrottle / 100.0) + 1000.0;
+
+		  bProp.set(yAdjustment + normalisedThrottle);
+		  eProp.set(-yAdjustment + normalisedThrottle);
+		  cProp.set(-xAdjustment + normalisedThrottle);
+		  aProp.set(xAdjustment + normalisedThrottle);
+	  }
 
 	  if (thisSecond != secondsElapsed) {
 		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
@@ -103,7 +114,7 @@ int main(void) {
 		  RecordFloatAnalytics("a---.prop", secondsElapsed, aProp.get());
 		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordFloatAnalytics("thro.remo", secondsElapsed, ReadRemoteThrottle());
+		  RecordFloatAnalytics("thro.remo", secondsElapsed, currentThrottle);
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
