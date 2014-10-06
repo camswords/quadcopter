@@ -30,6 +30,8 @@
     "gulp-mocha": "*",
     "expect.js": "*",
     "breeze-dag": "*",
-    "escodegen": "*"
+    "escodegen": "*",
+    "express": "*",
+    "noble": "*"
   }
 }

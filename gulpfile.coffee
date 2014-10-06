@@ -15,5 +15,6 @@ gulp.task 'test-optimise-amd', ['clean'], -> gulps['test-optimise-amd']()
 gulp.task 'performance', ['clean'], -> gulps['performance']()
 gulp.task 'watch-analytics', ['clean'], -> gulps['watch-analytics']()
 gulp.task 'watch-analytics-ftdi', ['clean'], -> gulps['watch-analytics-ftdi']()
+gulp.task 'analytics-server', -> gulps['analytics-server']()
 
 gulp.task 'deploy', ['clean'], -> gulps['deploy']()
