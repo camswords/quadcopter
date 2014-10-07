@@ -8,6 +8,8 @@
     "gulp": "*",
     "through2": "*",
     "require-dir": "*",
-    "express": "*"
+    "express": "*",
+    "moment": "*",
+    "influx": "*"
   }
 }
