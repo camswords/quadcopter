@@ -1,13 +1,8 @@
-influx = require 'influx'
+influxdb = require 'influxdb'
 moment = require 'moment'
 
-influxdb = influx
-  host: 'localhost'
-  port: 8086
-  username: 'analytics'
-  password: 'analytics'
-  database: 'quadcopter'
-
+pointsPerSecond = 0
+errorsPerSecond = 0
 startTime = null
 
 calculateTime = (timeInSeconds) ->
@@ -16,43 +11,27 @@ calculateTime = (timeInSeconds) ->
 
   startTime.clone().add(timeInSeconds, 'seconds').toDate()
 
-pointsPerSecond = 0
-errorsPerSecond = 0
-
-save = (name, timeInSeconds, value) ->
-  point =
-    time: calculateTime(timeInSeconds)
-    value: value
-
-  console.log timeInSeconds, name, value, calculateTime(timeInSeconds)
-  pointsPerSecond++
-
-  influxdb.writePoint name, point, {}, (error) ->
-    if error
-      console.log "ah oh, error writing point to series #{name}:", error
-
-notifyOfError = -> errorsPerSecond++
-
 saveMetaData = ->
   now = moment().toDate()
 
-  pointsPerSecondPoint = time: now, value: pointsPerSecond
-
-  influxdb.writePoint 'pps-.metr', pointsPerSecondPoint, {}, (error) ->
-    if error
-      console.log "ah oh, error writing point to series pps-.metr:", error
-
-  errorsPerSecondPoint = time: now, value: errorsPerSecond
-
-  influxdb.writePoint 'seri.err-', errorsPerSecondPoint, {}, (error) ->
-    if error
-      console.log "ah oh, error writing point to series seri.err-:", error
+  influxdb.save 'pps-.metr', { time: now, value: pointsPerSecond }
+  influxdb.save 'seri.err-', { time: now, value: errorsPerSecond }
 
   pointsPerSecond = 0
   errorsPerSecond = 0
 
+
 setInterval(saveMetaData, 1000)
 
+
 module.exports =
-  save: save
-  notifyOfError: notifyOfError
+  notifyOfError: ->
+    errorsPerSecond++
+
+  save: (name, timeInSeconds, value) ->
+    pointsPerSecond++
+    point = time: calculateTime(timeInSeconds), value: value
+
+    console.log timeInSeconds, name, point.value, point.time
+    influxdb.save(name, point)
+
