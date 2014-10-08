@@ -2,6 +2,7 @@ SerialPort = require('serialport').SerialPort
 through = require 'through2'
 influx = require 'influx'
 moment = require 'moment'
+serialIn = require '../analytics-router/serial-in'
 
 persistence = influx
   host: 'localhost'
@@ -11,11 +12,6 @@ persistence = influx
   database: 'quadcopter'
 
 module.exports = ->
-  concatenate = (bufferA, bufferB) ->
-    newBuffer = new Buffer(bufferA.length + bufferB.length)
-    bufferA.copy(newBuffer)
-    bufferB.copy(newBuffer, bufferA.length)
-    newBuffer
 
   startTime = null
   calculateTime = (timeInSeconds) ->
@@ -59,34 +55,9 @@ module.exports = ->
       else
         save('seri.err-', value: 1)
 
-  serialPort = new SerialPort "/dev/cu.usbserial-A9WZZTHD", { baudrate: 115200 }, false
 
-  serialPort.open (error) ->
-    throw "failed to open serial port due to #{error}" if error
-    console.log "connected..."
-
-    buffer = new Buffer(0)
-
-    serialPort.on 'data', (data) ->
-      buffer = concatenate(buffer, data)
-
-    parseBuffer = ->
-      i = 0
-      metricStartPosition = 0
-
-      while i < buffer.length
-        if buffer[i] == '|'.charCodeAt(0)
-          processData buffer.slice(metricStartPosition, i)
-          metricStartPosition = i + 1
-
-        i++
-
-      # unfinish metrics should be added back to the buffer
-      buffer = buffer.slice(metricStartPosition, buffer.length)
-
-
-    setInterval(parseBuffer, 1000)
-
+  connection = serialIn.connect '/dev/cu.usbserial-A9WZZTHD', { baudrate: 115200 }
+  connection.onEvent (statistic) -> processData(statistic)
 
   # return a stream, but never call the callback.
   # this is designed to run forever.
