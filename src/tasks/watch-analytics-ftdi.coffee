@@ -22,12 +22,14 @@ module.exports = ->
     if startTime == null
       startTime = moment().subtract(timeInSeconds, 'seconds')
 
-    startTime.add(timeInSeconds, 'seconds').toDate()
+    startTime.clone().add(timeInSeconds, 'seconds').toDate()
 
   save = (name, timeInSeconds, value) ->
     point =
       time: calculateTime(timeInSeconds)
       value: value
+
+    console.log name, value, calculateTime(timeInSeconds)
 
     persistence.writePoint name, point, {}, (error) ->
       if error
