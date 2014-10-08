@@ -15,9 +15,10 @@
  * Note: I probably shouldn't be afraid of longish (seconds) startup time. It may lead to better bias averaging.
  * Initial ZRO Tolerance is + / - 40 degrees / second. This depends a lot on temperature.
  */
-void InitialiseGyroscope() {
-	/* wait until the line is not busy */
-	while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY));
+bool InitialiseGyroscope() {
+	WaitUntilBusIsFree();
+
+	if (i2cHasProblem) return false;
 
 	/* Reset the Gyro.
 	 * Note that 0xD0 is the address of the Gyro on the bus.
@@ -27,6 +28,8 @@ void InitialiseGyroscope() {
 	SendData(0x3E);
 	SendData(0x80);
 	SendStop();
+
+	if (i2cHasProblem) return false;
 
 	/* Setup:
 	 * the full scale range of the gyro should be +/-2000 degrees / second
@@ -40,6 +43,8 @@ void InitialiseGyroscope() {
 	SendData(0x1B);
 	SendStop();
 
+	if (i2cHasProblem) return false;
+
 	/* Set the sample rate
 	 * Sample rate = internal sample rate / (divider + 1)
 	 * Setting divider to 4 to give a sample rate of 200Hz.
@@ -51,6 +56,8 @@ void InitialiseGyroscope() {
 	SendData(0x04);
 	SendStop();
 
+	if (i2cHasProblem) return false;
+
 	/* Set the clock source to PLL with Z Gyro as the reference.
 	 * This should be more stable / accurate than an internal oscillator (which would be greatly affected by temperature)
 	 * Probably not as good as an external oscillator though.
@@ -61,6 +68,8 @@ void InitialiseGyroscope() {
 	SendData(0x3E);
 	SendData(0x03);
 	SendStop();
+
+	if (i2cHasProblem) return false;
 
 	/* The gyro takes 50 milliseconds for zero settling */
 	WaitAFewMillis(50);
@@ -80,6 +89,7 @@ void InitialiseGyroscope() {
 	gyroscopeReading.xAngleDriftPerSecond = 1.9;
 	gyroscopeReading.yAngleDriftPerSecond = 3.1;
 	gyroscopeReading.zAngleDriftPerSecond = 0.35;
+	gyroscopeReading.trustworthy = true;
 
 	/* calibrate:
 	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
@@ -94,9 +104,12 @@ void InitialiseGyroscope() {
 	for (uint16_t i = 0; i < samples; i++) {
 		ReadGyroscope(&gyroscopeReading);
 
+		if (!gyroscopeReading.trustworthy) return false;
+
 		summedX += gyroscopeReading.x;
 		summedY += gyroscopeReading.y;
 		summedZ += gyroscopeReading.z;
+
 		WaitAFewMillis(5);
 	}
 
@@ -104,13 +117,23 @@ void InitialiseGyroscope() {
 	gyroscopeReading.yOffset = summedY / samples;
 	gyroscopeReading.zOffset = summedZ / samples;
 	gyroscopeReading.sampleTime = intermediateMillis;
+
+	return true;
 };
 
 void ReadGyroscope() {
+	gyroscopeReading.trustworthy = true;
+
 	/* Start reading from the high temperature register */
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);
 	SendData(0x1B);
+
+	if (i2cHasProblem) {
+		gyroscopeReading.trustworthy = false;
+		return;
+	}
+
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Receiver);
 
@@ -130,6 +153,11 @@ void ReadGyroscope() {
 	/* Finally read the data and NACK on response. This lets the peripheral know that we are finished reading */
 	uint8_t zLow = ReadDataExpectingEnd();
 	SendStop();
+
+	if (i2cHasProblem) {
+		gyroscopeReading.trustworthy = false;
+		return;
+	}
 
 	/* Temperature offset: -13200 LSB
 	 * Temperature sensitivity: 280 LSB / degrees celcius

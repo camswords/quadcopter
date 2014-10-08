@@ -3,6 +3,7 @@
 #define GYROSCOPE_H_
 
 #include <i2c.h>
+#include <stdbool.h>
 
 typedef struct GyroscopeReading {
 	float x;
@@ -16,11 +17,12 @@ typedef struct GyroscopeReading {
 	float xAngleDriftPerSecond;
 	float yAngleDriftPerSecond;
 	float zAngleDriftPerSecond;
+	bool trustworthy;
 }GyroscopeReading;
 
 struct GyroscopeReading gyroscopeReading;
 
-void InitialiseGyroscope();
+bool InitialiseGyroscope();
 
 void ReadGyroscope();
 

@@ -91,41 +91,50 @@ int main(void) {
 	  }
 
 	  ReadAngularPosition();
-	  /* ideally, we want this to return a value between -500 and 500 */
-	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
-	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float currentThrottle = ReadRemoteThrottle();
+	  /* if we can't trust it, don't use it */
+	  /* how must untrusted data do we deal with before we just bail? */
+	  if (angularPosition.trustworthy) {
 
-	  if (currentThrottle == 0.0) {
-		  bProp.set(1000);
-		  eProp.set(1000);
-		  cProp.set(1000);
-		  aProp.set(1000);
+		  /* ideally, we want this to return a value between -500 and 500 */
+		  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
+		  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
+
+		  float currentThrottle = ReadRemoteThrottle();
+
+		  if (currentThrottle == 0.0) {
+			  bProp.set(1000);
+			  eProp.set(1000);
+			  cProp.set(1000);
+			  aProp.set(1000);
+		  } else {
+			  float normalisedThrottle = (1000 * currentThrottle / 100.0) + 1000.0;
+
+			  bProp.set(yAdjustment + normalisedThrottle);
+			  eProp.set(-yAdjustment + normalisedThrottle);
+			  cProp.set(-xAdjustment + normalisedThrottle);
+			  aProp.set(xAdjustment + normalisedThrottle);
+		  }
+
+		  if (thisSecond != secondsElapsed) {
+		  		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
+		  		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
+		  		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
+		  		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
+		  		  RecordFloatAnalytics("b---.prop", secondsElapsed, bProp.get());
+		  		  RecordFloatAnalytics("e---.prop", secondsElapsed, eProp.get());
+		  		  RecordFloatAnalytics("c---.prop", secondsElapsed, cProp.get());
+		  		  RecordFloatAnalytics("a---.prop", secondsElapsed, aProp.get());
+		  		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
+		  		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
+		  		  RecordFloatAnalytics("thro.remo", secondsElapsed, currentThrottle);
+
+		  		  loopsPerSecond = 0;
+		  		  thisSecond = secondsElapsed;
+		  }
 	  } else {
-		  float normalisedThrottle = (1000 * currentThrottle / 100.0) + 1000.0;
-
-		  bProp.set(yAdjustment + normalisedThrottle);
-		  eProp.set(-yAdjustment + normalisedThrottle);
-		  cProp.set(-xAdjustment + normalisedThrottle);
-		  aProp.set(xAdjustment + normalisedThrottle);
-	  }
-
-	  if (thisSecond != secondsElapsed) {
-		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
-		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
-		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
-		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
-		  RecordFloatAnalytics("b---.prop", secondsElapsed, bProp.get());
-		  RecordFloatAnalytics("e---.prop", secondsElapsed, eProp.get());
-		  RecordFloatAnalytics("c---.prop", secondsElapsed, cProp.get());
-		  RecordFloatAnalytics("a---.prop", secondsElapsed, aProp.get());
-		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
-		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordFloatAnalytics("thro.remo", secondsElapsed, currentThrottle);
-
-		  loopsPerSecond = 0;
-		  thisSecond = secondsElapsed;
+		  /* not trust worthy! record it */
+		  RecordAnalytics("trus.sens", secondsElapsed, 1);
 	  }
   }
 }
