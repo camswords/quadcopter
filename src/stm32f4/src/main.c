@@ -26,6 +26,9 @@
 int main(void) {
   EnableTiming();
   InitialiseLeds();
+
+  TurnOn(ORANGE_LED);
+
   InitialiseSysTick();
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
@@ -70,6 +73,7 @@ int main(void) {
   cProp.set(1500);
   aProp.set(1500);
 
+  TurnOff(ORANGE_LED);
   TurnOn(YELLOW_LED);
 
   /* intitalise after the motors, this should give it some time for the temparature to stabalise */
