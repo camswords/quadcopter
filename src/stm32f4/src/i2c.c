@@ -75,7 +75,7 @@ void InitialiseI2C() {
 
 void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {
 	int32_t attempts = 0;
-	int32_t maxAttempts = 200000;
+	int32_t maxAttempts = 5000;
 
 	while(!I2C_CheckEvent(I2Cx, event) && attempts < maxAttempts) {
 		attempts++;
