@@ -20,7 +20,6 @@
  */
 
 void InitialiseI2C() {
-	i2cHasProblem = false;
 
 	/* enable the clock to i2c1 */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
@@ -73,91 +72,62 @@ void InitialiseI2C() {
 	I2C_Cmd(I2C1, ENABLE);
 };
 
-void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {
-	int8_t attempts = 0;
-	int8_t maxAttempts = 200;
-
-	while(!I2C_CheckEvent(I2Cx, event) && attempts < maxAttempts) {
-		attempts++;
-	}
-
-	if (attempts == maxAttempts) {
-		i2cHasProblem = true;
-	}
-}
-
-void WaitUntilBusIsFree() {
-	/* wait until the line is not busy */
-	WaitForEvent(I2C1, I2C_FLAG_BUSY);
-}
-
 void SendStart() {
-	i2cHasProblem = false;
-
 	/* Begin comms! */
 	I2C_GenerateSTART(I2C1, ENABLE);
 
 	/* Start condition has been correctly released on the bus (will fail if another device attempts to communicate and bus not free) */
-	WaitForEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT);
+	/* hmmm. I don't like while loops that never stop. */
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
 }
 
 /* Address should be the nominal write address of the peripheral. */
 void SendAddress(uint8_t address, uint8_t direction) {
-	if (i2cHasProblem) return;
-
 	/* send the address */
 	I2C_Send7bitAddress(I2C1, address, direction);
 
 	/* Wait for peripheral to acknowledge (own up) to the sent address */
 	if (direction == I2C_Direction_Transmitter) {
-		WaitForEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED);
+		while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
 	} else {
-		WaitForEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED);
+		while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
 	}
 }
 
 void SendData(uint8_t data) {
-	if (i2cHasProblem) return;
-
 	/* make sure that the bus is not transmitting */
-	WaitForEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTING);
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTING));
 
 	/* send the data */
 	I2C_SendData(I2C1, data);
 
 	/* wait for confirmation */
 	/* Testing on this event over I2C_EVENT_MASTER_BYTE_TRANSMITTING is more reliable, and slower. */
-	WaitForEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED);
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 }
 
 void SendStop() {
-	if (i2cHasProblem) return;
-
 	/* Communication is over for now */
 	I2C_GenerateSTOP(I2C1, ENABLE);
 }
 
 uint8_t ReadDataExpectingMore() {
-	if (i2cHasProblem) return 0;
-
 	/* automatically reply "yes, more" to tell the peripheral to move to the next register. */
 	I2C_AcknowledgeConfig(I2C1, ENABLE);
 
 	/* wait till the data is ready */
-	WaitForEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
 
 	/* return the read data */
 	return I2C_ReceiveData(I2C1);
 }
 
 uint8_t ReadDataExpectingEnd() {
-	if (i2cHasProblem) return 0;
-
 	/* don't automatically reply "yes, more". Instead, we will send a NACK to indicate no more. */
 	I2C_AcknowledgeConfig(I2C1, DISABLE);
 
 	/* wait till the data is ready */
-	WaitForEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED);
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED));
 
 	/* return the read data */
 	return I2C_ReceiveData(I2C1);
