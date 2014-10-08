@@ -36,26 +36,5 @@ void InitialiseMagnetometer() {
 }
 
 void ReadMagnetometer() {
-	/* Start reading from the x high register */
-	SendStart();
-	SendAddress(0xA6, I2C_Direction_Transmitter);
-	SendData(0x03);
-	SendStart();
-	SendAddress(0xA6, I2C_Direction_Receiver);
-
-	/* Read the data and ACK on response. This will cause the peripheral to get ready to return the next register's data.
-	 * Note that the multibyte read strategy will prevent the sensor updating half of the values in between a read.
-	 */
-	uint8_t xHigh = ReadDataExpectingMore();
-	uint8_t xLow = ReadDataExpectingMore();
-	uint8_t zHigh = ReadDataExpectingMore();
-	uint8_t zLow = ReadDataExpectingMore();
-	uint8_t yHigh = ReadDataExpectingMore();
-	uint8_t yLow = ReadDataExpectingEnd();
-	SendStop();
-
-	/* Note that a read value of -4096 is used for math over/under flow for the channel / bias measurement */
-	magnetometerReading.x = (((int16_t) xHigh << 8) | xLow);
-	magnetometerReading.y = (((int16_t) yHigh << 8) | yLow);
-	magnetometerReading.z = (((int16_t) zHigh << 8) | zLow);
+	/* removed because it looked wrong. will replace when I need the magnetometer. */
 }
