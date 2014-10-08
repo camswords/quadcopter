@@ -27,4 +27,4 @@ parse = (data, callback) ->
     callback("unable to parse point of type #{format}")
 
 
-module.exports = parse: -> parse
+module.exports = parse: parse
