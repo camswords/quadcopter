@@ -1,4 +1,4 @@
-influxdb = require 'influxdb'
+influxdb = require './influxdb'
 moment = require 'moment'
 
 pointsPerSecond = 0
