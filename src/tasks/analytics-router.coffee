@@ -14,7 +14,7 @@ module.exports = ->
           persistence.save(name, timeInSeconds, value)
 
         else
-          persistence.save('seri.err-', value: 1)
+          persistence.notifyOfError()
 
       else if format == 'F'
         if data.length == 20
@@ -23,9 +23,9 @@ module.exports = ->
           persistence.save(name, timeInSeconds, value)
 
         else
-          persistence.save('seri.err-', value: 1)
+          persistence.notifyOfError()
       else
-        persistence.save('seri.err-', value: 1)
+        persistence.notifyOfError()
 
 
   connection = serialIn.connect '/dev/cu.usbserial-A9WZZTHD', { baudrate: 115200 }

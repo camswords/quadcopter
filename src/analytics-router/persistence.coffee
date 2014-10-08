@@ -17,31 +17,42 @@ calculateTime = (timeInSeconds) ->
   startTime.clone().add(timeInSeconds, 'seconds').toDate()
 
 pointsPerSecond = 0
+errorsPerSecond = 0
 
 save = (name, timeInSeconds, value) ->
   point =
     time: calculateTime(timeInSeconds)
     value: value
 
-  console.log name, value, calculateTime(timeInSeconds)
+  console.log timeInSeconds, name, value, calculateTime(timeInSeconds)
   pointsPerSecond++
 
   influxdb.writePoint name, point, {}, (error) ->
     if error
       console.log "ah oh, error writing point to series #{name}:", error
 
+notifyOfError = -> errorsPerSecond++
 
-savePointsPerSecond = ->
-  point =
-    time: moment().toDate()
-    value: pointsPerSecond
+saveMetaData = ->
+  now = moment().toDate()
 
-  influxdb.writePoint 'pps-.metr', point, {}, (error) ->
+  pointsPerSecondPoint = time: now, value: pointsPerSecond
+
+  influxdb.writePoint 'pps-.metr', pointsPerSecondPoint, {}, (error) ->
     if error
       console.log "ah oh, error writing point to series pps-.metr:", error
 
+  errorsPerSecondPoint = time: now, value: errorsPerSecond
+
+  influxdb.writePoint 'seri.err-', errorsPerSecondPoint, {}, (error) ->
+    if error
+      console.log "ah oh, error writing point to series seri.err-:", error
+
   pointsPerSecond = 0
+  errorsPerSecond = 0
 
-setInterval(savePointsPerSecond, 1000)
+setInterval(saveMetaData, 1000)
 
-module.exports = save: save
+module.exports =
+  save: save
+  notifyOfError: notifyOfError
