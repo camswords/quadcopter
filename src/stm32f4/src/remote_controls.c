@@ -19,7 +19,7 @@ void InitialiseRemoteControls() {
   /* elevator: fly forwards or backwards
    * Channel 3 on the RC receiver
    */
-  elevator = MeasurePWMInput(TIM12, GPIOB, GPIO_Pin_14, GPIO_PinSource14); // channel 2 - PB.15
+  resetAngularPosition = MeasurePWMInput(TIM12, GPIOB, GPIO_Pin_14, GPIO_PinSource14); // channel 2 - PB.15
 }
 
 /* note this makes assumptions about the minimum and maximum of duty cycles */
@@ -56,6 +56,6 @@ float ReadRemoteAirleron() {
 	return CalculatePercentageOfMaximum(airleron->dutyCycle, airleron->frequency);
 }
 
-float ReadRemoteElevator() {
-	return CalculatePercentageOfMaximum(elevator->dutyCycle, elevator->frequency);
+float ReadResetAngularPosition() {
+	return CalculatePercentageOfMaximum(resetAngularPosition->dutyCycle, resetAngularPosition->frequency);
 }

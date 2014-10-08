@@ -82,6 +82,14 @@ int main(void) {
   while(1) {
 	  loopsPerSecond++;
 
+	  /* cheat! manually reset angles to zero when we know the quad is level */
+	  float resetPositionPercentage = ReadResetAngularPosition();
+	  if (resetPositionPercentage > 80.0) {
+		  ResetToAngularZeroPosition();
+		  xAxisPid = InitialisePid(10, 0, 0);
+		  yAxisPid = InitialisePid(10, 0, 0);
+	  }
+
 	  ReadAngularPosition();
 	  /* ideally, we want this to return a value between -500 and 500 */
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);

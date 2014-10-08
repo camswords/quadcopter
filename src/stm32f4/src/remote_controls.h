@@ -1,12 +1,13 @@
 #ifndef REMOTE_CONTROLS_H_
 #define REMOTE_CONTROLS_H_
 
+#include <stdint.h>
 #include <pwm_input.h>
 
 struct PWMInput* throttle;
 struct PWMInput* rudder;
 struct PWMInput* airleron;
-struct PWMInput* elevator;
+struct PWMInput* resetAngularPosition;
 
 void InitialiseRemoteControls();
 
@@ -17,7 +18,7 @@ float ReadRemoteRudder();
 
 float ReadRemoteAirleron();
 
-float ReadRemoteElevator();
+float ReadResetAngularPosition();
 
 
 
