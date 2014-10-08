@@ -3,12 +3,16 @@ moment = require 'moment'
 
 pointsPerSecond = 0
 errorsPerSecond = 0
+maximumTimeInSeconds = Infinity
 startTime = null
 
 calculateTime = (timeInSeconds) ->
-  if startTime == null
+
+  # recalculate start time on first run, or restart of device
+  if timeInSeconds < maximumTimeInSeconds
     startTime = moment().subtract(timeInSeconds, 'seconds')
 
+  maximumTimeInSeconds = timeInSeconds
   startTime.clone().add(timeInSeconds, 'seconds').toDate()
 
 saveMetaData = ->
