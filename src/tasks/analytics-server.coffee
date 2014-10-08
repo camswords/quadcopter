@@ -1,3 +1,3 @@
-analytics = require '../analytics/analytics'
+analytics = require '../analytics-server/analytics'
 
 module.exports = -> analytics.start()
