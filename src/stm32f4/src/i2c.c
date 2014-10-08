@@ -20,6 +20,7 @@
  */
 
 void InitialiseI2C() {
+	i2cHasProblem = false;
 
 	/* enable the clock to i2c1 */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
@@ -72,7 +73,27 @@ void InitialiseI2C() {
 	I2C_Cmd(I2C1, ENABLE);
 };
 
+void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {
+	int8_t attempts = 0;
+	int8_t maxAttempts = 200;
+
+	while(!I2C_CheckEvent(I2Cx, event) && attempts < maxAttempts) {
+		attempts++;
+	}
+
+	if (attempts == maxAttempts) {
+		i2cHasProblem = true;
+	}
+}
+
+void WaitUntilBusIsFree() {
+	/* wait until the line is not busy */
+	WaitForEvent(I2C1, I2C_FLAG_BUSY);
+}
+
 void SendStart() {
+	i2cHasProblem = false;
+
 	/* Begin comms! */
 	I2C_GenerateSTART(I2C1, ENABLE);
 

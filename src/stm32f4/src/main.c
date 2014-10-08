@@ -70,9 +70,12 @@ int main(void) {
   cProp.set(1500);
   aProp.set(1500);
 
+  TurnOn(YELLOW_LED);
+
   /* intitalise after the motors, this should give it some time for the temparature to stabalise */
   InitialiseAngularPosition();
 
+  TurnOff(YELLOW_LED);
   /* go go go! */
   TurnOn(BLUE_LED);
 
