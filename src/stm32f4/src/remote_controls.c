@@ -14,7 +14,7 @@ void InitialiseRemoteControls() {
   /* airleron: fly sideways left or right
    * Channel 2 on the RC receiver
    */
-  airleron = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
+  pidProportional = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
 
   /* elevator: fly forwards or backwards
    * Channel 3 on the RC receiver
@@ -52,8 +52,8 @@ float ReadRemoteRudder() {
 	return CalculatePercentageOfMaximum(rudder->dutyCycle, rudder->frequency);
 }
 
-float ReadRemoteAirleron() {
-	return CalculatePercentageOfMaximum(airleron->dutyCycle, airleron->frequency);
+float ReadRemotePidProportional() {
+	return CalculatePercentageOfMaximum(pidProportional->dutyCycle, pidProportional->frequency);
 }
 
 float ReadResetAngularPosition() {

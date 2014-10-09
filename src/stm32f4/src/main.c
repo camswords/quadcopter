@@ -127,6 +127,10 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
+		  float pidProportional = ReadRemotePidProportional();
+		  xAxisPid = InitialisePid(pidProportional, 0, 0);
+		  yAxisPid = InitialisePid(pidProportional, 0, 0);
+
 		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
 		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
 		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);

@@ -6,7 +6,7 @@
 
 struct PWMInput* throttle;
 struct PWMInput* rudder;
-struct PWMInput* airleron;
+struct PWMInput* pidProportional;
 struct PWMInput* resetAngularPosition;
 
 void InitialiseRemoteControls();
@@ -16,7 +16,7 @@ float ReadRemoteThrottle();
 
 float ReadRemoteRudder();
 
-float ReadRemoteAirleron();
+float ReadRemotePidProportional();
 
 float ReadResetAngularPosition();
 
