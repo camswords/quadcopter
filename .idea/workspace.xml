@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b4b1ff88-0c1f-4820-a868-70e04f8f0a03" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/config.js" afterPath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/config.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/stm32f4/eclipse/Quadcopter.launch" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/.settings/language.settings.xml" afterPath="$PROJECT_DIR$/src/stm32f4/.settings/language.settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/main.c" afterPath="$PROJECT_DIR$/src/stm32f4/src/main.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json" afterPath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="quadcopter.iws" />
@@ -55,21 +58,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="quadcopter.json" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="quadcopter.json" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="190.0" vertical-offset="4560" max-vertical-offset="12660">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.8705036" vertical-offset="11935" max-vertical-offset="12630">
+              <caret line="836" column="1" selection-start-line="836" selection-start-column="1" selection-end-line="836" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="config.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2698192" vertical-offset="481" max-vertical-offset="1200">
-              <caret line="45" column="51" selection-start-line="45" selection-start-column="51" selection-end-line="45" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="481" max-vertical-offset="1200">
+              <caret line="55" column="73" selection-start-line="55" selection-start-column="73" selection-end-line="55" selection-end-column="73" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -92,6 +95,7 @@
       <list>
         <option value="$PROJECT_DIR$/src/tasks/analytics-router.coffee" />
         <option value="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/config.js" />
+        <option value="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json" />
       </list>
     </option>
   </component>
@@ -232,6 +236,62 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="analytics-server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grafana-1.8.1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="quadcopter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="quadcopter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="analytics-server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grafana-1.8.1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dashboards" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="quadcopter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="quadcopter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="analytics-router" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -339,21 +399,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="190.0" vertical-offset="4560" max-vertical-offset="12660">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/config.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2698192" vertical-offset="481" max-vertical-offset="1200">
-          <caret line="45" column="51" selection-start-line="45" selection-start-column="51" selection-end-line="45" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="481" max-vertical-offset="1200">
+          <caret line="55" column="73" selection-start-line="55" selection-start-column="73" selection-end-line="55" selection-end-column="73" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8705036" vertical-offset="11935" max-vertical-offset="12630">
+          <caret line="836" column="1" selection-start-line="836" selection-start-column="1" selection-end-line="836" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>

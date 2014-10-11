@@ -96,7 +96,7 @@ int main(void) {
 
 	  /* cheat! manually reset angles to zero when we know the quad is level */
 	  float resetPositionPercentage = ReadResetAngularPosition();
-	  if (resetPositionPercentage > 80.0) {
+	  if (resetPositionPercentage > 99.00) {
 		  ResetToAngularZeroPosition();
 		  xAxisPid = InitialisePid(10, 0, 0);
 		  yAxisPid = InitialisePid(10, 0, 0);
@@ -141,7 +141,7 @@ int main(void) {
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
 		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
-		  RecordMetric("rest.remo", secondsElapsed, resetPositionPercentage);
+		  RecordMetric("pval.remo", secondsElapsed, pidProportional);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
 
 		  loopsPerSecond = 0;
