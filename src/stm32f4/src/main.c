@@ -25,7 +25,6 @@
 
 /* Things to do:
  *   - add some kind of a filter to the reset position input so that it doesn't keep resetting
- *   - find a way to allow me to send more analytics per second
  */
 
 int main(void) {
