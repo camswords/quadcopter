@@ -88,6 +88,7 @@ int main(void) {
   /* go go go! */
   TurnOn(BLUE_LED);
 
+  uint16_t resetsPerSecond = 0;
   uint16_t loopsPerSecond = 0;
   uint32_t thisSecond = 0;
 
@@ -100,6 +101,7 @@ int main(void) {
 		  ResetToAngularZeroPosition();
 		  xAxisPid = InitialisePid(10, 0, 0);
 		  yAxisPid = InitialisePid(10, 0, 0);
+		  resetsPerSecond++;
 	  }
 
 	  ReadAngularPosition();
@@ -136,8 +138,11 @@ int main(void) {
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
 		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("rest.remo", secondsElapsed, resetPositionPercentage);
+		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
 
 		  loopsPerSecond = 0;
+		  resetsPerSecond = 0;
 		  thisSecond = secondsElapsed;
 	  }
 
