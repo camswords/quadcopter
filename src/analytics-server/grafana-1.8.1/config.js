@@ -43,7 +43,7 @@ function (Settings) {
     },
 
     // default home dashboard
-    default_route: '/dashboard/db/quadcopter',
+    default_route: '/dashboard/file/quadcopter',
 
     // set to false to disable unsaved changes warning
     unsaved_changes_warning: true,
