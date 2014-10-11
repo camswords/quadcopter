@@ -4,7 +4,7 @@ persistence = require '../analytics-router/persistence'
 serialisedPoint = require '../analytics-router/serialised-point'
 
 module.exports = ->
-  connection = serialIn.connect '/dev/cu.usbserial-A9WZZTHD', { baudrate: 115200 }
+  connection = serialIn.connect '/dev/tty.usbserial-A90127RW', { baudrate: 115200 }
 
   connection.onEvent (data) ->
     serialisedPoint.parse data, (error, point) ->
