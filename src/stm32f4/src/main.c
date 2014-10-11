@@ -141,8 +141,10 @@ int main(void) {
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
 		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("thro.raw-", secondsElapsed, smoothedThrottle.lastMeasurement);
 		  RecordMetric("pval.remo", secondsElapsed, pidProportional);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
+		  RecordMetric("rest.raw-", secondsElapsed, resetPositionPercentage);
 
 		  loopsPerSecond = 0;
 		  resetsPerSecond = 0;

@@ -4,6 +4,7 @@
 typedef struct BrownsSimpleExponentSmoothing {
 	float alpha;
 	float smoothed;
+	float lastMeasurement;
 } BrownsSimpleExponentSmoothing;
 
 

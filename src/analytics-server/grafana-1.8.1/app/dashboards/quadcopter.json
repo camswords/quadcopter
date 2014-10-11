@@ -506,6 +506,13 @@
                             "column": "value",
                             "series": "rest.pers",
                             "query": "select mean(value) from \"rest.pers\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "rest.raw-",
+                            "query": "select mean(value) from \"rest.raw-\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -572,6 +579,13 @@
                             "column": "value",
                             "series": "thro.remo",
                             "query": "select mean(value) from \"thro.remo\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "thro.raw-",
+                            "query": "select mean(value) from \"thro.raw-\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},

@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b4b1ff88-0c1f-4820-a868-70e04f8f0a03" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/stm32f4/eclipse/Quadcopter.launch" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/.settings/language.settings.xml" afterPath="$PROJECT_DIR$/src/stm32f4/.settings/language.settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/browns_simple_exponent_smoothing.c" afterPath="$PROJECT_DIR$/src/stm32f4/src/browns_simple_exponent_smoothing.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/browns_simple_exponent_smoothing.h" afterPath="$PROJECT_DIR$/src/stm32f4/src/browns_simple_exponent_smoothing.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/main.c" afterPath="$PROJECT_DIR$/src/stm32f4/src/main.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json" afterPath="$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/remote_controls.c" afterPath="$PROJECT_DIR$/src/stm32f4/src/remote_controls.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stm32f4/src/remote_controls.h" afterPath="$PROJECT_DIR$/src/stm32f4/src/remote_controls.h" />
     </list>
     <ignored path="quadcopter.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,8 +62,8 @@
       <file leaf-file-name="quadcopter.json" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8705036" vertical-offset="11935" max-vertical-offset="12630">
-              <caret line="836" column="1" selection-start-line="836" selection-start-column="1" selection-end-line="836" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.95683455" vertical-offset="12085" max-vertical-offset="12840">
+              <caret line="850" column="1" selection-start-line="850" selection-start-column="1" selection-end-line="850" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -411,8 +412,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/analytics-server/grafana-1.8.1/app/dashboards/quadcopter.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8705036" vertical-offset="11935" max-vertical-offset="12630">
-          <caret line="836" column="1" selection-start-line="836" selection-start-column="1" selection-end-line="836" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.95683455" vertical-offset="12085" max-vertical-offset="12840">
+          <caret line="850" column="1" selection-start-line="850" selection-start-column="1" selection-end-line="850" selection-end-column="1" />
           <folding />
         </state>
       </provider>

@@ -6,20 +6,36 @@ void InitialiseRemoteControls() {
    */
   throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
 
+  smoothedThrottle.lastMeasurement = 0.0;
+  smoothedThrottle.alpha = 0.8;
+  smoothedThrottle.smoothed = 0.0;
+
   /* rudder: spin to the left or right on a flat plane
    * Channel 4 on the RC receiver
    */
   rudder = MeasurePWMInput(TIM5, GPIOA, GPIO_Pin_0, GPIO_PinSource0); 		// channel 2 - PA.01
+
+  smoothedRudder.lastMeasurement = 0.0;
+  smoothedRudder.alpha = 0.8;
+  smoothedRudder.smoothed = 0.0;
 
   /* airleron: fly sideways left or right
    * Channel 2 on the RC receiver
    */
   pidProportional = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
 
+  smoothedPidProportional.lastMeasurement = 0.0;
+  smoothedPidProportional.alpha = 0.8;
+  smoothedPidProportional.smoothed = 0.0;
+
   /* elevator: fly forwards or backwards
    * Channel 3 on the RC receiver
    */
   resetAngularPosition = MeasurePWMInput(TIM12, GPIOB, GPIO_Pin_14, GPIO_PinSource14); // channel 2 - PB.15
+
+  smoothedResetAngularPosition.lastMeasurement = 0.0;
+  smoothedResetAngularPosition.alpha = 0.1;
+  smoothedResetAngularPosition.smoothed = 0.0;
 }
 
 /* note this makes assumptions about the minimum and maximum of duty cycles */
@@ -45,17 +61,21 @@ float CalculatePercentageOfMaximum(float dutyCycle, float frequency) {
 }
 
 float ReadRemoteThrottle() {
-	return CalculatePercentageOfMaximum(throttle->dutyCycle, throttle->frequency);
+	float percentage = CalculatePercentageOfMaximum(throttle->dutyCycle, throttle->frequency);
+	return StepBrownsSimpleExponentSmoothing(&smoothedThrottle, percentage);
 }
 
 float ReadRemoteRudder() {
-	return CalculatePercentageOfMaximum(rudder->dutyCycle, rudder->frequency);
+	float percentage = CalculatePercentageOfMaximum(rudder->dutyCycle, rudder->frequency);
+	return StepBrownsSimpleExponentSmoothing(&smoothedRudder, percentage);
 }
 
 float ReadRemotePidProportional() {
-	return CalculatePercentageOfMaximum(pidProportional->dutyCycle, pidProportional->frequency);
+	float percentage = CalculatePercentageOfMaximum(pidProportional->dutyCycle, pidProportional->frequency);
+	return StepBrownsSimpleExponentSmoothing(&smoothedPidProportional, percentage);
 }
 
 float ReadResetAngularPosition() {
-	return CalculatePercentageOfMaximum(resetAngularPosition->dutyCycle, resetAngularPosition->frequency);
+	float percentage = CalculatePercentageOfMaximum(resetAngularPosition->dutyCycle, resetAngularPosition->frequency);
+	return StepBrownsSimpleExponentSmoothing(&smoothedResetAngularPosition, percentage);
 }
