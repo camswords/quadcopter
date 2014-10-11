@@ -6,7 +6,7 @@
 #include <on_board_leds.h>
 #include <pwm_input.h>
 #include <i2c.h>
-#include <serial_output.h>
+#include <analytics.h>
 #include <angular_position.h>
 #include <pid.h>
 #include <remote_controls.h>
@@ -23,6 +23,11 @@
  * build a start motors sequence
  */
 
+/* Things to do:
+ *   - add some kind of a filter to the reset position input so that it doesn't keep resetting
+ *   - find a way to allow me to send more analytics per second
+ */
+
 int main(void) {
   EnableTiming();
   InitialiseLeds();
@@ -32,7 +37,7 @@ int main(void) {
   InitialiseSysTick();
   InitialisePWM();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
-  InitialiseSerialOutput(); // PC.10 (TX) and PC.11 (RX)
+  InitialiseAnalytics(); // PC.10 (TX) and PC.11 (RX)
   Pid xAxisPid = InitialisePid(10, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
   Pid yAxisPid = InitialisePid(10, 0, 0);
 
@@ -98,6 +103,7 @@ int main(void) {
 	  }
 
 	  ReadAngularPosition();
+
 	  /* ideally, we want this to return a value between -500 and 500 */
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
@@ -119,20 +125,24 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  RecordAnalytics("loop.freq", secondsElapsed, loopsPerSecond);
-		  RecordFloatAnalytics("angu.posx", secondsElapsed, angularPosition.x);
-		  RecordFloatAnalytics("angu.posy", secondsElapsed, angularPosition.y);
-		  RecordFloatAnalytics("angu.posz", secondsElapsed, angularPosition.z);
-		  RecordFloatAnalytics("b---.prop", secondsElapsed, bProp.get());
-		  RecordFloatAnalytics("e---.prop", secondsElapsed, eProp.get());
-		  RecordFloatAnalytics("c---.prop", secondsElapsed, cProp.get());
-		  RecordFloatAnalytics("a---.prop", secondsElapsed, aProp.get());
-		  RecordFloatAnalytics("xadj.pid-", secondsElapsed, xAdjustment);
-		  RecordFloatAnalytics("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordFloatAnalytics("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
+		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
+		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
+		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
+		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
+		  RecordMetric("e---.prop", secondsElapsed, eProp.get());
+		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
+		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
+		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
+		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
+		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
 
 		  loopsPerSecond = 0;
 		  thisSecond = secondsElapsed;
+	  }
+
+	  if (intermediateMillis % analyticsFlushFrequency == 0) {
+		  FlushMetrics();
 	  }
   }
 }
