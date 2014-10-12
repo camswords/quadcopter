@@ -126,11 +126,15 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  float pidProportional = ReadRemotePidProportional();
-		  xAxisPid = InitialisePid(pidProportional, 0, 0);
-		  yAxisPid = InitialisePid(pidProportional, 0, 0);
+		  float thisPidProportional = ReadRemotePidProportional();
+		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
+		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
 
 		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
+		  RecordMetric("gyro.posx", secondsElapsed, gyroscopeReading.x);
+		  RecordMetric("gyro.posy", secondsElapsed, gyroscopeReading.y);
+		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
+		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
 		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
 		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
 		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
@@ -140,11 +144,19 @@ int main(void) {
 		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("pval.duty", secondsElapsed, pidProportional->dutyCycle);
+		  RecordMetric("pval.freq", secondsElapsed, pidProportional->frequency);
+		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
+		  RecordMetric("pval.raw-", secondsElapsed, smoothedPidProportional.lastMeasurement);
+		  RecordMetric("thro.duty", secondsElapsed, throttle->dutyCycle);
+		  RecordMetric("thro.freq", secondsElapsed, throttle->frequency);
 		  RecordMetric("thro.raw-", secondsElapsed, smoothedThrottle.lastMeasurement);
-		  RecordMetric("pval.remo", secondsElapsed, pidProportional);
+		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("rest.duty", secondsElapsed, resetAngularPosition->dutyCycle);
+		  RecordMetric("rest.freq", secondsElapsed, resetAngularPosition->frequency);
+		  RecordMetric("rest.remo", secondsElapsed, resetPositionPercentage);
+		  RecordMetric("rest.raw-", secondsElapsed, smoothedResetAngularPosition.lastMeasurement);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
-		  RecordMetric("rest.raw-", secondsElapsed, resetPositionPercentage);
 
 		  loopsPerSecond = 0;
 		  resetsPerSecond = 0;

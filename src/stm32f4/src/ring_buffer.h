@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RING_BUFFER_SIZE 512
+#define RING_BUFFER_SIZE 1024
 
 typedef struct RingBuffer
 {

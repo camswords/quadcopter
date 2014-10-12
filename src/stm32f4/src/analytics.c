@@ -6,7 +6,7 @@ void InitialiseAnalytics() {
 
 	/* how often to flush the metrics (20 times per second) */
 	analyticsFlushFrequency = 1000 / 20;
-	charactersToSendPerFlush = 20;
+	charactersToSendPerFlush = 30;
 
 	InitialiseSerialOutput();
 }
