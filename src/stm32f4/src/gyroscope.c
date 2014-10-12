@@ -31,13 +31,13 @@ void InitialiseGyroscope() {
 	/* Setup:
 	 * the full scale range of the gyro should be +/-2000 degrees / second
 	 * In theory 2000 degrees / second means the quad would be completely rotating 5 times per second! Probably higher than required.
-	 * digital low pass filter bandwidth is 42Hz, internal sample rate is 1kHz.
+	 * digital low pass filter bandwidth is 5Hz, internal sample rate is 1kHz.
 	 * Note: we could adjust the low pass filter in future to see the impact.
 	 */
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);
 	SendData(0x16);
-	SendData(0x1B);
+	SendData(0x1E);
 	SendStop();
 
 	/* Set the sample rate
