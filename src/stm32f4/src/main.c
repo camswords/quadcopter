@@ -145,19 +145,12 @@ int main(void) {
 		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordMetric("pval.duty", secondsElapsed, pidProportional->dutyCycle);
-		  RecordMetric("pval.freq", secondsElapsed, pidProportional->frequency);
 		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
-		  RecordMetric("pval.raw-", secondsElapsed, smoothedPidProportional.lastMeasurement);
-		  RecordMetric("thro.duty", secondsElapsed, throttle->dutyCycle);
-		  RecordMetric("thro.freq", secondsElapsed, throttle->frequency);
-		  RecordMetric("thro.raw-", secondsElapsed, smoothedThrottle.lastMeasurement);
 		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
-		  RecordMetric("rest.duty", secondsElapsed, resetAngularPosition->dutyCycle);
-		  RecordMetric("rest.freq", secondsElapsed, resetAngularPosition->frequency);
-		  RecordMetric("rest.remo", secondsElapsed, resetPositionPercentage);
-		  RecordMetric("rest.raw-", secondsElapsed, smoothedResetAngularPosition.lastMeasurement);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
+		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
+		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
+		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
 		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
 
 		  loopsPerSecond = 0;

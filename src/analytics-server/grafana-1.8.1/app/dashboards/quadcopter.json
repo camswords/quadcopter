@@ -19,88 +19,6 @@
                     "span": 4,
                     "editable": true,
                     "type": "graph",
-                    "id": 1,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "short",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": null,
-                        "rightMax": null,
-                        "leftMin": null,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": true,
-                    "legend": {
-                        "show": true,
-                        "values": false,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "function": "mean",
-                            "column": "value",
-                            "series": "angu.posx",
-                            "query": "select mean(value) from \"angu.posx\" where $timeFilter group by time($interval) order asc",
-                            "interval": "1s"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "angu.posy",
-                            "query": "select mean(value) from \"angu.posy\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "angu.posz",
-                            "query": "select mean(value) from \"angu.posz\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "angular.postion",
-                    "height": "",
-                    "leftYAxisLabel": "degrees"
-                },
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
                     "id": 12,
                     "datasource": null,
                     "renderer": "flot",
@@ -167,20 +85,20 @@
                     "span": 4,
                     "editable": true,
                     "type": "graph",
-                    "id": 8,
+                    "id": 6,
                     "datasource": null,
                     "renderer": "flot",
                     "x-axis": true,
                     "y-axis": true,
                     "scale": 1,
                     "y_formats": [
-                        "short",
+                        "none",
                         "short"
                     ],
                     "grid": {
-                        "leftMax": null,
+                        "leftMax": 2000,
                         "rightMax": null,
-                        "leftMin": null,
+                        "leftMin": 1000,
                         "rightMin": null,
                         "threshold1": null,
                         "threshold2": null,
@@ -205,7 +123,8 @@
                         "max": false,
                         "current": true,
                         "total": false,
-                        "avg": false
+                        "avg": false,
+                        "alignAsTable": false
                     },
                     "percentage": false,
                     "zerofill": true,
@@ -220,20 +139,21 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "xadj.pid-",
-                            "query": "select mean(value) from \"xadj.pid-\" where $timeFilter group by time($interval) order asc"
+                            "series": "a---.prop",
+                            "query": "select mean(value) from \"a---.prop\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "yadj.pid-",
-                            "query": "select mean(value) from \"yadj.pid-\" where $timeFilter group by time($interval) order asc"
+                            "series": "c---.prop",
+                            "query": "select mean(value) from \"c---.prop\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
                     "seriesOverrides": [],
-                    "title": "pid"
+                    "title": "x-axis.props",
+                    "leftYAxisLabel": "pulse"
                 },
                 {
                     "error": false,
@@ -313,91 +233,7 @@
                     "span": 4,
                     "editable": true,
                     "type": "graph",
-                    "id": 6,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "none",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": 2000,
-                        "rightMax": null,
-                        "leftMin": 1000,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": false,
-                    "legend": {
-                        "show": true,
-                        "values": true,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false,
-                        "alignAsTable": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "a---.prop",
-                            "query": "select mean(value) from \"a---.prop\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "c---.prop",
-                            "query": "select mean(value) from \"c---.prop\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "x-axis.props",
-                    "leftYAxisLabel": "pulse"
-                }
-            ],
-            "showTitle": true
-        },
-        {
-            "title": "Throttle",
-            "height": "250px",
-            "editable": true,
-            "collapse": false,
-            "panels": [
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
-                    "id": 16,
+                    "id": 8,
                     "datasource": null,
                     "renderer": "flot",
                     "x-axis": true,
@@ -410,7 +246,7 @@
                     "grid": {
                         "leftMax": null,
                         "rightMax": null,
-                        "leftMin": 0,
+                        "leftMin": null,
                         "rightMin": null,
                         "threshold1": null,
                         "threshold2": null,
@@ -447,23 +283,33 @@
                     },
                     "targets": [
                         {
+                            "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "thro.duty",
-                            "query": "select mean(value) from \"thro.duty\" where $timeFilter group by time($interval) order asc"
+                            "series": "xadj.pid-",
+                            "query": "select mean(value) from \"xadj.pid-\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "thro.freq",
-                            "query": "select mean(value) from \"thro.freq\" where $timeFilter group by time($interval) order asc"
+                            "series": "yadj.pid-",
+                            "query": "select mean(value) from \"yadj.pid-\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
                     "seriesOverrides": [],
-                    "title": "throttle.pwm"
-                },
+                    "title": "pid"
+                }
+            ],
+            "showTitle": true
+        },
+        {
+            "title": "Remote Control",
+            "height": "250px",
+            "editable": true,
+            "collapse": false,
+            "panels": [
                 {
                     "error": false,
                     "span": 4,
@@ -523,107 +369,19 @@
                             "column": "value",
                             "series": "thro.remo",
                             "query": "select mean(value) from \"thro.remo\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "thro.raw-",
-                            "query": "select mean(value) from \"thro.raw-\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
                     "seriesOverrides": [],
                     "title": "throttle.remote",
                     "leftYAxisLabel": "percent"
-                }
-            ],
-            "showTitle": true
-        },
-        {
-            "title": "Resets",
-            "height": "250px",
-            "editable": true,
-            "collapse": false,
-            "panels": [
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
-                    "id": 19,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "short",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": null,
-                        "rightMax": null,
-                        "leftMin": 0,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": false,
-                    "legend": {
-                        "show": true,
-                        "values": true,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "function": "mean",
-                            "column": "value",
-                            "series": "rest.duty",
-                            "query": "select mean(value) from \"rest.duty\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "rest.freq",
-                            "query": "select mean(value) from \"rest.freq\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "reset.pwm"
                 },
                 {
                     "error": false,
                     "span": 4,
                     "editable": true,
                     "type": "graph",
-                    "id": 20,
+                    "id": 14,
                     "datasource": null,
                     "renderer": "flot",
                     "x-axis": true,
@@ -673,22 +431,16 @@
                     },
                     "targets": [
                         {
-                            "function": "mean",
-                            "column": "value",
-                            "series": "rest.remo",
-                            "query": "select mean(value) from \"rest.remo\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "rest.raw-",
-                            "query": "select mean(value) from \"rest.raw-\" where $timeFilter group by time($interval) order asc"
+                            "series": "pval.remo",
+                            "query": "select mean(value) from \"pval.remo\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
                     "seriesOverrides": [],
-                    "title": "reset.remote"
+                    "title": "proportional.remote"
                 },
                 {
                     "error": false,
@@ -850,6 +602,167 @@
                     "span": 4,
                     "editable": true,
                     "type": "graph",
+                    "id": 23,
+                    "datasource": null,
+                    "renderer": "flot",
+                    "x-axis": true,
+                    "y-axis": true,
+                    "scale": 1,
+                    "y_formats": [
+                        "short",
+                        "short"
+                    ],
+                    "grid": {
+                        "leftMax": null,
+                        "rightMax": null,
+                        "leftMin": null,
+                        "rightMin": null,
+                        "threshold1": null,
+                        "threshold2": null,
+                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+                    },
+                    "annotate": {
+                        "enable": false
+                    },
+                    "resolution": 100,
+                    "lines": true,
+                    "fill": 0,
+                    "linewidth": 1,
+                    "points": false,
+                    "pointradius": 5,
+                    "bars": false,
+                    "stack": false,
+                    "legend": {
+                        "show": true,
+                        "values": true,
+                        "min": false,
+                        "max": false,
+                        "current": true,
+                        "total": false,
+                        "avg": false
+                    },
+                    "percentage": false,
+                    "zerofill": true,
+                    "nullPointMode": "connected",
+                    "steppedLine": false,
+                    "tooltip": {
+                        "value_type": "cumulative",
+                        "query_as_alias": true
+                    },
+                    "targets": [
+                        {
+                            "function": "mean",
+                            "column": "value",
+                            "series": "acce.posx",
+                            "query": "select mean(value) from \"acce.posx\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "acce.posy",
+                            "query": "select mean(value) from \"acce.posy\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "acce.posz",
+                            "query": "select mean(value) from \"acce.posz\" where $timeFilter group by time($interval) order asc"
+                        }
+                    ],
+                    "aliasColors": {},
+                    "seriesOverrides": [],
+                    "title": "accelerometer.position"
+                },
+                {
+                    "error": false,
+                    "span": 4,
+                    "editable": true,
+                    "type": "graph",
+                    "id": 1,
+                    "datasource": null,
+                    "renderer": "flot",
+                    "x-axis": true,
+                    "y-axis": true,
+                    "scale": 1,
+                    "y_formats": [
+                        "short",
+                        "short"
+                    ],
+                    "grid": {
+                        "leftMax": null,
+                        "rightMax": null,
+                        "leftMin": null,
+                        "rightMin": null,
+                        "threshold1": null,
+                        "threshold2": null,
+                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+                    },
+                    "annotate": {
+                        "enable": false
+                    },
+                    "resolution": 100,
+                    "lines": true,
+                    "fill": 0,
+                    "linewidth": 1,
+                    "points": false,
+                    "pointradius": 5,
+                    "bars": false,
+                    "stack": true,
+                    "legend": {
+                        "show": true,
+                        "values": true,
+                        "min": false,
+                        "max": false,
+                        "current": true,
+                        "total": false,
+                        "avg": false
+                    },
+                    "percentage": false,
+                    "zerofill": true,
+                    "nullPointMode": "connected",
+                    "steppedLine": false,
+                    "tooltip": {
+                        "value_type": "cumulative",
+                        "query_as_alias": true
+                    },
+                    "targets": [
+                        {
+                            "function": "mean",
+                            "column": "value",
+                            "series": "angu.posx",
+                            "query": "select mean(value) from \"angu.posx\" where $timeFilter group by time($interval) order asc",
+                            "interval": "1s"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "angu.posy",
+                            "query": "select mean(value) from \"angu.posy\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "angu.posz",
+                            "query": "select mean(value) from \"angu.posz\" where $timeFilter group by time($interval) order asc"
+                        }
+                    ],
+                    "aliasColors": {},
+                    "seriesOverrides": [],
+                    "title": "angular.postion",
+                    "height": "",
+                    "leftYAxisLabel": "degrees"
+                },
+                {
+                    "error": false,
+                    "span": 4,
+                    "editable": true,
+                    "type": "graph",
                     "id": 18,
                     "datasource": null,
                     "renderer": "flot",
@@ -912,152 +825,6 @@
                 }
             ],
             "showTitle": true
-        },
-        {
-            "title": "New row",
-            "height": "250px",
-            "editable": true,
-            "collapse": false,
-            "panels": [
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
-                    "id": 21,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "short",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": null,
-                        "rightMax": null,
-                        "leftMin": null,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": false,
-                    "legend": {
-                        "show": true,
-                        "values": true,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "function": "mean",
-                            "column": "value",
-                            "series": "pval.duty",
-                            "query": "select mean(value) from \"pval.duty\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "pval.freq",
-                            "query": "select mean(value) from \"pval.freq\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "proportional.pwm"
-                },
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
-                    "id": 14,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "short",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": 100,
-                        "rightMax": null,
-                        "leftMin": 0,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": false,
-                    "legend": {
-                        "show": true,
-                        "values": true,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "pval.remo",
-                            "query": "select mean(value) from \"pval.remo\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "proportional.remote"
-                }
-            ]
         },
         {
             "title": "Meta Metrics",
@@ -1205,13 +972,6 @@
                 }
             ],
             "showTitle": true
-        },
-        {
-            "title": "New row",
-            "height": "250px",
-            "editable": true,
-            "collapse": false,
-            "panels": []
         }
     ],
     "nav": [
@@ -1231,6 +991,7 @@
                 "30d"
             ],
             "refresh_intervals": [
+                "1s",
                 "5s",
                 "10s",
                 "30s",
