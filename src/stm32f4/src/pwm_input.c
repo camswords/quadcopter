@@ -166,18 +166,22 @@ void TIM4_IRQHandler()
     	/* As a percentage */
     	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
 
-    	/* eliminate noise that is more than twice the previous duty cycle */
-    	if (!isnan(updatedDutyCycle) && (pwmInputTimer4.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer4.dutyCycle)) {
-        	pwmInputTimer4.dutyCycle = updatedDutyCycle;
-    	}
-
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
     	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
 
-    	if (!isnan(updatedFrequency) && (pwmInputTimer4.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer4.frequency)) {
-    		pwmInputTimer4.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (isnan(updatedDutyCycle)
+    		|| isnan(updatedFrequency)
+    		|| updatedDutyCycle <= 0.0
+    		|| updatedFrequency <= 0.0
+    	    || (pwmInputTimer4.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer4.dutyCycle)
+    	    || (pwmInputTimer4.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer4.frequency)) {
+    		return;
     	}
+
+    	pwmInputTimer4.dutyCycle = updatedDutyCycle;
+		pwmInputTimer4.frequency = updatedFrequency;
     }
 }
 
@@ -193,18 +197,22 @@ void TIM5_IRQHandler() {
     	/* As a percentage */
     	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
 
-    	/* eliminate noise that is more than twice the previous duty cycle */
-    	if (!isnan(updatedDutyCycle) && (pwmInputTimer5.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer5.dutyCycle)) {
-    		pwmInputTimer5.dutyCycle = updatedDutyCycle;
-    	}
-
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
     	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
 
-		if (!isnan(updatedFrequency) && (pwmInputTimer5.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer5.frequency)) {
-			pwmInputTimer5.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
-		}
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (isnan(updatedDutyCycle)
+    		|| isnan(updatedFrequency)
+    		|| updatedDutyCycle <= 0.0
+    		|| updatedFrequency <= 0.0
+    	    || (pwmInputTimer5.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer5.dutyCycle)
+    	    || (pwmInputTimer5.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer5.frequency)) {
+    		return;
+    	}
+
+		pwmInputTimer5.dutyCycle = updatedDutyCycle;
+		pwmInputTimer5.frequency = updatedFrequency;
     }
 }
 
@@ -220,18 +228,22 @@ void TIM1_BRK_TIM9_IRQHandler() {
     	/* As a percentage */
     	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
 
-    	/* eliminate noise that is more than twice the previous duty cycle */
-    	if (!isnan(updatedDutyCycle) && (pwmInputTimer9.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer9.dutyCycle)) {
-    		pwmInputTimer9.dutyCycle = updatedDutyCycle;
-    	}
-
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
     	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
 
-		if (!isnan(updatedFrequency) && (pwmInputTimer9.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer9.frequency)) {
-			pwmInputTimer9.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
-		}
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (isnan(updatedDutyCycle)
+    		|| isnan(updatedFrequency)
+    		|| updatedDutyCycle <= 0.0
+    		|| updatedFrequency <= 0.0
+    	    || (pwmInputTimer9.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer9.dutyCycle)
+    	    || (pwmInputTimer9.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer9.frequency)) {
+    		return;
+    	}
+
+    	pwmInputTimer9.dutyCycle = updatedDutyCycle;
+		pwmInputTimer9.frequency = updatedFrequency;
     }
 }
 
@@ -247,26 +259,21 @@ void TIM8_BRK_TIM12_IRQHandler() {
     	/* As a percentage */
     	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
 
-    	/* eliminate noise that is more than twice the previous duty cycle */
-    	if (!isnan(updatedDutyCycle) && (pwmInputTimer12.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer12.dutyCycle)) {
-    		pwmInputTimer12.dutyCycle = updatedDutyCycle;
-    	}
-
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
     	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
 
-		if (!isnan(updatedFrequency) && (pwmInputTimer12.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer12.frequency)) {
-			pwmInputTimer12.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
-		}
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (isnan(updatedDutyCycle)
+    		|| isnan(updatedFrequency)
+    		|| updatedDutyCycle <= 0.0
+    		|| updatedFrequency <= 0.0
+    	    || (pwmInputTimer12.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer12.dutyCycle)
+    	    || (pwmInputTimer12.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer12.frequency)) {
+    		return;
+    	}
+
+    	pwmInputTimer12.dutyCycle = updatedDutyCycle;
+    	pwmInputTimer12.frequency = updatedFrequency;
     }
 }
-
-
-
-
-
-
-
-
-
