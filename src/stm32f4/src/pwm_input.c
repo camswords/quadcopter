@@ -1,6 +1,7 @@
 #include <pwm_input.h>
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_it.h>
+#include <math.h>
 
 /* Todo: This probably should account for startup, and for when the ICValues are 0 (when will this happen?) */
 /* Todo: The clock speed stuff should be moved out into it's own file / class / struct */
@@ -163,11 +164,20 @@ void TIM4_IRQHandler()
     	uint32_t IC2Value = TIM_GetCapture2(TIM4);
 
     	/* As a percentage */
-    	pwmInputTimer4.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+    	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (!isnan(updatedDutyCycle) && (pwmInputTimer4.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer4.dutyCycle)) {
+        	pwmInputTimer4.dutyCycle = updatedDutyCycle;
+    	}
 
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
-    	pwmInputTimer4.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
+    	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
+
+    	if (!isnan(updatedFrequency) && (pwmInputTimer4.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer4.frequency)) {
+    		pwmInputTimer4.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer4.hclckDivisor / (IC1Value * 1000);
+    	}
     }
 }
 
@@ -181,11 +191,20 @@ void TIM5_IRQHandler() {
     	uint32_t IC2Value = TIM_GetCapture2(TIM5);
 
     	/* As a percentage */
-    	pwmInputTimer5.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+    	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (!isnan(updatedDutyCycle) && (pwmInputTimer5.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer5.dutyCycle)) {
+    		pwmInputTimer5.dutyCycle = updatedDutyCycle;
+    	}
 
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
-    	pwmInputTimer5.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
+    	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
+
+		if (!isnan(updatedFrequency) && (pwmInputTimer5.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer5.frequency)) {
+			pwmInputTimer5.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer5.hclckDivisor / (IC1Value * 1000);
+		}
     }
 }
 
@@ -199,11 +218,20 @@ void TIM1_BRK_TIM9_IRQHandler() {
     	uint32_t IC2Value = TIM_GetCapture2(TIM9);
 
     	/* As a percentage */
-    	pwmInputTimer9.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+    	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (!isnan(updatedDutyCycle) && (pwmInputTimer9.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer9.dutyCycle)) {
+    		pwmInputTimer9.dutyCycle = updatedDutyCycle;
+    	}
 
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
-    	pwmInputTimer9.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
+    	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
+
+		if (!isnan(updatedFrequency) && (pwmInputTimer9.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer9.frequency)) {
+			pwmInputTimer9.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer9.hclckDivisor / (IC1Value * 1000);
+		}
     }
 }
 
@@ -217,11 +245,20 @@ void TIM8_BRK_TIM12_IRQHandler() {
     	uint32_t IC2Value = TIM_GetCapture2(TIM12);
 
     	/* As a percentage */
-    	pwmInputTimer12.dutyCycle = (IC2Value * 100.0f) / IC1Value;
+    	float updatedDutyCycle = (IC2Value * 100.0f) / IC1Value;
+
+    	/* eliminate noise that is more than twice the previous duty cycle */
+    	if (!isnan(updatedDutyCycle) && (pwmInputTimer12.dutyCycle == 0.0 || (updatedDutyCycle / 2) < pwmInputTimer12.dutyCycle)) {
+    		pwmInputTimer12.dutyCycle = updatedDutyCycle;
+    	}
 
     	/* HCLK is the Advanced High Speed Bus (AHB) Clock Speed, which is a
            factor of the System Clock (one, at the moment, hence is the same) */
-    	pwmInputTimer12.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
+    	float updatedFrequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
+
+		if (!isnan(updatedFrequency) && (pwmInputTimer12.frequency == 0.0 || (updatedFrequency / 2) < pwmInputTimer12.frequency)) {
+			pwmInputTimer12.frequency = (RCC_Clocks.HCLK_Frequency) / pwmInputTimer12.hclckDivisor / (IC1Value * 1000);
+		}
     }
 }
 
