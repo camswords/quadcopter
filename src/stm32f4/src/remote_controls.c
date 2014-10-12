@@ -7,7 +7,7 @@ void InitialiseRemoteControls() {
   throttle = MeasurePWMInput(TIM4, GPIOB, GPIO_Pin_6, GPIO_PinSource6); 	// channel 2 - PB.07
 
   smoothedThrottle.lastMeasurement = 0.0;
-  smoothedThrottle.alpha = 0.8;
+  smoothedThrottle.alpha = 0.4;
   smoothedThrottle.smoothed = 0.0;
 
   /* rudder: spin to the left or right on a flat plane
@@ -16,7 +16,7 @@ void InitialiseRemoteControls() {
   rudder = MeasurePWMInput(TIM5, GPIOA, GPIO_Pin_0, GPIO_PinSource0); 		// channel 2 - PA.01
 
   smoothedRudder.lastMeasurement = 0.0;
-  smoothedRudder.alpha = 0.8;
+  smoothedRudder.alpha = 0.4;
   smoothedRudder.smoothed = 0.0;
 
   /* airleron: fly sideways left or right
@@ -25,7 +25,7 @@ void InitialiseRemoteControls() {
   pidProportional = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
 
   smoothedPidProportional.lastMeasurement = 0.0;
-  smoothedPidProportional.alpha = 0.8;
+  smoothedPidProportional.alpha = 0.1;
   smoothedPidProportional.smoothed = 0.0;
 
   /* elevator: fly forwards or backwards
