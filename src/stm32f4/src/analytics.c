@@ -5,8 +5,8 @@ void InitialiseAnalytics() {
 	InitialiseRingBuffer(&metricsRingBuffer);
 
 	/* how often to flush the metrics (20 times per second) */
-	analyticsFlushFrequency = 1000 / 15;
-	charactersToSendPerFlush = 50;
+	analyticsFlushFrequency = 1000 / 200;
+	charactersToSendPerFlush = 5;
 
 	InitialiseSerialOutput();
 }
