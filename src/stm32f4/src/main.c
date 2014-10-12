@@ -25,7 +25,9 @@
  */
 
 /* Things to do:
- *   - add some kind of a filter to the reset position input so that it doesn't keep resetting
+ *   - add a high pass filter to the gyroscope
+ *   - add a low pass filter to the accelerometer
+ *   - combine their outputs using a complimentary filter
  */
 
 int main(void) {
