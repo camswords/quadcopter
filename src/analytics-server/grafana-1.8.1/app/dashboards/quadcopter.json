@@ -1136,9 +1136,82 @@
                     "aliasColors": {},
                     "seriesOverrides": [],
                     "title": "meta.metrics"
+                },
+                {
+                    "error": false,
+                    "span": 4,
+                    "editable": true,
+                    "type": "graph",
+                    "id": 22,
+                    "datasource": null,
+                    "renderer": "flot",
+                    "x-axis": true,
+                    "y-axis": true,
+                    "scale": 1,
+                    "y_formats": [
+                        "bytes",
+                        "short"
+                    ],
+                    "grid": {
+                        "leftMax": null,
+                        "rightMax": null,
+                        "leftMin": 0,
+                        "rightMin": null,
+                        "threshold1": null,
+                        "threshold2": null,
+                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
+                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
+                    },
+                    "annotate": {
+                        "enable": false
+                    },
+                    "resolution": 100,
+                    "lines": true,
+                    "fill": 0,
+                    "linewidth": 1,
+                    "points": false,
+                    "pointradius": 5,
+                    "bars": false,
+                    "stack": false,
+                    "legend": {
+                        "show": true,
+                        "values": true,
+                        "min": false,
+                        "max": false,
+                        "current": true,
+                        "total": false,
+                        "avg": false
+                    },
+                    "percentage": false,
+                    "zerofill": true,
+                    "nullPointMode": "connected",
+                    "steppedLine": false,
+                    "tooltip": {
+                        "value_type": "cumulative",
+                        "query_as_alias": true
+                    },
+                    "targets": [
+                        {
+                            "function": "mean",
+                            "column": "value",
+                            "series": "metr.buff",
+                            "query": "select mean(value) from \"metr.buff\" where $timeFilter group by time($interval) order asc",
+                            "interval": ""
+                        }
+                    ],
+                    "aliasColors": {},
+                    "seriesOverrides": [],
+                    "title": "metrics.buffer"
                 }
             ],
             "showTitle": true
+        },
+        {
+            "title": "New row",
+            "height": "250px",
+            "editable": true,
+            "collapse": false,
+            "panels": []
         }
     ],
     "nav": [
@@ -1186,6 +1259,6 @@
         "list": [],
         "enable": false
     },
-    "refresh": false,
+    "refresh": "5s",
     "version": 6
 }

@@ -14,7 +14,7 @@ void InitialiseAngularPosition() {
 	InitialiseGyroscope();
 
 	/* turn off until we need to use them */
-	//InitialiseAccelerometer();
+//	InitialiseAccelerometer();
 	//InitialiseMagnetometer();
 }
 
@@ -23,8 +23,7 @@ void ReadAngularPosition() {
 	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
 
 	ReadGyroscope();
-
-	// ReadAccelerometer();
+//	ReadAccelerometer();
 	// ReadMagnetometer();
 
 	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);

@@ -11,6 +11,7 @@
 #include <pid.h>
 #include <remote_controls.h>
 #include <gyroscope.h>
+#include <accelerometer.h>
 #include <stdint.h>
 
 /* Performance fun tips:
@@ -157,6 +158,7 @@ int main(void) {
 		  RecordMetric("rest.remo", secondsElapsed, resetPositionPercentage);
 		  RecordMetric("rest.raw-", secondsElapsed, smoothedResetAngularPosition.lastMeasurement);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
+		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
 
 		  loopsPerSecond = 0;
 		  resetsPerSecond = 0;
