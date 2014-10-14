@@ -21,24 +21,13 @@ void InitialiseAngularPosition() {
 }
 
 void ReadAngularPosition() {
-	/* we will always have a sample time here, as it is first set in the initialisation of the gyro */
-	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
-
 	ReadGyroscope();
 	ReadAccelerometer();
 	// ReadMagnetometer();
 
-	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
-
-	/* if we get here, we're going too fast (or something spectacular has gone wrong).
-	 * Skip, it will sort it self out for the next time.
-	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
-	if (sampleTime > 0  && sampleTime < 1000) {
-		float sampleRateInSeconds = sampleTime / 1000;
-		angularPosition.x += gyroscopeReading.x * sampleRateInSeconds;
-		angularPosition.y += gyroscopeReading.y * sampleRateInSeconds;
-		angularPosition.z += gyroscopeReading.z * sampleRateInSeconds;
-	}
+	angularPosition.x += gyroscopeReading.x;
+	angularPosition.y += gyroscopeReading.y;
+	angularPosition.z += gyroscopeReading.z;
 }
 
 void ResetToAngularZeroPosition() {

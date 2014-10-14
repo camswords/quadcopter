@@ -138,11 +138,23 @@ void ReadGyroscope() {
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
 
-	/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-	gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375;
-	gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375;
-	gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375;
+	/* we will always have a sample time here, as it is first set in the initialisation of the gyro */
+	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
 
 	/* update the sample time, this will be used to determine angular position (as opposed to degrees per second) */
 	gyroscopeReading.sampleTime = intermediateMillis;
+
+	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
+
+	/* if we get here, we're going too fast (or something spectacular has gone wrong).
+	 * Skip, it will sort it self out for the next time.
+	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
+	if (sampleTime > 0  && sampleTime < 1000) {
+		float sampleRateInSeconds = sampleTime / 1000;
+
+		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
+		gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375 * sampleRateInSeconds;
+		gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375 * sampleRateInSeconds;
+		gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375 * sampleRateInSeconds;
+	}
 }
