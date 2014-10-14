@@ -5,6 +5,8 @@
 #include <magnetometer.h>
 #include <stm32f4xx_it.h>
 
+/* are my angles consistent - radians, or degrees? */
+
 void InitialiseAngularPosition() {
 	/* initialise, assume the quad is level */
 	angularPosition.x = 0.0;
@@ -32,11 +34,10 @@ void ReadAngularPosition() {
 	 * Skip, it will sort it self out for the next time.
 	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
 	if (sampleTime > 0  && sampleTime < 1000) {
-		float sampleRateHz = 1000.0 / sampleTime;
-		float sampleTimeInSeconds = sampleTime / 1000.0;
-		angularPosition.x += gyroscopeReading.x / sampleRateHz + (sampleTimeInSeconds * gyroscopeReading.xAngleDriftPerSecond);
-		angularPosition.y += gyroscopeReading.y / sampleRateHz + (sampleTimeInSeconds * gyroscopeReading.yAngleDriftPerSecond);
-		angularPosition.z += gyroscopeReading.z / sampleRateHz + (sampleTimeInSeconds * gyroscopeReading.zAngleDriftPerSecond);
+		float sampleRateInSeconds = sampleTime / 1000;
+		angularPosition.x += gyroscopeReading.x * sampleRateInSeconds;
+		angularPosition.y += gyroscopeReading.y * sampleRateInSeconds;
+		angularPosition.z += gyroscopeReading.z * sampleRateInSeconds;
 	}
 }
 
