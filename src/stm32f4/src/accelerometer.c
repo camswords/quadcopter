@@ -1,5 +1,6 @@
 
 #include <accelerometer.h>
+#include <delay.h>
 
 void InitialiseAccelerometer() {
 	/* wait until the line is not busy */
@@ -59,9 +60,36 @@ void InitialiseAccelerometer() {
 	SendStop();
 
 	/* initialise the accelerometer at zero position */
-	accelerometerReading.x = 0;
-	accelerometerReading.y = 0;
-	accelerometerReading.z = 0;
+	accelerometerReading.x = 0.0f;
+	accelerometerReading.y = 0.0f;
+	accelerometerReading.z = 0.0f;
+	accelerometerReading.xOffset = 0.0f;
+	accelerometerReading.yOffset = 0.0f;
+	accelerometerReading.zOffset = 0.0f;
+
+
+	/* calibrate:
+	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
+	 * Note that I should really look at this again once the temperature has been visualised using analytics
+	 * This is also a chance to let the temperature stabalise before defining the zero position / offset.
+	 */
+	uint16_t samples = 1000;
+	float summedX = 0.0;
+	float summedY = 0.0;
+	float summedZ = 0.0;
+
+	for (uint16_t i = 0; i < samples; i++) {
+		ReadAccelerometer();
+
+		summedX += accelerometerReading.x;
+		summedY += accelerometerReading.y;
+		summedZ += accelerometerReading.z;
+		WaitAFewMillis(5);
+	}
+
+	accelerometerReading.xOffset = summedX / samples;
+	accelerometerReading.yOffset = summedY / samples;
+	accelerometerReading.zOffset = summedZ / samples;
 };
 
 void ReadAccelerometer() {
@@ -83,7 +111,11 @@ void ReadAccelerometer() {
 	uint8_t zHigh = ReadDataExpectingEnd();
 	SendStop();
 
-	accelerometerReading.x = (((int16_t) xHigh << 8) | xLow);
-	accelerometerReading.y = (((int16_t) yHigh << 8) | yLow);
-	accelerometerReading.z = (((int16_t) zHigh << 8) | zLow);
+	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
+	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
+	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
+
+	accelerometerReading.x = rawX - accelerometerReading.xOffset;
+	accelerometerReading.y = rawY - accelerometerReading.yOffset;
+	accelerometerReading.z = rawZ - accelerometerReading.zOffset;
 }

@@ -98,14 +98,14 @@ int main(void) {
   while(1) {
 	  loopsPerSecond++;
 
-	  /* cheat! manually reset angles to zero when we know the quad is level */
-	  float resetPositionPercentage = ReadResetAngularPosition();
-	  if (resetPositionPercentage > 99.00) {
-		  ResetToAngularZeroPosition();
-		  xAxisPid = InitialisePid(10, 0, 0);
-		  yAxisPid = InitialisePid(10, 0, 0);
-		  resetsPerSecond++;
-	  }
+//	  /* cheat! manually reset angles to zero when we know the quad is level */
+//	  float resetPositionPercentage = ReadResetAngularPosition();
+//	  if (resetPositionPercentage > 99.00) {
+//		  ResetToAngularZeroPosition();
+//		  xAxisPid = InitialisePid(10, 0, 0);
+//		  yAxisPid = InitialisePid(10, 0, 0);
+//		  resetsPerSecond++;
+//	  }
 
 	  ReadAngularPosition();
 
@@ -113,7 +113,8 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float currentThrottle = ReadRemoteThrottle();
+	  //	  float currentThrottle = ReadRemoteThrottle();
+	  float currentThrottle = 50.0;
 
 	  if (currentThrottle == 0.0) {
 		  bProp.set(1000);
@@ -130,9 +131,10 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  float thisPidProportional = ReadRemotePidProportional();
-		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
-		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
+		  float thisPidProportional = 10;
+//		  float thisPidProportional = ReadRemotePidProportional();
+//		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
+//		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
 
 		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
 		  RecordMetric("gyro.posx", secondsElapsed, gyroscopeReading.x);

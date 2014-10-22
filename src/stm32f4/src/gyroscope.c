@@ -150,11 +150,11 @@ void ReadGyroscope() {
 	 * Skip, it will sort it self out for the next time.
 	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
 	if (sampleTime > 0  && sampleTime < 1000) {
-		float sampleRateInSeconds = sampleTime / 1000;
+		float sampleRateInSeconds = sampleTime / 1000.0f;
 
 		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-		gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375 * sampleRateInSeconds;
-		gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375 * sampleRateInSeconds;
-		gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375 * sampleRateInSeconds;
+		gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375f * sampleRateInSeconds;
+		gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375f * sampleRateInSeconds;
+		gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375f * sampleRateInSeconds;
 	}
 }
