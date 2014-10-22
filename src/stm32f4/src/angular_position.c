@@ -26,6 +26,7 @@ void ReadAngularPosition() {
 	// ReadMagnetometer();
 
 	/* note: make sure that the gyro xyz and accel. xyz match up to the same physical axis */
+	/* remember to convert accl. to degrees */
 	angularPosition.x += gyroscopeReading.x;
 	angularPosition.y += gyroscopeReading.y;
 	angularPosition.z += gyroscopeReading.z;
