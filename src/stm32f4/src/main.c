@@ -110,8 +110,8 @@ int main(void) {
 
 		  bProp.set(yAdjustment + normalisedThrottle);
 		  eProp.set(-yAdjustment + normalisedThrottle);
-		  cProp.set(-xAdjustment + normalisedThrottle);
-		  aProp.set(xAdjustment + normalisedThrottle);
+		  cProp.set(xAdjustment + normalisedThrottle);
+		  aProp.set(-xAdjustment + normalisedThrottle);
 	  }
 
 	  if (thisSecond != secondsElapsed) {
