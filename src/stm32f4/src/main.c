@@ -75,12 +75,6 @@ int main(void) {
 
   WaitAFewMillis(2000);
 
-  /* move the throttle to a neutral (50%) position */
-  bProp.set(1500);
-  eProp.set(1500);
-  cProp.set(1500);
-  aProp.set(1500);
-
   TurnOff(ORANGE_LED);
   TurnOn(YELLOW_LED);
 
@@ -104,7 +98,7 @@ int main(void) {
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
 //	  float currentThrottle = ReadRemoteThrottle();
-	  float currentThrottle = 50.0;
+	  float currentThrottle = 3.0;
 
 	  if (currentThrottle == 0.0) {
 		  bProp.set(1000);
@@ -131,9 +125,6 @@ int main(void) {
 		  RecordMetric("gyro.posy", secondsElapsed, gyroscopeReading.y);
 		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
 		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
-		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
-		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
-		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
 		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
 		  RecordMetric("e---.prop", secondsElapsed, eProp.get());
 		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
@@ -146,6 +137,9 @@ int main(void) {
 		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
 		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
 		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
+		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
+		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
+		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
 		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
 
 		  loopsPerSecond = 0;
