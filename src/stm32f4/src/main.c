@@ -50,7 +50,7 @@ int main(void) {
    * Airleron: PE.05 (TIM9),  Channel 2 (PE.06 indirectly used)
    * Elevator: PB.14 (TIM12), Channel 3 (PB.15 indirectly used)
    */
-  InitialiseRemoteControls();
+//  InitialiseRemoteControls();
 
   // Uses Timer #3
   DutyCycle bProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
@@ -97,23 +97,13 @@ int main(void) {
 
   while(1) {
 	  loopsPerSecond++;
-
-//	  /* cheat! manually reset angles to zero when we know the quad is level */
-//	  float resetPositionPercentage = ReadResetAngularPosition();
-//	  if (resetPositionPercentage > 99.00) {
-//		  ResetToAngularZeroPosition();
-//		  xAxisPid = InitialisePid(10, 0, 0);
-//		  yAxisPid = InitialisePid(10, 0, 0);
-//		  resetsPerSecond++;
-//	  }
-
 	  ReadAngularPosition();
 
 	  /* ideally, we want this to return a value between -500 and 500 */
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  //	  float currentThrottle = ReadRemoteThrottle();
+//	  float currentThrottle = ReadRemoteThrottle();
 	  float currentThrottle = 50.0;
 
 	  if (currentThrottle == 0.0) {

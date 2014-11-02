@@ -1,6 +1,7 @@
 
 #include <accelerometer.h>
 #include <delay.h>
+#include <math.h>
 
 void InitialiseAccelerometer() {
 	/* wait until the line is not busy */
@@ -66,30 +67,6 @@ void InitialiseAccelerometer() {
 	accelerometerReading.xOffset = 0.0f;
 	accelerometerReading.yOffset = 0.0f;
 	accelerometerReading.zOffset = 0.0f;
-
-
-	/* calibrate:
-	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
-	 * Note that I should really look at this again once the temperature has been visualised using analytics
-	 * This is also a chance to let the temperature stabalise before defining the zero position / offset.
-	 */
-	uint16_t samples = 1000;
-	float summedX = 0.0;
-	float summedY = 0.0;
-	float summedZ = 0.0;
-
-	for (uint16_t i = 0; i < samples; i++) {
-		ReadAccelerometer();
-
-		summedX += accelerometerReading.x;
-		summedY += accelerometerReading.y;
-		summedZ += accelerometerReading.z;
-		WaitAFewMillis(5);
-	}
-
-	accelerometerReading.xOffset = summedX / samples;
-	accelerometerReading.yOffset = summedY / samples;
-	accelerometerReading.zOffset = summedZ / samples;
 };
 
 void ReadAccelerometer() {
@@ -115,7 +92,16 @@ void ReadAccelerometer() {
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
 
-	accelerometerReading.x = rawX - accelerometerReading.xOffset;
-	accelerometerReading.y = rawY - accelerometerReading.yOffset;
-	accelerometerReading.z = rawZ - accelerometerReading.zOffset;
+	float calibratedX = rawX - accelerometerReading.xOffset;
+	float calibratedY = rawY - accelerometerReading.yOffset;
+	float calibratedZ = rawZ - accelerometerReading.zOffset;
+
+	/* calculate the squares */
+	float xSquared = calibratedX * calibratedX;
+	float ySquared = calibratedY * calibratedY;
+	float zSquared = calibratedZ * calibratedZ;
+
+	accelerometerReading.x = atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
+	accelerometerReading.y = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
+	accelerometerReading.z = 0.0f; // for now.
 }

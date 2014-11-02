@@ -69,13 +69,13 @@ void InitialiseGyroscope() {
 	WaitAFewMillis(20);
 
 	/* initialise the gyroscope reading */
-	gyroscopeReading.gyroscopeTemperature = 0;
-	gyroscopeReading.x = 0;
-	gyroscopeReading.y = 0;
-	gyroscopeReading.z = 0;
-	gyroscopeReading.xOffset = 0;
-	gyroscopeReading.yOffset = 0;
-	gyroscopeReading.zOffset = 0;
+	gyroscopeReading.gyroscopeTemperature = 0.0f;
+	gyroscopeReading.x = 0.0f;
+	gyroscopeReading.y = 0.0f;
+	gyroscopeReading.z = 0.0f;
+	gyroscopeReading.xOffset = 0.0f;
+	gyroscopeReading.yOffset = 0.0f;
+	gyroscopeReading.zOffset = 0.0f;
 	gyroscopeReading.sampleTime = 0;
 
 	/* calibrate:
