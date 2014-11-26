@@ -174,9 +174,7 @@ void TIM4_IRQHandler()
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0
-    	    || (pwmInputTimer4.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer4.dutyCycle)
-    	    || (pwmInputTimer4.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer4.frequency)) {
+    		|| updatedFrequency <= 0.0) {
     		return;
     	}
 
@@ -205,9 +203,7 @@ void TIM5_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0
-    	    || (pwmInputTimer5.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer5.dutyCycle)
-    	    || (pwmInputTimer5.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer5.frequency)) {
+    		|| updatedFrequency <= 0.0) {
     		return;
     	}
 
@@ -236,9 +232,7 @@ void TIM1_BRK_TIM9_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0
-    	    || (pwmInputTimer9.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer9.dutyCycle)
-    	    || (pwmInputTimer9.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer9.frequency)) {
+    		|| updatedFrequency <= 0.0) {
     		return;
     	}
 
@@ -267,9 +261,7 @@ void TIM8_BRK_TIM12_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0
-    	    || (pwmInputTimer12.dutyCycle != 0.0 && (updatedDutyCycle / 2) > pwmInputTimer12.dutyCycle)
-    	    || (pwmInputTimer12.frequency != 0.0 && (updatedFrequency / 2) > pwmInputTimer12.frequency)) {
+    		|| updatedFrequency <= 0.0) {
     		return;
     	}
 

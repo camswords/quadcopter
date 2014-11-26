@@ -1,5 +1,6 @@
 
 #include <pid.h>
+#include <math.h>
 
 struct Pid InitialisePid(float proportional, float integral, float differential) {
 	Pid pid;
@@ -14,6 +15,11 @@ struct Pid InitialisePid(float proportional, float integral, float differential)
 }
 
 float CalculatePidAdjustment(Pid* pid, float current, float target) {
+
+	if (isnan(current) || isnan(target)) {
+		return 0.0;
+	}
+
     float error = target - current;
     float diff = error - pid->lastError;
     pid->lastError = error;

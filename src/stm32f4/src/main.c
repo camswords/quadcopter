@@ -50,7 +50,7 @@ int main(void) {
    * Airleron: PE.05 (TIM9),  Channel 2 (PE.06 indirectly used)
    * Elevator: PB.14 (TIM12), Channel 3 (PB.15 indirectly used)
    */
-//  InitialiseRemoteControls();
+  InitialiseRemoteControls();
 
   // Uses Timer #3
   DutyCycle bProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
