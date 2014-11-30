@@ -97,8 +97,7 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-//	  float currentThrottle = ReadRemoteThrottle();
-	  float currentThrottle = 3.0;
+	  float currentThrottle = ReadRemoteThrottle();
 
 	  if (currentThrottle == 0.0) {
 		  bProp.set(1000);
