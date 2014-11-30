@@ -13,7 +13,6 @@ struct PWMInput* MeasurePWMInput(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_
 	struct PWMInput* pwmInput;
 	uint32_t ahbPeripheralPort;
 	uint8_t gpioAlternateFunction;
-	uint32_t apbPeripheralTimer;
 	uint8_t nvicInterruptChannel;
 
 	/* Note all of these timers are on AHB1, whichs means they run at 80,000,000 Hz. */

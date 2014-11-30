@@ -25,9 +25,10 @@ $(QUAD_ELF): $(SRC)
 		-DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DHSE_VALUE=8000000 \
 		-ggdb -O0 \
 		-I./src \
-		-I./Libraries/CMSIS/Include/ \
-		-I./Libraries/STM32F4xx_StdPeriph_Driver/inc/ \
-		-Woverflow \
+		-isystem ./Libraries/CMSIS/Include/ \
+		-isystem ./Libraries/STM32F4xx_StdPeriph_Driver/inc/ \
+		-Werror \
+		-Wall \
 		-Wl,-T,./src/stm32_flash.ld \
 		$^ -lm -lc -lnosys \
 		-o $(QUAD_ELF)

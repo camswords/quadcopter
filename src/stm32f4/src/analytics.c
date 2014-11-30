@@ -15,8 +15,7 @@ void WriteStringToBuffer(char* value) {
 	char* letter = value;
 
 	while(*letter) {
-		RingBufferPut(&metricsRingBuffer, *letter);
-		*letter++;
+		RingBufferPut(&metricsRingBuffer, *letter++);
 	}
 }
 

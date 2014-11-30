@@ -1,3 +1,6 @@
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+
+
 /**
   ******************************************************************************
   * @file    stm32f4xx_flash.c

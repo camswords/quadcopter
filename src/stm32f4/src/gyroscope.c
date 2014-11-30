@@ -4,11 +4,11 @@
 #include <delay.h>
 #include <systick.h>
 
-/* Note: could PEC positioning help ensure correctness? */
-/* Note: The 9DOF sensor has internal resistors */
-/* Note: the power (SDA, SCL, VDD) lines on the i2c bus should be checked for random voltage spikes. I have heard reports a tantalum cap might be needed */
-/* Note that typically as you increase range sensitivity suffers causing reduced resolution.
-/* Note that a gyro suffers from drift error. Note that temperature greatly affects the drift.
+/* Note: could PEC positioning help ensure correctness?
+ * Note: The 9DOF sensor has internal resistors
+ * Note: the power (SDA, SCL, VDD) lines on the i2c bus should be checked for random voltage spikes. I have heard reports a tantalum cap might be needed
+ * Note that typically as you increase range sensitivity suffers causing reduced resolution.
+ * Note that a gyro suffers from drift error. Note that temperature greatly affects the drift.
  * One way to calibrate is whenever you know the quadcopter is stationary, zero out the current measured values.
  * Note: on startup, we should zero out what is measured. Apparently a "zero" position is a "stressful" position for the device,
  *   each individual sensor will have different readings. Just average the first few readings.

@@ -27,8 +27,6 @@ void ReadAngularPosition() {
 
 	/* note: make sure that the gyro xyz and accel. xyz match up to the same physical axis */
 	/* remember to convert accl. to degrees */
-	float gyroToAccelRatio = 0.0f;
-
 	angularPosition.x = accelerometerReading.x;
 	angularPosition.y = accelerometerReading.y;
 	angularPosition.z = accelerometerReading.z;
