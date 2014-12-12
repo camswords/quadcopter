@@ -97,7 +97,8 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float currentThrottle = ReadRemoteThrottle();
+	  //	  float currentThrottle = ReadRemoteThrottle();
+	  float currentThrottle = 0.5f;
 
 	  if (currentThrottle == 0.0) {
 		  bProp.set(1000);
@@ -125,7 +126,7 @@ int main(void) {
 		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
 		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
 		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
-		  RecordMetric("e---.prop", secondsElapsed, eProp.get());
+		  RecordMetric("e---.-0prop", secondsElapsed, eProp.get());
 		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
 		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
