@@ -7,6 +7,7 @@
 void EnableTiming();
 void TimingDelay(unsigned int tick);
 void WaitASecond();
+void WaitAMillisecond();
 void WaitAFewMillis(int16_t millis);
 
 #endif

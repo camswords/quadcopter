@@ -1,4 +1,5 @@
 #include <i2c.h>
+#include <delay.h>
 
 /* Note: should convert the while loops to not loop forever */
 /* Hmm: what about when a client needs more time and attempts to extend the acknowledgement? */
@@ -17,7 +18,52 @@
  *   PEC error PECERR
  *   Timeout/Tlow error TIMEOUT
  *   SMBus Alert SMBALERT
+ *
+ *   Converting events to meaning:
+ *     I2C_EVENT_MASTER_MODE_SELECT (0x30001) == I2C_FLAG_BUSY (0x00020000) | I2C_FLAG_MSL (0x00010000) | I2C_FLAG_SB (0x10000001)
  */
+
+void ResetI2C() {
+	/* disable i2c */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, DISABLE);
+
+	/* Enable the clock to the pin's port */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+
+    /* Setup the clock pin as an output pin */
+    GPIO_InitTypeDef gpioClockStructure;
+    gpioClockStructure.GPIO_Pin = GPIO_Pin_8;
+    gpioClockStructure.GPIO_Mode = GPIO_Mode_OUT;
+    gpioClockStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    gpioClockStructure.GPIO_OType = GPIO_OType_PP;
+    gpioClockStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(GPIOB, &gpioClockStructure);
+
+    /* Setup the data pin as an input pin */
+    GPIO_InitTypeDef gpioDataStructure;
+    gpioDataStructure.GPIO_Pin = GPIO_Pin_9;
+    gpioDataStructure.GPIO_Mode = GPIO_Mode_IN;
+    gpioDataStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    gpioDataStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOB, &gpioDataStructure);
+
+	/*
+	 * Sometimes an I2C slave can get stuck holding the data line low. This is the equivalent to a 'busy bus' and prevents the master generating a start condition.
+	 * This can be fixed by clocking the line up to nine times and waiting for the SDA to go high after each clock.
+	 * When SDA becomes high, you're good to go. Stop clocking, generate a start signal and proceed as normal. We're just always clocking 9 times, if SDA is high it will remain so.
+	 * If after nine clocks something is still holding the line low, then you have bigger problems!
+	 * See http://forums.parallax.com/showthread.php/112299-I2C-reset-%28part-of-protocol-or-by-device-manufacturer-only-%29
+	 */
+	WaitAMillisecond();
+
+	for(int i = 0; i < 10; i++) {
+		GPIO_SetBits(GPIOB, GPIO_Pin_8);
+		WaitAMillisecond();
+
+		GPIO_ResetBits(GPIOB, GPIO_Pin_8);
+		WaitAMillisecond();
+	}
+}
 
 void InitialiseI2C() {
 	i2cHasProblem = false;

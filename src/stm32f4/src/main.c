@@ -38,6 +38,7 @@ int main(void) {
 
   InitialiseSysTick();
   InitialisePWM();
+  ResetI2C();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
   InitialiseAnalytics(); // PC.10 (TX) and PC.11 (RX)
   Pid xAxisPid = InitialisePid(10, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */

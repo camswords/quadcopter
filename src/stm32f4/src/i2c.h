@@ -10,6 +10,8 @@ bool i2cHasProblem;
 
 void WaitUntilBusIsFree();
 
+void ResetI2C();
+
 void InitialiseI2C();
 
 void SendStart();
