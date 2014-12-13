@@ -72,34 +72,13 @@ void InitialiseGyroscope() {
 	gyroscopeReading.gyroscopeTemperature = 0.0f;
 	gyroscopeReading.x = 0.0f;
 	gyroscopeReading.y = 0.0f;
+	gyroscopeReading.rawX = 0.0f;
+	gyroscopeReading.rawY = 0.0f;
+	gyroscopeReading.rawZ = 0.0f;
 	gyroscopeReading.z = 0.0f;
 	gyroscopeReading.xOffset = 0.0f;
 	gyroscopeReading.yOffset = 0.0f;
 	gyroscopeReading.zOffset = 0.0f;
-	gyroscopeReading.sampleTime = 0;
-
-	/* calibrate:
-	 * collect samples for two seconds while at a "zero" position. Average out reading, use this as an offset value.
-	 * Note that I should really look at this again once the temperature has been visualised using analytics
-	 * This is also a chance to let the temperature stabalise before defining the zero position / offset.
-	 */
-	uint16_t samples = 1000;
-	float summedX = 0.0;
-	float summedY = 0.0;
-	float summedZ = 0.0;
-
-	for (uint16_t i = 0; i < samples; i++) {
-		ReadGyroscope(&gyroscopeReading);
-
-		summedX += gyroscopeReading.x;
-		summedY += gyroscopeReading.y;
-		summedZ += gyroscopeReading.z;
-		WaitAFewMillis(5);
-	}
-
-	gyroscopeReading.xOffset = summedX / samples;
-	gyroscopeReading.yOffset = summedY / samples;
-	gyroscopeReading.zOffset = summedZ / samples;
 	gyroscopeReading.sampleTime = intermediateMillis;
 };
 
@@ -153,8 +132,12 @@ void ReadGyroscope() {
 		float sampleRateInSeconds = sampleTime / 1000.0f;
 
 		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-		gyroscopeReading.x = (rawX - gyroscopeReading.xOffset) / 14.375f * sampleRateInSeconds;
-		gyroscopeReading.y = (rawY - gyroscopeReading.yOffset) / 14.375f * sampleRateInSeconds;
-		gyroscopeReading.z = (rawZ - gyroscopeReading.zOffset) / 14.375f * sampleRateInSeconds;
+		gyroscopeReading.rawX = (rawX - gyroscopeReading.xOffset) / 14.375f;
+		gyroscopeReading.rawY = (rawY - gyroscopeReading.yOffset) / 14.375f;
+		gyroscopeReading.rawZ = (rawZ - gyroscopeReading.zOffset) / 14.375f;
+
+		gyroscopeReading.x += gyroscopeReading.rawX * sampleRateInSeconds;
+		gyroscopeReading.y += gyroscopeReading.rawY * sampleRateInSeconds;
+		gyroscopeReading.z += gyroscopeReading.rawZ * sampleRateInSeconds;
 	}
 }
