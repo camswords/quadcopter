@@ -13,6 +13,11 @@ parse = (data, callback) ->
     else
       callback("data length of integer point is #{data.length}, should be 18")
 
+  if format == 'M'
+    # don't call the callback, this is not intended to be saved as a data point.
+    # it is a message to be communicated to the user
+    console.log('INFO: ', data.toString('ascii', 12));
+
   else if format == 'F'
     if data.length == 20
       callback null,

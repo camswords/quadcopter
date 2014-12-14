@@ -17,6 +17,8 @@ void InitialiseAnalytics();
 /* Note that the name is designed to be 9 characters: xxxx.xxxx */
 void RecordMetric(char* name, uint32_t timeInSeconds, float value);
 
+void RecordMessage(char *message);
+
 void FlushMetrics();
 
 #endif

@@ -23,6 +23,12 @@ void WriteCharacterToBuffer(uint16_t value) {
 	RingBufferPut(&metricsRingBuffer, value);
 }
 
+void RecordMessage(char *message) {
+	WriteStringToBuffer("info.msg-:M:");
+	WriteStringToBuffer(message);
+	WriteStringToBuffer("|");
+}
+
 void RecordMetric(char* name, uint32_t timeInSeconds, float value) {
 	WriteStringToBuffer(name);
 	WriteStringToBuffer(":F:");
