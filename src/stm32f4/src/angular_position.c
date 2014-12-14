@@ -13,7 +13,7 @@ void InitialiseAngularPosition() {
 	angularPosition.y = 0.0;
 	angularPosition.z = 0.0;
 
-	InitialiseGyroscope();
+//	InitialiseGyroscope();
 
 	/* turn off until we need to use them */
 	InitialiseAccelerometer();
@@ -21,7 +21,7 @@ void InitialiseAngularPosition() {
 }
 
 void ReadAngularPosition() {
-	ReadGyroscope();
+//	ReadGyroscope();
 	ReadAccelerometer();
 	// ReadMagnetometer();
 

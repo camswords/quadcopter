@@ -138,6 +138,7 @@ int main(void) {
 		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
 		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
 		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
+		  RecordMetric("acce.freq", secondsElapsed, accelerometerReading.readings);
 		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
 		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
 		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
@@ -145,6 +146,7 @@ int main(void) {
 
 		  loopsPerSecond = 0;
 		  resetsPerSecond = 0;
+		  accelerometerReading.readings = 0;
 		  thisSecond = secondsElapsed;
 	  }
 

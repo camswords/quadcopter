@@ -67,26 +67,32 @@ void InitialiseAccelerometer() {
 	accelerometerReading.xOffset = 0.0f;
 	accelerometerReading.yOffset = 0.0f;
 	accelerometerReading.zOffset = 0.0f;
+	accelerometerReading.readings = 0;
+
+	isReadingAccelerometer = false;
 };
 
 void ReadAccelerometer() {
-	/* Start reading from the x low register */
-	SendStart();
-	SendAddress(0xA6, I2C_Direction_Transmitter);
-	SendData(0x32);
-	SendStart();
-	SendAddress(0xA6, I2C_Direction_Receiver);
 
-	/* Read the data and ACK on response. This will cause the peripheral to get ready to return the next register's data.
-	 * Note that the multibyte read strategy will prevent the sensor updating half of the values in between a read.
-	 */
-	uint8_t xLow = ReadDataExpectingMore();
-	uint8_t xHigh = ReadDataExpectingMore();
-	uint8_t yLow = ReadDataExpectingMore();
-	uint8_t yHigh = ReadDataExpectingMore();
-	uint8_t zLow = ReadDataExpectingMore();
-	uint8_t zHigh = ReadDataExpectingEnd();
-	SendStop();
+	if (i2cInUse) {
+		// intentionally allow the i2c interrupt routine time to complete
+		return;
+	}
+
+	if (!isReadingAccelerometer) {
+		// kick off a new read of the accelerometer values
+		ReadFromAddress(0xA6, 0x32, 6);
+		isReadingAccelerometer = true;
+		return;
+	}
+
+	// done! convert the values to a reading
+	uint8_t xLow = incoming[0];
+	uint8_t xHigh = incoming[1];
+	uint8_t yLow = incoming[2];
+	uint8_t yHigh = incoming[3];
+	uint8_t zLow = incoming[4];
+	uint8_t zHigh = incoming[5];
 
 	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
@@ -104,4 +110,6 @@ void ReadAccelerometer() {
 	accelerometerReading.x = atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
 	accelerometerReading.y = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
 	accelerometerReading.z = 0.0f; // for now.
+	accelerometerReading.readings++;
+	isReadingAccelerometer = false;
 }

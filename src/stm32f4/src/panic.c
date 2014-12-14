@@ -10,8 +10,12 @@
 void panic(char* message) {
 	TurnOn(RED_LED);
 
+	int bufferLength = strlen(message) + strlen("|") + 1;
+	char buffer[bufferLength];
+	snprintf(buffer, bufferLength, "%s|", message);
+
 	FlushAllMetrics();
-	RecordMessage(message);
+	RecordMessage(buffer);
 	FlushAllMetrics();
 }
 
