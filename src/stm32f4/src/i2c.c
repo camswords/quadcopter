@@ -222,10 +222,6 @@ void I2C1_EV_IRQHandler(void) {
 
 			break;
 
-		case I2C_EVENT_MASTER_BYTE_TRANSMITTING:
-			// ignore, we'll do everything on transmitted instead.
-			break;
-
 		case I2C_EVENT_MASTER_BYTE_TRANSMITTED:
 			if (outgoingIndex < expectedNumberOfOutgoing) {
 				I2C_SendData(I2C1, outgoing[outgoingIndex++]);
