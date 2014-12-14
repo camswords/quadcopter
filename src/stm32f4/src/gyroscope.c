@@ -80,9 +80,74 @@ void InitialiseGyroscope() {
 	gyroscopeReading.yOffset = -3.65f;
 	gyroscopeReading.zOffset = 0.0f;
 	gyroscopeReading.sampleTime = intermediateMillis;
+	gyroscopeReading.readings = 0;
+
+	isReadingGyroscope = false;
 };
 
 void ReadGyroscope() {
+
+	if (i2cInUse) {
+		// intentionally allow the i2c interrupt routine time to complete
+		return;
+	}
+
+	if (!isReadingGyroscope) {
+		// kick off a new read of the gyroscope values
+		ReadFromAddress(0xD0, 0x1B, 8);
+		isReadingGyroscope = true;
+		return;
+	}
+
+	uint8_t temperatureHigh = incoming[0];
+	uint8_t temperatureLow = incoming[1];
+	uint8_t xHigh = incoming[2];
+	uint8_t xLow = incoming[3];
+	uint8_t yHigh = incoming[4];
+	uint8_t yLow = incoming[5];
+	uint8_t zHigh = incoming[6];
+	uint8_t zLow = incoming[7];
+
+	/* Temperature offset: -13200 LSB
+	 * Temperature sensitivity: 280 LSB / degrees celcius
+	 */
+	int16_t rawTemperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
+	gyroscopeReading.gyroscopeTemperature = 35 + (rawTemperature + 13200) / 280;
+
+	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
+	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
+	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
+
+	/* we will always have a sample time here, as it is first set in the initialisation of the gyro */
+	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
+
+	/* update the sample time, this will be used to determine angular position (as opposed to degrees per second) */
+	gyroscopeReading.sampleTime = intermediateMillis;
+
+	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
+
+	/* if we get here, we're going too fast (or something spectacular has gone wrong).
+	 * Skip, it will sort it self out for the next time.
+	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
+	if (sampleTime > 0  && sampleTime < 1000) {
+		float sampleRateInSeconds = (float) sampleTime / 1000.0f;
+
+		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
+		gyroscopeReading.rawX = ((float) rawX / 14.375f) - gyroscopeReading.xOffset;
+		gyroscopeReading.rawY = ((float) rawY / 14.375f) - gyroscopeReading.yOffset;
+		gyroscopeReading.rawZ = ((float) rawZ / 14.375f) - gyroscopeReading.zOffset;
+
+		gyroscopeReading.x += gyroscopeReading.rawX * sampleRateInSeconds;
+		gyroscopeReading.y += gyroscopeReading.rawY * sampleRateInSeconds;
+		gyroscopeReading.z += gyroscopeReading.rawZ * sampleRateInSeconds;
+		gyroscopeReading.readings++;
+	}
+
+	isReadingGyroscope = false;
+}
+
+
+void OldReadGyroscope() {
 	/* Start reading from the high temperature register */
 	SendStart();
 	SendAddress(0xD0, I2C_Direction_Transmitter);

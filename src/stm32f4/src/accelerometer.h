@@ -3,6 +3,7 @@
 #define ACCELEROMETER_H
 
 #include <i2c.h>
+#include <stdint.h>
 
 bool isReadingAccelerometer;
 

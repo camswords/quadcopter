@@ -126,6 +126,7 @@ int main(void) {
 		  RecordMetric("gyro.posy", secondsElapsed, gyroscopeReading.y);
 		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
 		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
+		  RecordMetric("gyro.freq", secondsElapsed, gyroscopeReading.readings);
 		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
 		  RecordMetric("e---.-0prop", secondsElapsed, eProp.get());
 		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
@@ -133,7 +134,7 @@ int main(void) {
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
 		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
-		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+//		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
 		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
 		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
 		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
@@ -147,6 +148,7 @@ int main(void) {
 		  loopsPerSecond = 0;
 		  resetsPerSecond = 0;
 		  accelerometerReading.readings = 0;
+		  gyroscopeReading.readings = 0;
 		  thisSecond = secondsElapsed;
 	  }
 

@@ -13,16 +13,29 @@ void InitialiseAngularPosition() {
 	angularPosition.y = 0.0;
 	angularPosition.z = 0.0;
 
-//	InitialiseGyroscope();
+	sensorToggle = true;
 
-	/* turn off until we need to use them */
+	InitialiseGyroscope();
 	InitialiseAccelerometer();
 	//InitialiseMagnetometer();
 }
 
 void ReadAngularPosition() {
-//	ReadGyroscope();
-	ReadAccelerometer();
+
+	if (sensorToggle) {
+		ReadGyroscope();
+
+		if (!isReadingGyroscope) {
+			sensorToggle = !sensorToggle;
+		}
+	} else {
+		ReadAccelerometer();
+
+		if (!isReadingAccelerometer) {
+			sensorToggle = !sensorToggle;
+		}
+	}
+
 	// ReadMagnetometer();
 
 	/* note: make sure that the gyro xyz and accel. xyz match up to the same physical axis */

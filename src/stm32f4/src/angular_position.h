@@ -2,6 +2,9 @@
 #define ANGULAR_POSITION_H_
 
 #include <systick.h>
+#include <stdbool.h>
+
+bool sensorToggle;
 
 typedef struct AngularPosition {
 	float x;

@@ -3,6 +3,9 @@
 #define GYROSCOPE_H_
 
 #include <i2c.h>
+#include <stdint.h>
+
+bool isReadingGyroscope;
 
 typedef struct GyroscopeReading {
 	float x;
@@ -16,6 +19,7 @@ typedef struct GyroscopeReading {
 	float yOffset;
 	float zOffset;
 	uint32_t sampleTime;
+	uint32_t readings;
 }GyroscopeReading;
 
 struct GyroscopeReading gyroscopeReading;
