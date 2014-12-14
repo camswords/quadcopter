@@ -6,8 +6,8 @@
 #include <stdint.h>
 
 typedef struct PWMInput {
-    float dutyCycle;
-    float frequency;
+    volatile float dutyCycle;
+    volatile float frequency;
     uint8_t hclckDivisor;
 
 }PWMInput;
