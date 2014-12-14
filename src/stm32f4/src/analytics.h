@@ -20,5 +20,6 @@ void RecordMetric(char* name, uint32_t timeInSeconds, float value);
 void RecordMessage(char *message);
 
 void FlushMetrics();
+void FlushAllMetrics();
 
 #endif

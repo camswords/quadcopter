@@ -1,5 +1,6 @@
 #include <analytics.h>
 #include <serial_output.h>
+#include <delay.h>
 
 void InitialiseAnalytics() {
 	InitialiseRingBuffer(&metricsRingBuffer);
@@ -26,7 +27,6 @@ void WriteCharacterToBuffer(uint16_t value) {
 void RecordMessage(char *message) {
 	WriteStringToBuffer("info.msg-:M:");
 	WriteStringToBuffer(message);
-	WriteStringToBuffer("|");
 }
 
 void RecordMetric(char* name, uint32_t timeInSeconds, float value) {
@@ -62,5 +62,12 @@ void FlushMetrics() {
 	while(metricsFlushed < charactersToSendPerFlush && metricsRingBuffer.count > 0) {
 		WriteData(RingBufferPop(&metricsRingBuffer));
 		metricsFlushed++;
+	}
+}
+
+void FlushAllMetrics() {
+	while(metricsRingBuffer.count > 0) {
+		WriteData(RingBufferPop(&metricsRingBuffer));
+		WaitAFewMillis(10);
 	}
 }
