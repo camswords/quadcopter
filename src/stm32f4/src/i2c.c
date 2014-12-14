@@ -115,6 +115,9 @@ void InitialiseI2C() {
 	I2C_InitStruct.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 	I2C_Init(I2C1, &I2C_InitStruct);
 
+	/* Clock stretch! Note sure if this is useful for master, but the idea is to allow the peripheral to delay acknowledgement if it needs more time. */
+    I2C_StretchClockCmd(I2C1, ENABLE);
+
 	/* Turn it on! */
 	I2C_Cmd(I2C1, ENABLE);
 };
