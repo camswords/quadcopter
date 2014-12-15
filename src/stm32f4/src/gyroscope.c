@@ -3,6 +3,7 @@
 #include <gyroscope.h>
 #include <delay.h>
 #include <systick.h>
+#include <math.h>
 
 /* Note: could PEC positioning help ensure correctness?
  * Note: The 9DOF sensor has internal resistors
@@ -72,14 +73,10 @@ void InitialiseGyroscope() {
 	gyroscopeReading.gyroscopeTemperature = 0.0f;
 	gyroscopeReading.x = 0.0f;
 	gyroscopeReading.y = 0.0f;
-	gyroscopeReading.rawX = 0.0f;
-	gyroscopeReading.rawY = 0.0f;
-	gyroscopeReading.rawZ = 0.0f;
 	gyroscopeReading.z = 0.0f;
-	gyroscopeReading.xOffset = -1.99f;
-	gyroscopeReading.yOffset = -3.65f;
+	gyroscopeReading.xOffset = 0.0f;
+	gyroscopeReading.yOffset = 0.0f;
 	gyroscopeReading.zOffset = 0.0f;
-	gyroscopeReading.sampleTime = intermediateMillis;
 	gyroscopeReading.readings = 0;
 
 	isReadingGyroscope = false;
@@ -118,91 +115,17 @@ void ReadGyroscope() {
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
 
-	/* we will always have a sample time here, as it is first set in the initialisation of the gyro */
-	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
+	/* gyro sensitivity: 14.375 LSB / (degrees / second) */
+	float xDegreesPerSecond = ((float) rawX / 14.375f) - gyroscopeReading.xOffset;
+	float yDegreesPerSecond = ((float) rawY / 14.375f) - gyroscopeReading.yOffset;
+	float zDegreesPerSecond = ((float) rawZ / 14.375f) - gyroscopeReading.zOffset;
 
-	/* update the sample time, this will be used to determine angular position (as opposed to degrees per second) */
-	gyroscopeReading.sampleTime = intermediateMillis;
-
-	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
-
-	/* if we get here, we're going too fast (or something spectacular has gone wrong).
-	 * Skip, it will sort it self out for the next time.
-	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
-	if (sampleTime > 0  && sampleTime < 1000) {
-		float sampleRateInSeconds = (float) sampleTime / 1000.0f;
-
-		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-		gyroscopeReading.rawX = ((float) rawX / 14.375f) - gyroscopeReading.xOffset;
-		gyroscopeReading.rawY = ((float) rawY / 14.375f) - gyroscopeReading.yOffset;
-		gyroscopeReading.rawZ = ((float) rawZ / 14.375f) - gyroscopeReading.zOffset;
-
-		gyroscopeReading.x += gyroscopeReading.rawX * sampleRateInSeconds;
-		gyroscopeReading.y += gyroscopeReading.rawY * sampleRateInSeconds;
-		gyroscopeReading.z += gyroscopeReading.rawZ * sampleRateInSeconds;
+	if (!isnan(xDegreesPerSecond) && !isnan(yDegreesPerSecond) && !isnan(zDegreesPerSecond)) {
+		gyroscopeReading.x = xDegreesPerSecond;
+		gyroscopeReading.y = yDegreesPerSecond;
+		gyroscopeReading.z = zDegreesPerSecond;
 		gyroscopeReading.readings++;
 	}
 
 	isReadingGyroscope = false;
-}
-
-
-void OldReadGyroscope() {
-	/* Start reading from the high temperature register */
-	SendStart();
-	SendAddress(0xD0, I2C_Direction_Transmitter);
-	SendData(0x1B);
-	SendStart();
-	SendAddress(0xD0, I2C_Direction_Receiver);
-
-	/* Read the data and ACK on response. This will cause the peripheral to get ready
-	 * to return the next register's data
-	 * Note that the multibyte read strategy will prevent the sensor updating
-	 * half of the values in between a read.
-	 */
-	uint8_t temperatureHigh = ReadDataExpectingMore();
-	uint8_t temperatureLow = ReadDataExpectingMore();
-	uint8_t xHigh = ReadDataExpectingMore();
-	uint8_t xLow = ReadDataExpectingMore();
-	uint8_t yHigh = ReadDataExpectingMore();
-	uint8_t yLow = ReadDataExpectingMore();
-	uint8_t zHigh = ReadDataExpectingMore();
-
-	/* Finally read the data and NACK on response. This lets the peripheral know that we are finished reading */
-	uint8_t zLow = ReadDataExpectingEnd();
-	SendStop();
-
-	/* Temperature offset: -13200 LSB
-	 * Temperature sensitivity: 280 LSB / degrees celcius
-	 */
-	int16_t rawTemperature = (((int16_t) temperatureHigh << 8) | temperatureLow);
-	gyroscopeReading.gyroscopeTemperature = 35 + (rawTemperature + 13200) / 280;
-
-	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
-	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
-	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
-
-	/* we will always have a sample time here, as it is first set in the initialisation of the gyro */
-	uint32_t previousSampleTime = gyroscopeReading.sampleTime;
-
-	/* update the sample time, this will be used to determine angular position (as opposed to degrees per second) */
-	gyroscopeReading.sampleTime = intermediateMillis;
-
-	uint32_t sampleTime = (gyroscopeReading.sampleTime - previousSampleTime);
-
-	/* if we get here, we're going too fast (or something spectacular has gone wrong).
-	 * Skip, it will sort it self out for the next time.
-	 * Hiding errors like this is a terrible idea. Totes need to understand the root cause of this issue. */
-	if (sampleTime > 0  && sampleTime < 1000) {
-		float sampleRateInSeconds = (float) sampleTime / 1000.0f;
-
-		/* gyro sensitivity: 14.375 LSB / (degrees / second) */
-		gyroscopeReading.rawX = ((float) rawX / 14.375f) - gyroscopeReading.xOffset;
-		gyroscopeReading.rawY = ((float) rawY / 14.375f) - gyroscopeReading.yOffset;
-		gyroscopeReading.rawZ = ((float) rawZ / 14.375f) - gyroscopeReading.zOffset;
-
-		gyroscopeReading.x += gyroscopeReading.rawX * sampleRateInSeconds;
-		gyroscopeReading.y += gyroscopeReading.rawY * sampleRateInSeconds;
-		gyroscopeReading.z += gyroscopeReading.rawZ * sampleRateInSeconds;
-	}
 }

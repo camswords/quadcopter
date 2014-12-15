@@ -107,9 +107,16 @@ void ReadAccelerometer() {
 	float ySquared = calibratedY * calibratedY;
 	float zSquared = calibratedZ * calibratedZ;
 
-	accelerometerReading.x = -atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
-	accelerometerReading.y = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
-	accelerometerReading.z = 0.0f; // for now.
-	accelerometerReading.readings++;
+	float xInDegrees = -atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
+	float yInDegrees = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
+	float zInDegress = 0.0f; // for now.
+
+	if (!isnan(xInDegrees) && !isnan(yInDegrees) && !isnan(zInDegress)) {
+		accelerometerReading.x = xInDegrees;
+		accelerometerReading.y = yInDegrees;
+		accelerometerReading.z = zInDegress;
+		accelerometerReading.readings++;
+	}
+
 	isReadingAccelerometer = false;
 }

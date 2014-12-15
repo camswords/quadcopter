@@ -527,7 +527,7 @@
             "showTitle": true
         },
         {
-            "title": "Gyroscope",
+            "title": "Angular Position",
             "height": "250px",
             "editable": true,
             "collapse": false,
@@ -728,10 +728,10 @@
                     "stack": false,
                     "legend": {
                         "show": true,
-                        "values": false,
+                        "values": true,
                         "min": false,
                         "max": false,
-                        "current": false,
+                        "current": true,
                         "total": false,
                         "avg": false
                     },

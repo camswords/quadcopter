@@ -11,14 +11,10 @@ typedef struct GyroscopeReading {
 	float x;
 	float y;
 	float z;
-	float rawX;
-	float rawY;
-	float rawZ;
 	float gyroscopeTemperature;
 	float xOffset;
 	float yOffset;
 	float zOffset;
-	uint32_t sampleTime;
 	uint32_t readings;
 }GyroscopeReading;
 

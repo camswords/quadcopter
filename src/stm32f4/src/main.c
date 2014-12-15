@@ -86,10 +86,11 @@ int main(void) {
   InitialiseAngularPosition();
 
   TurnOff(YELLOW_LED);
-  /* go go go! */
   TurnOn(BLUE_LED);
 
-  uint16_t resetsPerSecond = 0;
+  /* go go go! */
+
+
   uint16_t loopsPerSecond = 0;
   uint32_t thisSecond = 0;
 
@@ -137,8 +138,7 @@ int main(void) {
 		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
 		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
 		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
-//		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
-		  RecordMetric("rest.pers", secondsElapsed, resetsPerSecond);
+		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
 		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
 		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
 		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
@@ -149,7 +149,6 @@ int main(void) {
 		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
 
 		  loopsPerSecond = 0;
-		  resetsPerSecond = 0;
 		  accelerometerReading.readings = 0;
 		  gyroscopeReading.readings = 0;
 		  thisSecond = secondsElapsed;
