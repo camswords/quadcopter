@@ -111,7 +111,7 @@ void InitialiseI2C() {
 
 	I2C_InitTypeDef I2C_InitStruct;
 	/* note that the clock speed should be able to go up to 400kHz */
-	I2C_InitStruct.I2C_ClockSpeed = 100000; 		// 100kHz
+	I2C_InitStruct.I2C_ClockSpeed = 400000; 		// 100kHz
 
 	/* Use I2c (alternative is an SMBus device) */
 	I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
