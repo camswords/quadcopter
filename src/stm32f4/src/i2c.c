@@ -34,10 +34,15 @@
 /* Should really introduce PEC (packet error checking) */
 
 void ResetI2C() {
+	warning("Resetting I2C bus");
 	/* disable i2c interrupts */
     I2C_ITConfig(I2C1, I2C_IT_ERR | I2C_IT_EVT | I2C_IT_BUF, DISABLE);
 
-	/* disable i2c */
+    /* turn it off and on again ;) */
+    I2C_SoftwareResetCmd(I2C1, ENABLE);
+    I2C_SoftwareResetCmd(I2C1, DISABLE);
+
+	/* disable the clock to i2c */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, DISABLE);
 
 	/* Enable the clock to the pin's port */
@@ -166,6 +171,7 @@ void ReadFromAddress(uint8_t peripheral, uint8_t periperalRegister, uint8_t numb
     i2cInUse = true;
     i2cTransmitting = true;
     expectedNumberOfIncoming = numberOfBytesToRead;
+	i2cMisunderstoodEvents = 0;
 
     /* setup the data that we will be writing to */
     expectedNumberOfOutgoing = 1;
@@ -233,11 +239,23 @@ void I2C1_EV_IRQHandler(void) {
 	        break;
 
 		default:
+			i2cMisunderstoodEvents++;
+
+			if (i2cMisunderstoodEvents > 1000) {
+				warningWithValue("i2c handling unknown events, latest is", event);
+			    I2C_ITConfig(I2C1, I2C_IT_ERR | I2C_IT_EVT | I2C_IT_BUF, DISABLE);
+				i2cHasProblem = true;
+			}
+
 	        break;
 	}
 }
 
 void I2C1_ER_IRQHandler(void) {
+    /* no more interrupts! */
+	I2C_ITConfig(I2C1, I2C_IT_ERR | I2C_IT_EVT | I2C_IT_BUF, DISABLE);
+	i2cHasProblem = true;
+
 	if (I2C_GetITStatus(I2C1, I2C_IT_AF)) {
 		warning("i2c1 acknowledge failure");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_AF);
@@ -265,8 +283,6 @@ void I2C1_ER_IRQHandler(void) {
 	} else {
 		warning("i2c1 error unknown");
 	}
-
-	i2cHasProblem = true;
 }
 
 void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {

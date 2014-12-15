@@ -28,6 +28,7 @@ void ReadAngularPosition() {
 		isReadingGyroscope = false;
 		ResetI2C();
 		InitialiseI2C();
+		return;
 	}
 
 	if (sensorToggle) {

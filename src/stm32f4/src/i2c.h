@@ -13,6 +13,7 @@
 bool i2cHasProblem;
 bool i2cInUse;
 bool i2cTransmitting;
+uint32_t i2cMisunderstoodEvents;
 
 /* the address to identify the peripheral we are communicating with */
 uint8_t peripheralAddress;
