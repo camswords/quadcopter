@@ -4,6 +4,7 @@
 #include <accelerometer.h>
 #include <magnetometer.h>
 #include <stm32f4xx_it.h>
+#include <delay.h>
 
 /* are my angles consistent - radians, or degrees? */
 
@@ -22,7 +23,15 @@ void InitialiseAngularPosition() {
 
 void ReadAngularPosition() {
 
+	if (i2cHasProblem) {
+		isReadingAccelerometer = false;
+		isReadingGyroscope = false;
+		ResetI2C();
+		InitialiseI2C();
+	}
+
 	if (sensorToggle) {
+		/* this gryo is dodgy. Sometimes, the last bit in the read sequence never comes back properly, causing errors on the I2C bus. Silly gyro. */
 		ReadGyroscope();
 
 		if (!isReadingGyroscope) {

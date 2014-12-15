@@ -12,6 +12,7 @@
 #include <remote_controls.h>
 #include <gyroscope.h>
 #include <accelerometer.h>
+#include <panic.h>
 #include <stdint.h>
 
 /* Performance fun tips:
@@ -33,10 +34,12 @@
 int main(void) {
   EnableTiming();
   InitialiseLeds();
+  InitialisePanicButton();
 
   TurnOn(ORANGE_LED);
 
   InitialiseSysTick();
+
   InitialisePWM();
   ResetI2C();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
@@ -150,6 +153,7 @@ int main(void) {
 		  accelerometerReading.readings = 0;
 		  gyroscopeReading.readings = 0;
 		  thisSecond = secondsElapsed;
+		  ClearWarnings();
 	  }
 
 	  if (intermediateMillis % analyticsFlushFrequency == 0) {

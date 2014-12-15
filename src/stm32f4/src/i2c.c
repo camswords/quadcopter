@@ -207,7 +207,6 @@ void I2C1_EV_IRQHandler(void) {
 				incoming[incomingIndex++] = I2C_ReceiveData(I2C1);
 			}
 
-
 			if (incomingIndex == expectedNumberOfIncoming) {
 				I2C_GenerateSTOP(I2C1, ENABLE);
 				i2cInUse = false;
@@ -240,32 +239,34 @@ void I2C1_EV_IRQHandler(void) {
 
 void I2C1_ER_IRQHandler(void) {
 	if (I2C_GetITStatus(I2C1, I2C_IT_AF)) {
-		panic("i2c1 acknowledge failure");
+		warning("i2c1 acknowledge failure");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_AF);
 
 	} else if (I2C_GetITStatus(I2C1, I2C_IT_BERR)) {
-		panic("i2c1 bus error");
+		warning("i2c1 bus error");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_BERR);
 
 	} else if (I2C_GetITStatus(I2C1, I2C_IT_ARLO)) {
-		panic("i2c1 arbitration loss");
+		warning("i2c1 arbitration loss");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_ARLO);
 
 	} else if (I2C_GetITStatus(I2C1, I2C_IT_OVR)) {
-		panic("i2c1 overrun/underrun");
+		warning("i2c1 overrun/underrun");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_OVR);
 
 	} else if (I2C_GetITStatus(I2C1, I2C_IT_TIMEOUT)) {
-		panic("i2c1 timeout/tlow");
+		warning("i2c1 timeout/tlow");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_TIMEOUT);
 
 	} else if (I2C_GetITStatus(I2C1, I2C_IT_PECERR)) {
-		panic("i2c1 pec error");
+		warning("i2c1 pec error");
 		I2C_ClearITPendingBit(I2C1, I2C_IT_PECERR);
 
 	} else {
-		panic("i2c1 error unknown");
+		warning("i2c1 error unknown");
 	}
+
+	i2cHasProblem = true;
 }
 
 void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {
@@ -277,6 +278,7 @@ void WaitForEvent(I2C_TypeDef* I2Cx, uint32_t event) {
 	}
 
 	if (attempts == maxAttempts) {
+		panicWithValue("gave up waiting for I2C event", event);
 		i2cHasProblem = true;
 	}
 }
