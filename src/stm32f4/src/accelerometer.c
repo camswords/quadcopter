@@ -107,7 +107,7 @@ void ReadAccelerometer() {
 	float ySquared = calibratedY * calibratedY;
 	float zSquared = calibratedZ * calibratedZ;
 
-	accelerometerReading.x = atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
+	accelerometerReading.x = -atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
 	accelerometerReading.y = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
 	accelerometerReading.z = 0.0f; // for now.
 	accelerometerReading.readings++;
