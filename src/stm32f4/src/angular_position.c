@@ -5,6 +5,7 @@
 #include <magnetometer.h>
 #include <stm32f4xx_it.h>
 #include <delay.h>
+#include <configuration.h>
 
 /* are my angles consistent - radians, or degrees? */
 
@@ -48,15 +49,8 @@ void ReadAngularPosition() {
 
 	// ReadMagnetometer();
 
-	/* welcome to the complimentary filter */
-	const float highFrequencyImportance = 0.98f;
-
-	/* the dt in the calculation. Note that it roughly gets a reading every millisecond */
-	/* this is a bit of a lie: sample rate is closer to 1.74k per second now that the gyro calculations are simpler. */
-	const float sampleRate = 1.0f / (1000.0f / 1.0f);
-
-	angularPosition.x = highFrequencyImportance * (angularPosition.x + (gyroscopeReading.x * sampleRate)) + (1.0f - highFrequencyImportance) * accelerometerReading.x;
-	angularPosition.y = highFrequencyImportance * (angularPosition.y + (gyroscopeReading.y * sampleRate)) + (1.0f - highFrequencyImportance) * accelerometerReading.y;
+	angularPosition.x = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.x + (gyroscopeReading.x * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.x;
+	angularPosition.y = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.y + (gyroscopeReading.y * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.y;
 	angularPosition.z = 0;
 }
 

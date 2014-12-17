@@ -14,6 +14,7 @@
 #include <accelerometer.h>
 #include <panic.h>
 #include <stdint.h>
+#include <configuration.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -155,7 +156,7 @@ int main(void) {
 		  ClearWarnings();
 	  }
 
-	  if (intermediateMillis % analyticsFlushFrequency == 0) {
+	  if (intermediateMillis % ANALYTICS_FLUSH_FREQUENCY == 0) {
 		  FlushMetrics();
 	  }
   }

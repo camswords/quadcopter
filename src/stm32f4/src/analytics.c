@@ -1,14 +1,10 @@
 #include <analytics.h>
 #include <serial_output.h>
 #include <delay.h>
+#include <configuration.h>
 
 void InitialiseAnalytics() {
 	InitialiseRingBuffer(&metricsRingBuffer);
-
-	/* how often to flush the metrics (20 times per second) */
-	analyticsFlushFrequency = 1000 / 200;
-	charactersToSendPerFlush = 5;
-
 	InitialiseSerialOutput();
 }
 
@@ -65,7 +61,7 @@ void RecordMetric(char* name, uint32_t timeInSeconds, float value) {
 void FlushMetrics() {
 	uint8_t metricsFlushed = 0;
 
-	while(metricsFlushed < charactersToSendPerFlush && metricsRingBuffer.count > 0) {
+	while(metricsFlushed < ANALYTICS_CHARACTERS_TO_SEND_PER_FLUSH && metricsRingBuffer.count > 0) {
 		WriteData(RingBufferPop(&metricsRingBuffer));
 		metricsFlushed++;
 	}
