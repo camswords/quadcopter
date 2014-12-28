@@ -74,6 +74,7 @@ void InitialiseGyroscope() {
 	gyroscopeReading.x = 0.0f;
 	gyroscopeReading.y = 0.0f;
 	gyroscopeReading.z = 0.0f;
+	gyroscopeReading.rawX = 0.0f;
 	gyroscopeReading.xOffset = 0.0f;
 	gyroscopeReading.yOffset = 0.0f;
 	gyroscopeReading.zOffset = 0.0f;
@@ -114,6 +115,10 @@ void ReadGyroscope() {
 	int16_t rawX = (((int16_t) xHigh << 8) | xLow);
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
+
+	gyroscopeReading.rawX = rawX;
+	gyroscopeReading.rawY = rawY;
+	gyroscopeReading.rawZ = rawZ;
 
 	/* gyro sensitivity: 14.375 LSB / (degrees / second) */
 	float xDegreesPerSecond = ((float) rawX / 14.375f) - gyroscopeReading.xOffset;

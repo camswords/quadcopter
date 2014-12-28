@@ -11,6 +11,9 @@ typedef struct GyroscopeReading {
 	float x;
 	float y;
 	float z;
+	int16_t rawX;
+	int16_t rawY;
+	int16_t rawZ;
 	float gyroscopeTemperature;
 	float xOffset;
 	float yOffset;

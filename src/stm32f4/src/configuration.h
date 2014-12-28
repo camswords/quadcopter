@@ -11,7 +11,7 @@
 
 // ANALYTICS
 #define ANALYTICS_FLUSH_FREQUENCY 		   			1000 / 200 	/* how often to flush the metrics (20 times per second) */
-#define	ANALYTICS_CHARACTERS_TO_SEND_PER_FLUSH 		5
+#define	SERIAL_BUFFER_CHARACTERS_TO_SEND_PER_FLUSH 	5
 
 
 

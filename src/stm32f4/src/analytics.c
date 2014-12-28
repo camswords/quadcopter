@@ -1,75 +1,53 @@
 #include <analytics.h>
-#include <serial_output.h>
-#include <delay.h>
-#include <configuration.h>
+#include <mavlink.h>
+#include <gyroscope.h>
+#include <accelerometer.h>
+#include <angular_position.h>
+#include <systick.h>
+#include <stdint.h>
 
 void InitialiseAnalytics() {
-	InitialiseRingBuffer(&metricsRingBuffer);
-	InitialiseSerialOutput();
-}
+	InitialiseSerialBuffer();
 
-void WriteStringToBuffer(char* value) {
-	char* letter = value;
-
-	while(*letter) {
-		RingBufferPut(&metricsRingBuffer, *letter++);
-	}
-}
-
-void WriteCharacterToBuffer(uint16_t value) {
-	RingBufferPut(&metricsRingBuffer, value);
+	mavlink_system.sysid = 1;
+	mavlink_system.compid = 1;
 }
 
 void RecordWarningMessage(char *message) {
-	WriteStringToBuffer("info.warn:W:");
-	WriteStringToBuffer(message);
+	// todo!
 }
 
 void RecordPanicMessage(char *message) {
-	WriteStringToBuffer("info.err-:E:");
-	WriteStringToBuffer(message);
+	// todo!
 }
 
+void SendTelemetryHeartBeat() {
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_AUTO_ARMED, 0, MAV_STATE_ACTIVE);
+}
 
-void RecordMetric(char* name, uint32_t timeInSeconds, float value) {
-	WriteStringToBuffer(name);
-	WriteStringToBuffer(":F:");
+void SendTelemetryRawImu() {
+	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, intermediateMillis * 1000, (accelerometerReading.xG * 1000.0f), (accelerometerReading.yG * 1000.0f), (accelerometerReading.zG * 1000.0f), gyroscopeReading.rawX, gyroscopeReading.rawY, gyroscopeReading.rawZ, 0, 0, 0);
+}
 
-	uint8_t timeHighest = (timeInSeconds >> 24) & 0xFF;
-	uint8_t timeHigh = (timeInSeconds >> 16) & 0xFF;
-	uint8_t timeLow = (timeInSeconds >> 8) & 0xFF;
-	uint8_t timeLowest = (timeInSeconds >> 0) & 0xFF;
+void SendTelemetryScaledImu() {
+	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, intermediateMillis, angularPosition.x, angularPosition.y, angularPosition.z, gyroscopeReading.x, gyroscopeReading.y, gyroscopeReading.z, 0, 0, 0);
+}
 
-	int32_t roundedValue = (value * 1000000);
+void SendTelementryLocalPosition() {
+	float x =  5.0 * 3.141592f / 180.0f;
+	float y =  45.0 * 3.141592f / 180.0f;
+	float z =  0.0 * 3.141592f / 180.0f;
+	float quaternion[4];
 
-	uint8_t valueHighest = (roundedValue >> 24) & 0xFF;
-	uint8_t valueHigh = (roundedValue >> 16) & 0xFF;
-	uint8_t valueLow = (roundedValue >> 8) & 0xFF;
-	uint8_t valueLowest = (roundedValue >> 0) & 0xFF;
-
-	WriteCharacterToBuffer(timeHighest);
-	WriteCharacterToBuffer(timeHigh);
-	WriteCharacterToBuffer(timeLow);
-	WriteCharacterToBuffer(timeLowest);
-	WriteCharacterToBuffer(valueHighest);
-	WriteCharacterToBuffer(valueHigh);
-	WriteCharacterToBuffer(valueLow);
-	WriteCharacterToBuffer(valueLowest);
-	WriteCharacterToBuffer('|');
+	mavlink_euler_to_quaternion(x, y, z, quaternion);
+	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, intermediateMillis, quaternion[0], quaternion[1], quaternion[2], quaternion[3], 0, 0, 0);
 }
 
 void FlushMetrics() {
-	uint8_t metricsFlushed = 0;
-
-	while(metricsFlushed < ANALYTICS_CHARACTERS_TO_SEND_PER_FLUSH && metricsRingBuffer.count > 0) {
-		WriteData(RingBufferPop(&metricsRingBuffer));
-		metricsFlushed++;
-	}
+	FlushPortionOfSerialBuffer();
 }
 
 void FlushAllMetrics() {
-	while(metricsRingBuffer.count > 0) {
-		WriteData(RingBufferPop(&metricsRingBuffer));
-		WaitAFewMillis(10);
-	}
+	FlushEntireSerialBuffer();
 }
+
