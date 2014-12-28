@@ -11,6 +11,9 @@ typedef struct AccelerometerReading {
 	float x;
 	float y;
 	float z;
+	float xG;
+	float yG;
+	float zG;
 	float xOffset;
 	float yOffset;
 	float zOffset;

@@ -98,9 +98,14 @@ void ReadAccelerometer() {
 	int16_t rawY = (((int16_t) yHigh << 8) | yLow);
 	int16_t rawZ = (((int16_t) zHigh << 8) | zLow);
 
-	float calibratedX = rawX - accelerometerReading.xOffset;
-	float calibratedY = rawY - accelerometerReading.yOffset;
-	float calibratedZ = rawZ - accelerometerReading.zOffset;
+	/* full resolution means that there is a scale of 3.9mG/LSB */
+	accelerometerReading.xG = rawX * 0.0039;
+	accelerometerReading.yG = rawY * 0.0039;
+	accelerometerReading.zG = rawZ * 0.0039;
+
+	float calibratedX = accelerometerReading.xG - accelerometerReading.xOffset;
+	float calibratedY = accelerometerReading.yG - accelerometerReading.yOffset;
+	float calibratedZ = accelerometerReading.zG - accelerometerReading.zOffset;
 
 	/* calculate the squares */
 	float xSquared = calibratedX * calibratedX;
