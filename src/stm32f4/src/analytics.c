@@ -34,9 +34,9 @@ void SendTelemetryScaledImu() {
 }
 
 void SendTelementryLocalPosition() {
-	float x =  5.0 * 3.141592f / 180.0f;
-	float y =  45.0 * 3.141592f / 180.0f;
-	float z =  0.0 * 3.141592f / 180.0f;
+	float x =  angularPosition.x * 3.141592f / 180.0f;
+	float y =  angularPosition.y * 3.141592f / 180.0f;
+	float z =  angularPosition.z * 3.141592f / 180.0f;
 	float quaternion[4];
 
 	mavlink_euler_to_quaternion(x, y, z, quaternion);

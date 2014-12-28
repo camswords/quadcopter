@@ -49,9 +49,14 @@ void ReadAngularPosition() {
 
 	// ReadMagnetometer();
 
-	angularPosition.x = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.x + (gyroscopeReading.x * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.x;
-	angularPosition.y = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.y + (gyroscopeReading.y * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.y;
-	angularPosition.z = 0;
+//  seems buggered. will introduce the gyro later.
+//	angularPosition.x = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.x + (gyroscopeReading.x * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.x;
+//	angularPosition.y = HOW_MUCH_I_TRUST_THE_GYROSCOPE * (angularPosition.y + (gyroscopeReading.y * GYROSCOPE_SAMPLE_RATE)) + HOW_MUCH_I_TRUST_THE_ACCELEROMETER * accelerometerReading.y;
+//	angularPosition.z = 0;
+
+	angularPosition.x = accelerometerReading.x;
+	angularPosition.y = accelerometerReading.y;
+	angularPosition.z = accelerometerReading.z;
 }
 
 void ResetToAngularZeroPosition() {
