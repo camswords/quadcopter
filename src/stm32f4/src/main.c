@@ -1,20 +1,22 @@
-#include <stm32f4xx.h>
-#include <stm32f4xx_gpio.h>
-#include <delay.h>
-#include <pwm.h>
-#include <systick.h>
-#include <on_board_leds.h>
-#include <pwm_input.h>
-#include <i2c.h>
-#include <analytics.h>
-#include <angular_position.h>
-#include <pid.h>
-#include <remote_controls.h>
-#include <gyroscope.h>
-#include <accelerometer.h>
-#include <panic.h>
 #include <stdint.h>
-#include <configuration.h>
+
+//#include <pwm_input.h>
+#include "../Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_gpio.h"
+#include "accelerometer.h"
+#include "analytics.h"
+#include "angular_position.h"
+#include "configuration.h"
+#include "delay.h"
+#include "gyroscope.h"
+#include "i2c.h"
+#include "on_board_leds.h"
+#include "panic.h"
+#include "pid.h"
+#include "pwm.h"
+#include "remote_controls.h"
+#include "stm32f4xx.h"
+#include "systick.h"
+#include <stdlib.h>
 
 /* Performance fun tips:
  * Use the native register size wherever possible (32bit!). That way the processor doesn't have to do fancy scaling to get your register to the size it can handle
@@ -124,28 +126,31 @@ int main(void) {
 		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
 		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
 
-		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
-//		  RecordMetric("gyro.posx", secondsElapsed, gyroscopeReading.x);
-//		  RecordMetric("gyro.posy", secondsElapsed, gyroscopeReading.y);
-//		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
-//		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
-		  RecordMetric("gyro.freq", secondsElapsed, gyroscopeReading.readings);
-		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
-		  RecordMetric("e---.prop", secondsElapsed, eProp.get());
-		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
-		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
-		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
-		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
-		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
-		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
-//		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
-//		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
-//		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
-		  RecordMetric("acce.freq", secondsElapsed, accelerometerReading.readings);
-		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
-		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
-		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
-//		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
+		  uint8_t loopReference = rand() & 0xFF;
+
+		  RecordMetric(SECONDS_ELAPSED, loopReference, secondsElapsed);
+		  RecordMetric(LOOP_FREQUENCY, loopReference, loopsPerSecond);
+		  RecordMetric(GRYOSCOPE_X_POSITION, loopReference, gyroscopeReading.x);
+		  RecordMetric(GRYOSCOPE_Y_POSITION, loopReference, gyroscopeReading.y);
+		  RecordMetric(GRYOSCOPE_Z_POSITION, loopReference, gyroscopeReading.z);
+		  RecordMetric(GRYOSCOPE_TEMPERATURE, loopReference, gyroscopeReading.gyroscopeTemperature);
+		  RecordMetric(GRYOSCOPE_SAMPLE_RATE, loopReference, gyroscopeReading.readings);
+		  RecordMetric(PROPELLOR_B_SPEED, loopReference, bProp.get());
+		  RecordMetric(PROPELLOR_E_SPEED, loopReference, eProp.get());
+		  RecordMetric(PROPELLOR_C_SPEED, loopReference, cProp.get());
+		  RecordMetric(PROPELLOR_A_SPEED, loopReference, aProp.get());
+		  RecordMetric(PID_X_ADJUSTMENT, loopReference, xAdjustment);
+		  RecordMetric(PID_Y_ADJUSTMENT, loopReference, yAdjustment);
+		  RecordMetric(PID_PROPORTIONAL, loopReference, thisPidProportional);
+		  RecordMetric(REMOTE_THROTTLE, loopReference, currentThrottle);
+		  RecordMetric(ACCELEROMETER_X_POSITION, loopReference, accelerometerReading.x);
+		  RecordMetric(ACCELEROMETER_Y_POSITION, loopReference, accelerometerReading.y);
+		  RecordMetric(ACCELEROMETER_Z_POSITION, loopReference, accelerometerReading.z);
+		  RecordMetric(ACCELEROMETER_SAMPLE_RATE, loopReference, accelerometerReading.readings);
+		  RecordMetric(ANGULAR_X_POSITION, loopReference, angularPosition.x);
+		  RecordMetric(ANGULAR_Y_POSITION, loopReference, angularPosition.y);
+		  RecordMetric(ANGULAR_Z_POSITION, loopReference, angularPosition.z);
+		  RecordMetric(METRICS_BUFFER_SIZE, loopReference, metricsRingBuffer.count);
 
 		  loopsPerSecond = 0;
 		  accelerometerReading.readings = 0;
