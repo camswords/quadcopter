@@ -32,8 +32,6 @@
  *   - combine their outputs using a complimentary filter
  */
 
-
-
 int main(void) {
   EnableTiming();
   InitialiseLeds();
@@ -105,8 +103,7 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  //	  float currentThrottle = ReadRemoteThrottle();
-	  float currentThrottle = 0.5f;
+	  float currentThrottle = ReadRemoteThrottle();
 
 	  if (currentThrottle == 0.0) {
 		  bProp.set(1000);
@@ -123,38 +120,33 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-//		  float thisPidProportional = 10;
+		  float thisPidProportional = 10;
 //		  float thisPidProportional = ReadRemotePidProportional();
 //		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
 //		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
 
-//		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
+		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
 //		  RecordMetric("gyro.posx", secondsElapsed, gyroscopeReading.x);
 //		  RecordMetric("gyro.posy", secondsElapsed, gyroscopeReading.y);
 //		  RecordMetric("gyro.posz", secondsElapsed, gyroscopeReading.z);
 //		  RecordMetric("gyro.temp", secondsElapsed, gyroscopeReading.gyroscopeTemperature);
-//		  RecordMetric("gyro.freq", secondsElapsed, gyroscopeReading.readings);
-//		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
-//		  RecordMetric("e---.-0prop", secondsElapsed, eProp.get());
-//		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
-//		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
-//		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
-//		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
-//		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
-//		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
+		  RecordMetric("gyro.freq", secondsElapsed, gyroscopeReading.readings);
+		  RecordMetric("b---.prop", secondsElapsed, bProp.get());
+		  RecordMetric("e---.prop", secondsElapsed, eProp.get());
+		  RecordMetric("c---.prop", secondsElapsed, cProp.get());
+		  RecordMetric("a---.prop", secondsElapsed, aProp.get());
+		  RecordMetric("xadj.pid-", secondsElapsed, xAdjustment);
+		  RecordMetric("yadj.pid-", secondsElapsed, yAdjustment);
+		  RecordMetric("pval.remo", secondsElapsed, thisPidProportional);
+		  RecordMetric("thro.remo", secondsElapsed, currentThrottle);
 //		  RecordMetric("acce.posx", secondsElapsed, accelerometerReading.x);
 //		  RecordMetric("acce.posy", secondsElapsed, accelerometerReading.y);
 //		  RecordMetric("acce.posz", secondsElapsed, accelerometerReading.z);
-//		  RecordMetric("acce.freq", secondsElapsed, accelerometerReading.readings);
-//		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
-//		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
-//		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
+		  RecordMetric("acce.freq", secondsElapsed, accelerometerReading.readings);
+		  RecordMetric("angu.posx", secondsElapsed, angularPosition.x);
+		  RecordMetric("angu.posy", secondsElapsed, angularPosition.y);
+		  RecordMetric("angu.posz", secondsElapsed, angularPosition.z);
 //		  RecordMetric("metr.buff", secondsElapsed, metricsRingBuffer.count);
-
-		  SendTelemetryHeartBeat();
-		  SendTelemetryRawImu();
-		  SendTelemetryScaledImu();
-		  SendTelementryLocalPosition();
 
 		  loopsPerSecond = 0;
 		  accelerometerReading.readings = 0;

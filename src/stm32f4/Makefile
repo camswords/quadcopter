@@ -27,8 +27,6 @@ $(QUAD_ELF): $(SRC)
 		-I./src \
 		-isystem ./Libraries/CMSIS/Include/ \
 		-isystem ./Libraries/STM32F4xx_StdPeriph_Driver/inc/ \
-		-isystem ./Libraries/mavlink/ \
-		-isystem ./Libraries/mavlink/common \
 		-Werror \
 		-Wall \
 		-Wl,-T,./src/stm32_flash.ld \
