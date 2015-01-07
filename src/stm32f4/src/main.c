@@ -120,10 +120,9 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  float thisPidProportional = 10;
-//		  float thisPidProportional = ReadRemotePidProportional();
-//		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
-//		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
+		  float thisPidProportional = ReadRemotePidProportional();
+		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
+		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
 
 		  RecordMetric("loop.freq", secondsElapsed, loopsPerSecond);
 //		  RecordMetric("gyro.posx", secondsElapsed, gyroscopeReading.x);
