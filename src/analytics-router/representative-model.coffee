@@ -39,7 +39,11 @@ module.exports =
     model[point.metric] =
       value: point.value
       loopReference: point.loopReference
-      timeInSeconds: calculateTime(determineSeconds(point.loopReference))
-      isStale: -> model[point.metric].loopReference != model['secondsElapsed'].loopReference
+      time: calculateTime(determineSeconds(point.loopReference))
+      isStale: ->
+        if !model[point.metric] || !model['secondsElapsed']
+          return false
+
+        model[point.metric].loopReference != model['secondsElapsed'].loopReference
 
 

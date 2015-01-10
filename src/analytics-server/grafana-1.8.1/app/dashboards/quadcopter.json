@@ -72,22 +72,22 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "loop.freq",
-                            "query": "select mean(value) from \"loop.freq\" where $timeFilter group by time($interval) order asc"
+                            "series": "loopFrequency",
+                            "query": "select mean(value) from \"loopFrequency\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "acce.freq",
-                            "query": "select mean(value) from \"acce.freq\" where $timeFilter group by time($interval) order asc"
+                            "series": "accelerometerSampleRate",
+                            "query": "select mean(value) from \"accelerometerSampleRate\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "gyro.freq",
-                            "query": "select mean(value) from \"gyro.freq\" where $timeFilter group by time($interval) order asc"
+                            "series": "gyroscopeSampleRate",
+                            "query": "select mean(value) from \"gyroscopeSampleRate\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -153,15 +153,15 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "a---.prop",
-                            "query": "select mean(value) from \"a---.prop\" where $timeFilter group by time($interval) order asc"
+                            "series": "propellorASpeed",
+                            "query": "select mean(value) from \"propellorASpeed\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "c---.prop",
-                            "query": "select mean(value) from \"c---.prop\" where $timeFilter group by time($interval) order asc"
+                            "series": "propellorCSpeed",
+                            "query": "select mean(value) from \"propellorCSpeed\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -226,15 +226,15 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "b---.prop",
-                            "query": "select mean(value) from \"b---.prop\" where $timeFilter group by time($interval) order asc"
+                            "series": "propellorBSpeed",
+                            "query": "select mean(value) from \"propellorBSpeed\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "e---.prop",
-                            "query": "select mean(value) from \"e---.prop\" where $timeFilter group by time($interval) order asc"
+                            "series": "propellorESpeed",
+                            "query": "select mean(value) from \"propellorESpeed\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -300,15 +300,15 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "xadj.pid-",
-                            "query": "select mean(value) from \"xadj.pid-\" where $timeFilter group by time($interval) order asc"
+                            "series": "pidXAdjustment",
+                            "query": "select mean(value) from \"pidXAdjustment\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "yadj.pid-",
-                            "query": "select mean(value) from \"yadj.pid-\" where $timeFilter group by time($interval) order asc"
+                            "series": "pidYAdjustment",
+                            "query": "select mean(value) from \"pidYAdjustment\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -381,8 +381,8 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "thro.remo",
-                            "query": "select mean(value) from \"thro.remo\" where $timeFilter group by time($interval) order asc"
+                            "series": "remoteThrottle",
+                            "query": "select mean(value) from \"remoteThrottle\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -448,80 +448,13 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "pval.remo",
-                            "query": "select mean(value) from \"pval.remo\" where $timeFilter group by time($interval) order asc"
+                            "series": "pidProportional",
+                            "query": "select mean(value) from \"pidProportional\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
                     "seriesOverrides": [],
                     "title": "proportional.remote"
-                },
-                {
-                    "error": false,
-                    "span": 4,
-                    "editable": true,
-                    "type": "graph",
-                    "id": 15,
-                    "datasource": null,
-                    "renderer": "flot",
-                    "x-axis": true,
-                    "y-axis": true,
-                    "scale": 1,
-                    "y_formats": [
-                        "short",
-                        "short"
-                    ],
-                    "grid": {
-                        "leftMax": null,
-                        "rightMax": null,
-                        "leftMin": 0,
-                        "rightMin": null,
-                        "threshold1": null,
-                        "threshold2": null,
-                        "threshold1Color": "rgba(216, 200, 27, 0.27)",
-                        "threshold2Color": "rgba(234, 112, 112, 0.22)"
-                    },
-                    "annotate": {
-                        "enable": false
-                    },
-                    "resolution": 100,
-                    "lines": true,
-                    "fill": 0,
-                    "linewidth": 1,
-                    "points": false,
-                    "pointradius": 5,
-                    "bars": false,
-                    "stack": false,
-                    "legend": {
-                        "show": true,
-                        "values": true,
-                        "min": false,
-                        "max": false,
-                        "current": true,
-                        "total": false,
-                        "avg": false
-                    },
-                    "percentage": false,
-                    "zerofill": true,
-                    "nullPointMode": "connected",
-                    "steppedLine": false,
-                    "tooltip": {
-                        "value_type": "cumulative",
-                        "query_as_alias": true
-                    },
-                    "targets": [
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "rest.pers",
-                            "query": "select mean(value) from \"rest.pers\" where $timeFilter group by time($interval) order asc"
-                        }
-                    ],
-                    "aliasColors": {},
-                    "seriesOverrides": [],
-                    "title": "resets / second",
-                    "leftYAxisLabel": ""
                 }
             ],
             "showTitle": true
@@ -589,22 +522,22 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "gyro.posx",
-                            "query": "select mean(value) from \"gyro.posx\" where $timeFilter group by time($interval) order asc"
+                            "series": "gyroscopeXPosition",
+                            "query": "select mean(value) from \"gyroscopeXPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "gyro.posy",
-                            "query": "select mean(value) from \"gyro.posy\" where $timeFilter group by time($interval) order asc"
+                            "series": "gyroscopeYPosition",
+                            "query": "select mean(value) from \"gyroscopeYPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "gyro.posz",
-                            "query": "select mean(value) from \"gyro.posz\" where $timeFilter group by time($interval) order asc"
+                            "series": "gyroscopeZPosition",
+                            "query": "select mean(value) from \"gyroscopeZPosition\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -668,22 +601,22 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "acce.posx",
-                            "query": "select mean(value) from \"acce.posx\" where $timeFilter group by time($interval) order asc"
+                            "series": "accelerometerXPosition",
+                            "query": "select mean(value) from \"accelerometerXPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "acce.posy",
-                            "query": "select mean(value) from \"acce.posy\" where $timeFilter group by time($interval) order asc"
+                            "series": "accelerometerYPosition",
+                            "query": "select mean(value) from \"accelerometerYPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "acce.posz",
-                            "query": "select mean(value) from \"acce.posz\" where $timeFilter group by time($interval) order asc"
+                            "series": "accelerometerZPosition",
+                            "query": "select mean(value) from \"accelerometerZPosition\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -747,22 +680,22 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "angu.posx",
-                            "query": "select mean(value) from \"angu.posx\" where $timeFilter group by time($interval) order asc"
+                            "series": "angularXPosition",
+                            "query": "select mean(value) from \"angularXPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "angu.posy",
-                            "query": "select mean(value) from \"angu.posy\" where $timeFilter group by time($interval) order asc"
+                            "series": "angularYPosition",
+                            "query": "select mean(value) from \"angularYPosition\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "angu.posz",
-                            "query": "select mean(value) from \"angu.posz\" where $timeFilter group by time($interval) order asc"
+                            "series": "angularZPosition",
+                            "query": "select mean(value) from \"angularZPosition\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -826,8 +759,8 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "gyro.temp",
-                            "query": "select mean(value) from \"gyro.temp\" where $timeFilter group by time($interval) order asc"
+                            "series": "gyroscopeTemperature",
+                            "query": "select mean(value) from \"gyroscopeTemperature\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -902,13 +835,6 @@
                             "column": "value",
                             "series": "pps-.metr",
                             "query": "select mean(value) from \"pps-.metr\" where $timeFilter group by time($interval) order asc"
-                        },
-                        {
-                            "target": "",
-                            "function": "mean",
-                            "column": "value",
-                            "series": "seri.err-",
-                            "query": "select mean(value) from \"seri.err-\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},
@@ -972,8 +898,8 @@
                         {
                             "function": "mean",
                             "column": "value",
-                            "series": "metr.buff",
-                            "query": "select mean(value) from \"metr.buff\" where $timeFilter group by time($interval) order asc",
+                            "series": "metricsBufferSize",
+                            "query": "select mean(value) from \"metricsBufferSize\" where $timeFilter group by time($interval) order asc",
                             "interval": ""
                         }
                     ],
