@@ -23,7 +23,11 @@ definitions =
   { reference: 19, name: 'propellorESpeed', type: 'float' },
   { reference: 20, name: 'propellorCSpeed', type: 'float' },
   { reference: 21, name: 'propellorASpeed', type: 'float' },
-  { reference: 22, name: 'metricsBufferSize', type: 'integer' }]
+  { reference: 22, name: 'metricsBufferSize', type: 'integer' },
+  { reference: 23, name: 'debugValue1', type: 'float' },
+  { reference: 24, name: 'debugValue2', type: 'float' },
+  { reference: 25, name: 'debugValue3', type: 'integer' },
+  { reference: 26, name: 'debugValue4', type: 'integer' }]
 
 metricDefinitionByReference = (reference) ->
   _.find definitions, (definition) -> definition.reference == reference

@@ -151,6 +151,8 @@ int main(void) {
 		  RecordFloatMetric(METRIC_ANGULAR_Y_POSITION, loopReference, angularPosition.y);
 		  RecordFloatMetric(METRIC_ANGULAR_Z_POSITION, loopReference, angularPosition.z);
 		  RecordIntegerMetric(METRIC_METRICS_BUFFER_SIZE, loopReference, metricsRingBuffer.count);
+		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, throttle->dutyCycle);
+		  RecordFloatMetric(METRIC_DEBUG_VALUE_2, loopReference, throttle->frequency);
 
 		  loopsPerSecond = 0;
 		  accelerometerReading.readings = 0;

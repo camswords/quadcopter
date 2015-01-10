@@ -37,5 +37,9 @@
 #define METRIC_PROPELLOR_C_SPEED							20
 #define METRIC_PROPELLOR_A_SPEED							21
 #define METRIC_METRICS_BUFFER_SIZE							22
+#define METRIC_DEBUG_VALUE_1								23
+#define METRIC_DEBUG_VALUE_2								24
+#define METRIC_DEBUG_VALUE_3								25
+#define METRIC_DEBUG_VALUE_4								26
 
 #endif
