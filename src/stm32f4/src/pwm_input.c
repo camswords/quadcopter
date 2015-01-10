@@ -173,7 +173,8 @@ void TIM4_IRQHandler()
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0) {
+    		|| updatedFrequency <= 0.0
+    		|| IC1Value == IC2Value) {
     		return;
     	}
 
@@ -202,7 +203,8 @@ void TIM5_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0) {
+    		|| updatedFrequency <= 0.0
+    		|| IC1Value == IC2Value) {
     		return;
     	}
 
@@ -231,7 +233,8 @@ void TIM1_BRK_TIM9_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0) {
+    		|| updatedFrequency <= 0.0
+    		|| IC1Value == IC2Value) {
     		return;
     	}
 
@@ -260,7 +263,8 @@ void TIM8_BRK_TIM12_IRQHandler() {
     	if (isnan(updatedDutyCycle)
     		|| isnan(updatedFrequency)
     		|| updatedDutyCycle <= 0.0
-    		|| updatedFrequency <= 0.0) {
+    		|| updatedFrequency <= 0.0
+    		|| IC1Value == IC2Value) {
     		return;
     	}
 
