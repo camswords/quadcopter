@@ -1,7 +1,8 @@
-#include <analytics.h>
-#include <serial_output.h>
-#include <delay.h>
-#include <configuration.h>
+#include "analytics.h"
+
+#include "configuration.h"
+#include "delay.h"
+#include "serial_output.h"
 
 void InitialiseAnalytics() {
 	InitialiseRingBuffer(&metricsRingBuffer);
@@ -30,7 +31,23 @@ void RecordPanicMessage(char *message) {
 	WriteStringToBuffer(message);
 }
 
-void RecordMetric(uint8_t type, uint8_t loopReference, float value) {
+void RecordIntegerMetric(uint8_t type, uint8_t loopReference, uint32_t value) {
+	WriteCharacterToBuffer('S');
+	WriteCharacterToBuffer(type);
+	WriteCharacterToBuffer(loopReference);
+
+	uint8_t valueHighest = (value >> 24) & 0xFF;
+	uint8_t valueHigh = (value >> 16) & 0xFF;
+	uint8_t valueLow = (value >> 8) & 0xFF;
+	uint8_t valueLowest = (value >> 0) & 0xFF;
+
+	WriteCharacterToBuffer(valueHighest);
+	WriteCharacterToBuffer(valueHigh);
+	WriteCharacterToBuffer(valueLow);
+	WriteCharacterToBuffer(valueLowest);
+}
+
+void RecordFloatMetric(uint8_t type, uint8_t loopReference, float value) {
 	WriteCharacterToBuffer('S');
 	WriteCharacterToBuffer(type);
 	WriteCharacterToBuffer(loopReference);

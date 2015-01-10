@@ -1,35 +1,36 @@
 _ = require('lodash')
 
-metrics =
-  secondsElapsed: 0
-  loopFrequency: 1
-  gyroscopeXPosition: 2
-  gyroscopeYPosition: 3
-  gyroscopeZPosition: 4
-  gyroscopeTemperature: 5
-  gyroscopeSampleRate: 6
-  accelerometerXPosition: 7
-  accelerometerYPosition: 8
-  accelerometerZPosition: 9
-  accelerometerSampleRate: 10
-  angularXPosition: 11
-  angularYPosition: 12
-  angularZPosition: 13
-  pidXAdjustment: 14
-  pidYAdjustment: 15
-  pidProportional: 16
-  remoteThrottle: 17
-  propellorBSpeed: 18
-  propellorESpeed: 19
-  propellorCSpeed: 20
-  propellorASpeed: 21
-  metricsBufferSize: 22
+definitions =
+  [{ reference: 0, name: 'secondsElapsed', type: 'integer' },
+  { reference: 1, name: 'loopFrequency', type: 'integer' },
+  { reference: 2, name: 'gyroscopeXPosition', type: 'float' },
+  { reference: 3, name: 'gyroscopeYPosition', type: 'float' },
+  { reference: 4, name: 'gyroscopeZPosition', type: 'float' },
+  { reference: 5, name: 'gyroscopeTemperature', type: 'float' },
+  { reference: 6, name: 'gyroscopeSampleRate', type: 'integer' },
+  { reference: 7, name: 'accelerometerXPosition', type: 'float' },
+  { reference: 8, name: 'accelerometerYPosition', type: 'float' },
+  { reference: 9, name: 'accelerometerZPosition', type: 'float' },
+  { reference: 10, name: 'accelerometerSampleRate', type: 'integer' },
+  { reference: 11, name: 'angularXPosition', type: 'float' },
+  { reference: 12, name: 'angularYPosition', type: 'float' },
+  { reference: 13, name: 'angularZPosition', type: 'float' },
+  { reference: 14, name: 'pidXAdjustment', type: 'float' },
+  { reference: 15, name: 'pidYAdjustment', type: 'float' },
+  { reference: 16, name: 'pidProportional', type: 'float' },
+  { reference: 17, name: 'remoteThrottle', type: 'float' },
+  { reference: 18, name: 'propellorBSpeed', type: 'float' },
+  { reference: 19, name: 'propellorESpeed', type: 'float' },
+  { reference: 20, name: 'propellorCSpeed', type: 'float' },
+  { reference: 21, name: 'propellorASpeed', type: 'float' },
+  { reference: 22, name: 'metricsBufferSize', type: 'integer' }]
 
-metricNameForValue = (value) ->
-  _.find Object.keys(metrics), (metricName) -> metrics[metricName] == value
+metricDefinitionByReference = (reference) ->
+  _.find definitions, (definition) -> definition.reference == reference
 
 
 module.exports =
-  metrics: metrics
+  definitions: definitions
+  numberOfDefinitions: definitions.length
   startCharacter: 'S'
-  metricNameForValue: metricNameForValue
+  metricDefinitionByReference: metricDefinitionByReference

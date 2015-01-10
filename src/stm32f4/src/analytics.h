@@ -8,8 +8,9 @@ RingBuffer metricsRingBuffer;
 
 void InitialiseAnalytics();
 
-/* Note that the name is designed to be 9 characters: xxxx.xxxx */
-void RecordMetric(uint8_t type, uint8_t loopReference, float value);
+void RecordIntegerMetric(uint8_t type, uint8_t loopReference, uint32_t value);
+
+void RecordFloatMetric(uint8_t type, uint8_t loopReference, float value);
 
 void RecordPanicMessage(char *message);
 void RecordWarningMessage(char *message);

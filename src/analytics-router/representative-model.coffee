@@ -1,4 +1,3 @@
-protocol = require('./protocol')
 _ = require('lodash')
 moment = require('moment')
 
