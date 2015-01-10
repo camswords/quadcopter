@@ -10,7 +10,7 @@ metricsValueOffset = 7
 
 
 initialise = ->
-  for row in [1..numberOfRows * consoleLinesPerRow] by 1
+  for row in [1..(numberOfRows * consoleLinesPerRow) + 10] by 1
     cursor.goto(1, row).eraseLine()
 
 
@@ -19,25 +19,27 @@ outputToConsole = (representativeModel) ->
     column = index % metricsPerRow
     row = Math.floor(index / metricsPerRow) + 1
 
-    cursor.fg.reset()
     cursor.magenta()
 
     cursor.goto(column * columnWidth, (row * consoleLinesPerRow))
     cursor.eraseLine().write(metricName)
 
-    cursor.fg.reset()
     cursor.green()
 
     cursor.goto(column * columnWidth + metricsValueOffset, (row * consoleLinesPerRow) + 1)
 
-    if (representativeModel[metricName] == undefined || representativeModel[metricName] == null)
-      cursor.fg.reset()
+    if representativeModel[metricName] == undefined || representativeModel[metricName] == null
       cursor.red()
       cursor.eraseLine().write('-')
+    else if representativeModel[metricName].isStale()
+      cursor.red()
+      cursor.eraseLine().write(representativeModel[metricName].value + "")
     else
-      cursor.fg.reset()
       cursor.green()
       cursor.eraseLine().write(representativeModel[metricName].value + "")
+
+    cursor.reset()
+
 
 
 module.exports =

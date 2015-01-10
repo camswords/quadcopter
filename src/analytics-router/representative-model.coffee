@@ -4,14 +4,13 @@ moment = require('moment')
 
 secondsReferences = []
 model = {}
-onLoopComplete = ->
+onLoopCompletes = []
 maximumTimeInSeconds = Infinity
 startTime = null
 
 determineSeconds = (loopReference) ->
   reference = _.find secondsReferences, (reference) -> reference.loopReference == loopReference
   reference.seconds if (reference)
-
 
 calculateTime = (timeInSeconds) ->
   if !timeInSeconds
@@ -26,20 +25,21 @@ calculateTime = (timeInSeconds) ->
 
 
 module.exports =
-  onLoopComplete: (callback) -> onLoopComplete = callback
+  onLoopComplete: (callback) -> onLoopCompletes.push(callback)
 
   update: (point) ->
     if (point.metric == 'secondsElapsed')
+      # seconds elapsed is the first metric sent, so lets notify others of the model at this point
+      _.each onLoopCompletes, (onLoopComplete) -> onLoopComplete(model)
+
       secondsReferences.push
         loopReference: point.loopReference
         seconds: point.value
-
-      # seconds elapsed is the first metric sent, so lets notify others of the model at this point
-      onLoopComplete(model)
 
     model[point.metric] =
       value: point.value
       loopReference: point.loopReference
       timeInSeconds: calculateTime(determineSeconds(point.loopReference))
+      isStale: -> model[point.metric].loopReference != model['secondsElapsed'].loopReference
 
 
