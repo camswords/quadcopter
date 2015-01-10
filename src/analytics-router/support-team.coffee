@@ -14,7 +14,7 @@ initialise = ->
     cursor.goto(1, row).eraseLine()
 
 
-outputToConsole = (metrics) ->
+outputToConsole = (representativeModel) ->
   _.forEach Object.keys(protocol.metrics), (metricName, index) ->
     column = index % metricsPerRow
     row = Math.floor(index / metricsPerRow) + 1
@@ -30,14 +30,14 @@ outputToConsole = (metrics) ->
 
     cursor.goto(column * columnWidth + metricsValueOffset, (row * consoleLinesPerRow) + 1)
 
-    if (metrics[metricName] == undefined || metrics[metricName] == null)
+    if (representativeModel[metricName] == undefined || representativeModel[metricName] == null)
       cursor.fg.reset()
       cursor.red()
       cursor.eraseLine().write('-')
     else
       cursor.fg.reset()
       cursor.green()
-      cursor.eraseLine().write(metrics[metricName] + "")
+      cursor.eraseLine().write(representativeModel[metricName].value + "")
 
 
 module.exports =
