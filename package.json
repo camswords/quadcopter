@@ -10,6 +10,8 @@
     "require-dir": "*",
     "express": "*",
     "moment": "*",
-    "influx": "*"
+    "influx": "*",
+    "lodash": "*",
+    "ansi": "*"
   }
 }

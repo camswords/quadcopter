@@ -34,7 +34,6 @@ void RecordMetric(uint8_t type, uint8_t loopReference, float value) {
 	WriteCharacterToBuffer('S');
 	WriteCharacterToBuffer(type);
 	WriteCharacterToBuffer(loopReference);
-	WriteCharacterToBuffer(type);
 
 	int32_t roundedValue = (value * 1000000);
 	uint8_t valueHighest = (roundedValue >> 24) & 0xFF;

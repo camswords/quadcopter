@@ -1,4 +1,5 @@
 SerialPort = require('serialport').SerialPort
+protocol = require('./protocol')
 
 concatenate = (bufferA, bufferB) ->
   newBuffer = new Buffer(bufferA.length + bufferB.length)
@@ -23,13 +24,13 @@ Connection =
         metricStartPosition = 0
 
         while i < buffer.length
-          if buffer[i] == '|'.charCodeAt(0)
+          if buffer[i] == protocol.startCharacter.charCodeAt(0)
             callback buffer.slice(metricStartPosition, i)
             metricStartPosition = i + 1
 
           i++
 
-        # unfinish metrics should be added back to the buffer
+        # unfinished metrics should be added back to the buffer
         buffer = buffer.slice(metricStartPosition, buffer.length)
 
       setInterval(parseBuffer, 200)

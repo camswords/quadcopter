@@ -36,6 +36,5 @@ module.exports =
     pointsPerSecond++
     point = time: calculateTime(timeInSeconds), value: value
 
-    console.log timeInSeconds, name, point.value, point.time
     influxdb.save(name, point)
 
