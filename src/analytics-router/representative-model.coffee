@@ -1,15 +1,14 @@
 _ = require('lodash')
 moment = require('moment')
 
-secondsReferences = []
+secondsReferences = {}
 model = {}
 onLoopCompletes = []
 maximumTimeInSeconds = Infinity
 startTime = null
 
-determineSeconds = (loopReference) ->
-  reference = _.find secondsReferences, (reference) -> reference.loopReference == loopReference
-  reference.seconds if (reference)
+determineSeconds = (loopReference) -> secondsReferences[loopReference]
+
 
 calculateTime = (timeInSeconds) ->
   if !timeInSeconds
@@ -31,14 +30,12 @@ module.exports =
       # seconds elapsed is the first metric sent, so lets notify others of the model at this point
       _.each onLoopCompletes, (onLoopComplete) -> onLoopComplete(model)
 
-      secondsReferences.push
-        loopReference: point.loopReference
-        seconds: point.value
+      secondsReferences[point.loopReference] = point.value
 
     model[point.metric] =
       value: point.value
       loopReference: point.loopReference
-      time: calculateTime(determineSeconds(point.loopReference))
+      time: calculateTime(secondsReferences[point.loopReference])
       isStale: ->
         if !model[point.metric] || !model['secondsElapsed']
           return false
