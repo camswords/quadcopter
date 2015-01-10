@@ -45,5 +45,6 @@ module.exports =
           return false
 
         model[point.metric].loopReference != model['secondsElapsed'].loopReference
+      isValid: -> !model[point.metric].isStale() && model[point.metric].time != 'undefined'
 
 

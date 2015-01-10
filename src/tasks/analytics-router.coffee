@@ -12,7 +12,8 @@ module.exports = ->
 
   representativeModel.onLoopComplete (model) ->
     _.each Object.keys(model), (metricName) ->
-      persistence.save(metricName, model[metricName].time, model[metricName].value)
+      if model[metricName].isValid()
+        persistence.save(metricName, model[metricName].time, model[metricName].value)
 
   representativeModel.onLoopComplete (model) -> supportTeam.notify(model)
 
