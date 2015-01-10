@@ -25,8 +25,13 @@ Connection =
 
         while i < buffer.length
           if buffer[i] == protocol.startCharacter.charCodeAt(0)
-            callback buffer.slice(metricStartPosition, i)
-            metricStartPosition = i + 1
+
+            if (i - metricStartPosition) == protocol.payloadLength
+              callback buffer.slice(metricStartPosition, i)
+              metricStartPosition = i + 1
+
+            if (i - metricStartPosition) > protocol.payloadLength
+              metricStartPosition = i + 1
 
           i++
 

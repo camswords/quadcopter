@@ -25,7 +25,6 @@ outputToConsole = (representativeModel) ->
     cursor.eraseLine().write(definition.name)
 
     cursor.green()
-
     cursor.goto(column * columnWidth + metricsValueOffset, (row * consoleLinesPerRow) + 1)
 
     metric = representativeModel[definition.name]
@@ -41,8 +40,6 @@ outputToConsole = (representativeModel) ->
       cursor.eraseLine().write(metric.value + "")
 
     cursor.reset()
-
-
 
 module.exports =
   notify: outputToConsole

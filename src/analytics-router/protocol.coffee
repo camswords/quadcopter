@@ -38,3 +38,4 @@ module.exports =
   numberOfDefinitions: definitions.length
   startCharacter: 'S'
   metricDefinitionByReference: metricDefinitionByReference
+  payloadLength: 6
