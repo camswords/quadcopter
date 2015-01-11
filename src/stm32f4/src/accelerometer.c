@@ -112,7 +112,7 @@ void ReadAccelerometer() {
 	float ySquared = calibratedY * calibratedY;
 	float zSquared = calibratedZ * calibratedZ;
 
-	float xInDegrees = -atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
+	float xInDegrees = atan(calibratedY / sqrt(xSquared + zSquared)) * 180.0f / 3.141592f;
 	float yInDegrees = atan(calibratedX / sqrt(ySquared + zSquared)) * 180.0f / 3.141592f;
 	float zInDegress = 0.0f; // for now.
 
