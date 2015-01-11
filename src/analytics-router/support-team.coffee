@@ -3,41 +3,42 @@ _ = require('lodash')
 protocol = require('./protocol')
 
 columnWidth = 30
-metricsPerRow = 4
-numberOfRows = Math.ceil(protocol.definitions.length / metricsPerRow)
 consoleLinesPerRow = 4
-metricsValueOffset = 7
+metricsValueOffset = 4
 
 
 initialise = ->
-  for row in [1..(numberOfRows * consoleLinesPerRow) + 10] by 1
+  for row in [1..(protocol.suggestedNumberOfRows * consoleLinesPerRow) + 10] by 1
     cursor.goto(1, row).eraseLine()
 
+outputValue = (cursor, column, row, value) ->
+  whiteSpace = [1..(columnWidth - 1)].reduce ((accumulator)-> accumulator + ' '), ''
+  cursor.goto(column, row)
+        .write(whiteSpace)
+        .goto(column, row)
+        .write(value)
 
 outputToConsole = (representativeModel) ->
-  _.forEach protocol.definitions, (definition, index) ->
-    column = index % metricsPerRow
-    row = Math.floor(index / metricsPerRow) + 1
+  _.forEach protocol.definitions, (definition) ->
 
     cursor.magenta()
+    headingColumn = (definition.column - 1) * columnWidth
+    headingRow = (definition.row * consoleLinesPerRow)
+    outputValue(cursor, headingColumn, headingRow, definition.name)
 
-    cursor.goto(column * columnWidth, (row * consoleLinesPerRow))
-    cursor.eraseLine().write(definition.name)
-
-    cursor.green()
-    cursor.goto(column * columnWidth + metricsValueOffset, (row * consoleLinesPerRow) + 1)
-
+    valueColumn = (definition.column - 1) * columnWidth + metricsValueOffset
+    valueRow = (definition.row * consoleLinesPerRow) + 1
     metric = representativeModel[definition.name]
 
     if metric == undefined || metric == null
       cursor.red()
-      cursor.eraseLine().write('-')
+      outputValue(cursor, valueColumn, valueRow, '-')
     else if metric.isStale()
       cursor.red()
-      cursor.eraseLine().write(metric.value + "")
+      outputValue(cursor, valueColumn, valueRow, metric.value + '')
     else
       cursor.green()
-      cursor.eraseLine().write(metric.value + "")
+      outputValue(cursor, valueColumn, valueRow, metric.value + '')
 
     cursor.reset()
 
