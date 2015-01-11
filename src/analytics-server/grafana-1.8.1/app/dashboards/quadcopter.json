@@ -448,15 +448,15 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "remoteXPidProportional",
-                            "query": "select mean(value) from \"remoteXPidProportional\" where $timeFilter group by time($interval) order asc"
+                            "series": "remotePidProportional",
+                            "query": "select mean(value) from \"remotePidProportional\" where $timeFilter group by time($interval) order asc"
                         },
                         {
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "remoteYPidProportional",
-                            "query": "select mean(value) from \"remoteYPidProportional\" where $timeFilter group by time($interval) order asc"
+                            "series": "remotePidIntegral",
+                            "query": "select mean(value) from \"remotePidIntegral\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},

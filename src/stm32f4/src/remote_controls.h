@@ -6,9 +6,9 @@
 
 struct PWMInput* throttle;
 
-struct PWMInput* xPidProportional;
+struct PWMInput* remotePidProportional;
 
-struct PWMInput* yPidProportional;
+struct PWMInput* remotePidIntegral;
 
 struct PWMInput* resetAngularPosition;
 
@@ -17,9 +17,9 @@ void InitialiseRemoteControls();
 /* These will come back as a percentage */
 float ReadRemoteThrottle();
 
-float ReadRemoteXPidProportional();
+float ReadRemotePidProportional();
 
-float ReadRemoteYPidProportional();
+float ReadRemotePidIntegral();
 
 float ReadResetAngularPosition();
 

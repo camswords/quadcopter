@@ -9,12 +9,12 @@ void InitialiseRemoteControls() {
   /* rudder: spin to the left or right on a flat plane
    * Channel 4 on the RC receiver
    */
-  xPidProportional = MeasurePWMInput(TIM5, GPIOA, GPIO_Pin_0, GPIO_PinSource0); 		// channel 2 - PA.01
+  remotePidProportional = MeasurePWMInput(TIM5, GPIOA, GPIO_Pin_0, GPIO_PinSource0); 		// channel 2 - PA.01
 
   /* airleron: fly sideways left or right
    * Channel 2 on the RC receiver
    */
-  yPidProportional = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
+  remotePidIntegral = MeasurePWMInput(TIM9, GPIOE, GPIO_Pin_5, GPIO_PinSource5);	// channel 2 - PE.05
 
   /* elevator: fly forwards or backwards
    * Channel 3 on the RC receiver
@@ -48,12 +48,12 @@ float ReadRemoteThrottle() {
 	return CalculatePercentageOfMaximum(throttle->dutyCycle, throttle->frequency);
 }
 
-float ReadRemoteXPidProportional() {
-	return CalculatePercentageOfMaximum(xPidProportional->dutyCycle, xPidProportional->frequency);
+float ReadRemotePidProportional() {
+	return CalculatePercentageOfMaximum(remotePidProportional->dutyCycle, remotePidProportional->frequency);
 }
 
-float ReadRemoteYPidProportional() {
-	return CalculatePercentageOfMaximum(yPidProportional->dutyCycle, yPidProportional->frequency);
+float ReadRemotePidIntegral() {
+	return CalculatePercentageOfMaximum(remotePidIntegral->dutyCycle, remotePidIntegral->frequency);
 }
 
 float ReadResetAngularPosition() {
