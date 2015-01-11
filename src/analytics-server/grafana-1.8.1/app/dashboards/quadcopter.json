@@ -448,8 +448,15 @@
                             "target": "",
                             "function": "mean",
                             "column": "value",
-                            "series": "pidProportional",
-                            "query": "select mean(value) from \"pidProportional\" where $timeFilter group by time($interval) order asc"
+                            "series": "remoteXPidProportional",
+                            "query": "select mean(value) from \"remoteXPidProportional\" where $timeFilter group by time($interval) order asc"
+                        },
+                        {
+                            "target": "",
+                            "function": "mean",
+                            "column": "value",
+                            "series": "remoteYPidProportional",
+                            "query": "select mean(value) from \"remoteYPidProportional\" where $timeFilter group by time($interval) order asc"
                         }
                     ],
                     "aliasColors": {},

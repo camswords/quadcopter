@@ -122,9 +122,10 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  float thisPidProportional = ReadRemotePidProportional();
-		  xAxisPid = InitialisePid(thisPidProportional, 0, 0);
-		  yAxisPid = InitialisePid(thisPidProportional, 0, 0);
+		  float xPidProportional = ReadRemoteXPidProportional();
+		  float yPidProportional = ReadRemoteYPidProportional();
+		  xAxisPid = InitialisePid(xPidProportional, 0, 0);
+		  yAxisPid = InitialisePid(yPidProportional, 0, 0);
 
 		  uint8_t loopReference = rand() & 0xFF;
 
@@ -141,7 +142,8 @@ int main(void) {
 		  RecordFloatMetric(METRIC_PROPELLOR_A_SPEED, loopReference, aProp.get());
 		  RecordFloatMetric(METRIC_PID_X_ADJUSTMENT, loopReference, xAdjustment);
 		  RecordFloatMetric(METRIC_PID_Y_ADJUSTMENT, loopReference, yAdjustment);
-		  RecordFloatMetric(METRIC_PID_PROPORTIONAL, loopReference, thisPidProportional);
+		  RecordFloatMetric(METRIC_REMOTE_X_PID_PROPORTIONAL, loopReference, xPidProportional);
+		  RecordFloatMetric(METRIC_REMOTE_Y_PID_PROPORTIONAL, loopReference, yPidProportional);
 		  RecordFloatMetric(METRIC_REMOTE_THROTTLE, loopReference, currentThrottle);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_X_POSITION, loopReference, accelerometerReading.x);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_Y_POSITION, loopReference, accelerometerReading.y);
