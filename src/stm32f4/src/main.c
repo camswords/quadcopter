@@ -60,10 +60,11 @@ int main(void) {
   InitialiseRemoteControls();
 
   // Uses Timer #3
-  DutyCycle bProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1); 		// (x axis)
+  DutyCycle bProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4); 		// (x axis)
   DutyCycle eProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
   DutyCycle cProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
-  DutyCycle aProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4);	// (y axis)
+  DutyCycle aProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);	// (y axis)
+
 
   /* note: should introduce yaw, pitch roll into this */
   /* full throttle for two seconds */
