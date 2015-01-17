@@ -2,6 +2,14 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
+// ARMING_SEQUENCE
+#define ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED		0
+#define ARMING_SEQUENCE_HIGH_THROTTLE_REQUIRED		1
+#define ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED_AGAIN 2
+#define ARMING_SEQUENCE_ARMED						3
+
+#define ARMING_SEQUENCE_IS_DISABLED					0
+
 // THROTTLE CALIBRATION
 /* use different values of motor speed if the quad ascends / descends too quickly with a centered throttle */
 #define MOTOR_SPEED_REQUIRED_FOR_LIFT				1100.0
