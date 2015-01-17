@@ -46,8 +46,8 @@ int main(void) {
   InitialisePWM();
   ResetI2C();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
-  Pid xAxisPid = InitialisePid(10, 0, 0);	/* a 1 degree angle will affect the power distribution by + / - 20 */
-  Pid yAxisPid = InitialisePid(10, 0, 0);
+  Pid xAxisPid = InitialisePid(5, 0, 0);
+  Pid yAxisPid = InitialisePid(5, 0, 0);
 
 
   /*
@@ -99,9 +99,13 @@ int main(void) {
 	  loopsPerSecond++;
 	  ReadAngularPosition();
 
-	  /* ideally, we want this to return a value between -500 and 500 */
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
+
+	  if (xAdjustment < PID_MINIMUM_BOUND) { xAdjustment = PID_MINIMUM_BOUND; }
+	  if (xAdjustment > PID_MAXIMUM_BOUND) { xAdjustment = PID_MAXIMUM_BOUND; }
+	  if (yAdjustment < PID_MINIMUM_BOUND) { yAdjustment = PID_MINIMUM_BOUND; }
+	  if (yAdjustment > PID_MAXIMUM_BOUND) { yAdjustment = PID_MAXIMUM_BOUND; }
 
 	  float thrust = ReadRemoteThrottle();
 	  float baseMotorSpeed = 0;
@@ -150,11 +154,6 @@ int main(void) {
 	  }
 
 	  if (thisSecond != secondsElapsed) {
-		  float remotePidProportional = ReadRemotePidProportional();
-		  float remotePidIntegral = ReadRemotePidIntegral();
-		  xAxisPid = InitialisePid(remotePidProportional, remotePidIntegral, 0);
-		  yAxisPid = InitialisePid(remotePidProportional, remotePidIntegral, 0);
-
 		  uint8_t loopReference = rand() & 0xFF;
 
 		  RecordIntegerMetric(METRIC_SECONDS_ELAPSED, loopReference, secondsElapsed);
@@ -170,8 +169,7 @@ int main(void) {
 		  RecordFloatMetric(METRIC_PROPELLOR_A_SPEED, loopReference, aProp.get());
 		  RecordFloatMetric(METRIC_PID_X_ADJUSTMENT, loopReference, xAdjustment);
 		  RecordFloatMetric(METRIC_PID_Y_ADJUSTMENT, loopReference, yAdjustment);
-		  RecordFloatMetric(METRIC_REMOTE_PID_PROPORTIONAL, loopReference, remotePidProportional);
-		  RecordFloatMetric(METRIC_REMOTE_PID_INTEGRAL, loopReference, remotePidIntegral);
+		  RecordFloatMetric(METRIC_REMOTE_PID_PROPORTIONAL, loopReference, 5);
 		  RecordFloatMetric(METRIC_REMOTE_THROTTLE, loopReference, thrust);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_X_POSITION, loopReference, accelerometerReading.x);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_Y_POSITION, loopReference, accelerometerReading.y);

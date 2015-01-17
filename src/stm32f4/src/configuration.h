@@ -11,6 +11,11 @@
  */
 #define THROTTLE_SENSITIVITY						10.0
 
+// PID
+/* any pid calculations outside these bounds will be reduced to the bound value */
+#define PID_MINIMUM_BOUND							-100.0
+#define PID_MAXIMUM_BOUND							100.0
+
 
 // MOTOR SPEED
 #define MINIMUM_MOTOR_SPEED							1000

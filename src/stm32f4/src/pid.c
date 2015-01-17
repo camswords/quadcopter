@@ -2,6 +2,8 @@
 #include <pid.h>
 #include <math.h>
 
+
+/* note, cumulative error should really be bounded to the last know 'good' state, or the last x calcuations etc */
 struct Pid InitialisePid(float proportional, float integral, float differential) {
 	Pid pid;
 
