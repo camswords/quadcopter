@@ -46,8 +46,8 @@ int main(void) {
   InitialisePWM();
   ResetI2C();
   InitialiseI2C();	// PB.08 (SCL), PB.09 (SDA)
-  Pid xAxisPid = InitialisePid(5, 0, 0);
-  Pid yAxisPid = InitialisePid(5, 0, 0);
+  Pid xAxisPid = InitialisePid(3, 0, 0);
+  Pid yAxisPid = InitialisePid(3, 0, 0);
 
 
   /*
@@ -107,9 +107,13 @@ int main(void) {
 	  if (yAdjustment < PID_MINIMUM_BOUND) { yAdjustment = PID_MINIMUM_BOUND; }
 	  if (yAdjustment > PID_MAXIMUM_BOUND) { yAdjustment = PID_MAXIMUM_BOUND; }
 
-	  float thrust = ReadRemoteThrottle();
+	  float thrust = 50.0;
 	  float baseMotorSpeed = 0;
 	  float motorAdjustment = 0;
+	  float bMotorSpeed = 0.0;
+	  float eMotorSpeed = 0.0;
+	  float cMotorSpeed = 0.0;
+	  float aMotorSpeed = 0.0;
 
 	  if (thrust == 0.0) {
 		  /* always turn it off when the throttle is zero, independent of throttle constants */
@@ -121,10 +125,10 @@ int main(void) {
 		  /* throttle is converted to a range of -50 to +50 */
 		  baseMotorSpeed = MOTOR_SPEED_REQUIRED_FOR_LIFT + (THROTTLE_SENSITIVITY * (thrust - 50.0));
 
-		  float bMotorSpeed = baseMotorSpeed + yAdjustment;
-		  float eMotorSpeed = baseMotorSpeed - yAdjustment;
-		  float cMotorSpeed = baseMotorSpeed + xAdjustment;
-		  float aMotorSpeed = baseMotorSpeed - xAdjustment;
+		  bMotorSpeed = baseMotorSpeed + yAdjustment;
+		  eMotorSpeed = baseMotorSpeed - yAdjustment;
+		  cMotorSpeed = baseMotorSpeed + xAdjustment;
+		  aMotorSpeed = baseMotorSpeed - xAdjustment;
 
 		  /* adjust all motor speeds if one motor is outside motor speed bounds */
 		  /* this is a deliberate choice to prioritise desired angular position over desired thrust */
@@ -147,10 +151,15 @@ int main(void) {
 		  }
 
 		  /* apply adjusted motor speeds to the motors */
-		  bProp.set(bMotorSpeed + motorAdjustment);
-		  eProp.set(eMotorSpeed + motorAdjustment);
-		  cProp.set(cMotorSpeed + motorAdjustment);
-		  aProp.set(aMotorSpeed + motorAdjustment);
+		  bMotorSpeed = bMotorSpeed + motorAdjustment;
+		  eMotorSpeed = eMotorSpeed + motorAdjustment;
+		  cMotorSpeed = cMotorSpeed + motorAdjustment;
+		  aMotorSpeed = aMotorSpeed + motorAdjustment;
+
+		  bProp.set(bMotorSpeed);
+		  eProp.set(eMotorSpeed);
+		  cProp.set(cMotorSpeed);
+		  aProp.set(aMotorSpeed);
 	  }
 
 	  if (thisSecond != secondsElapsed) {
@@ -163,13 +172,13 @@ int main(void) {
 		  RecordFloatMetric(METRIC_GYROSCOPE_Z_POSITION, loopReference, gyroscopeReading.z);
 		  RecordFloatMetric(METRIC_GYROSCOPE_TEMPERATURE, loopReference, gyroscopeReading.gyroscopeTemperature);
 		  RecordIntegerMetric(METRIC_GYROSCOPE_SAMPLE_RATE, loopReference, gyroscopeReading.readings);
-		  RecordFloatMetric(METRIC_PROPELLOR_B_SPEED, loopReference, bProp.get());
-		  RecordFloatMetric(METRIC_PROPELLOR_E_SPEED, loopReference, eProp.get());
-		  RecordFloatMetric(METRIC_PROPELLOR_C_SPEED, loopReference, cProp.get());
-		  RecordFloatMetric(METRIC_PROPELLOR_A_SPEED, loopReference, aProp.get());
+		  RecordFloatMetric(METRIC_PROPELLOR_B_SPEED, loopReference, bMotorSpeed);
+		  RecordFloatMetric(METRIC_PROPELLOR_E_SPEED, loopReference, eMotorSpeed);
+		  RecordFloatMetric(METRIC_PROPELLOR_C_SPEED, loopReference, cMotorSpeed);
+		  RecordFloatMetric(METRIC_PROPELLOR_A_SPEED, loopReference, aMotorSpeed);
 		  RecordFloatMetric(METRIC_PID_X_ADJUSTMENT, loopReference, xAdjustment);
 		  RecordFloatMetric(METRIC_PID_Y_ADJUSTMENT, loopReference, yAdjustment);
-		  RecordFloatMetric(METRIC_REMOTE_PID_PROPORTIONAL, loopReference, 5);
+		  RecordFloatMetric(METRIC_REMOTE_PID_PROPORTIONAL, loopReference, xAxisPid.proportional);
 		  RecordFloatMetric(METRIC_REMOTE_THROTTLE, loopReference, thrust);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_X_POSITION, loopReference, accelerometerReading.x);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_Y_POSITION, loopReference, accelerometerReading.y);
@@ -180,7 +189,7 @@ int main(void) {
 		  RecordFloatMetric(METRIC_ANGULAR_Z_POSITION, loopReference, angularPosition.z);
 		  RecordIntegerMetric(METRIC_METRICS_BUFFER_SIZE, loopReference, metricsRingBuffer.count);
 		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, baseMotorSpeed);
-		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, motorAdjustment);
+		  RecordFloatMetric(METRIC_DEBUG_VALUE_2, loopReference, motorAdjustment);
 
 		  loopsPerSecond = 0;
 		  accelerometerReading.readings = 0;
