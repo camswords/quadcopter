@@ -2,6 +2,20 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
+// THROTTLE CALIBRATION
+/* use different values of motor speed if the quad ascends / descends too quickly with a centered throttle */
+#define MOTOR_SPEED_REQUIRED_FOR_LIFT				1500.0
+
+/* use different values of sensitivity if the quad ascends / descends too quickly when changing the throttle.
+ * this is used in a calculation MOTOR_SPEED + (SENS. * THROTTLE) where THROTTLE is in the range -50 : +50.
+ */
+#define THROTTLE_SENSITIVITY						10.0
+
+
+// MOTOR SPEED
+#define MINIMUM_MOTOR_SPEED							1000
+#define MAXIMUM_MOTOR_SPEED							2000
+
 
 // ANGULAR POSITION
 #define HOW_MUCH_I_TRUST_THE_GYROSCOPE     			0.98f

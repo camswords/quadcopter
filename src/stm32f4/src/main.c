@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-//#include <pwm_input.h>
 #include "../Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_gpio.h"
 #include "accelerometer.h"
 #include "analytics.h"
@@ -60,11 +59,10 @@ int main(void) {
   InitialiseRemoteControls();
 
   // Uses Timer #3
-  DutyCycle bProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4); 		// (x axis)
-  DutyCycle eProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (x axis)
-  DutyCycle cProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);		// (y axis)
-  DutyCycle aProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);	// (y axis)
-
+  DutyCycle bProp = InitialisePWMChannel(GPIOB, GPIO_Pin_1, GPIO_PinSource1, 4); 	// (y axis)
+  DutyCycle eProp = InitialisePWMChannel(GPIOA, GPIO_Pin_7, GPIO_PinSource7, 2);	// (y axis)
+  DutyCycle cProp = InitialisePWMChannel(GPIOB, GPIO_Pin_0, GPIO_PinSource0, 3);	// (x axis)
+  DutyCycle aProp = InitialisePWMChannel(GPIOA, GPIO_Pin_6, GPIO_PinSource6, 1);	// (x axis)
 
   /* note: should introduce yaw, pitch roll into this */
   /* full throttle for two seconds */
@@ -86,14 +84,13 @@ int main(void) {
   TurnOff(ORANGE_LED);
   TurnOn(YELLOW_LED);
 
-  /* intitalise after the motors, this should give it some time for the temparature to stabalise */
+  /* initialise after the motors, this should give it some time for the temperature to stabilise */
   InitialiseAngularPosition();
 
   TurnOff(YELLOW_LED);
   TurnOn(BLUE_LED);
 
   /* go go go! */
-
 
   uint16_t loopsPerSecond = 0;
   uint32_t thisSecond = 0;
@@ -106,20 +103,50 @@ int main(void) {
 	  float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
 	  float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-	  float currentThrottle = ReadRemoteThrottle();
+	  float thrust = ReadRemoteThrottle();
+	  float baseMotorSpeed = 0;
+	  float motorAdjustment = 0;
 
-	  if (currentThrottle == 0.0) {
+	  if (thrust == 0.0) {
+		  /* always turn it off when the throttle is zero, independent of throttle constants */
 		  bProp.set(1000);
 		  eProp.set(1000);
 		  cProp.set(1000);
 		  aProp.set(1000);
 	  } else {
-		  float normalisedThrottle = (1000 * currentThrottle / 100.0) + 1000.0;
+		  /* throttle is converted to a range of -50 to +50 */
+		  baseMotorSpeed = MOTOR_SPEED_REQUIRED_FOR_LIFT + (THROTTLE_SENSITIVITY * (thrust - 50.0));
 
-		  bProp.set(yAdjustment + normalisedThrottle);
-		  eProp.set(-yAdjustment + normalisedThrottle);
-		  cProp.set(xAdjustment + normalisedThrottle);
-		  aProp.set(-xAdjustment + normalisedThrottle);
+		  float bMotorSpeed = baseMotorSpeed + yAdjustment;
+		  float eMotorSpeed = baseMotorSpeed - yAdjustment;
+		  float cMotorSpeed = baseMotorSpeed + xAdjustment;
+		  float aMotorSpeed = baseMotorSpeed - xAdjustment;
+
+		  /* adjust all motor speeds if one motor is outside motor speed bounds */
+		  /* this is a deliberate choice to prioritise desired angular position over desired thrust */
+		  float smallestMotorSpeed = MAXIMUM_MOTOR_SPEED;
+		  float largestMotorSpeed = MINIMUM_MOTOR_SPEED;
+
+		  if (bMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = bMotorSpeed; }
+		  if (bMotorSpeed > largestMotorSpeed) { largestMotorSpeed = bMotorSpeed; }
+		  if (eMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = eMotorSpeed; }
+		  if (eMotorSpeed > largestMotorSpeed) { largestMotorSpeed = eMotorSpeed; }
+		  if (cMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = cMotorSpeed; }
+		  if (cMotorSpeed > largestMotorSpeed) { largestMotorSpeed = cMotorSpeed; }
+		  if (aMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = aMotorSpeed; }
+		  if (aMotorSpeed > largestMotorSpeed) { largestMotorSpeed = aMotorSpeed; }
+
+		  if (smallestMotorSpeed < MINIMUM_MOTOR_SPEED) {
+			  motorAdjustment = MINIMUM_MOTOR_SPEED - smallestMotorSpeed;
+		  } else if (largestMotorSpeed > MAXIMUM_MOTOR_SPEED) {
+			  motorAdjustment = MAXIMUM_MOTOR_SPEED - largestMotorSpeed;
+		  }
+
+		  /* apply adjusted motor speeds to the motors */
+		  bProp.set(bMotorSpeed + motorAdjustment);
+		  eProp.set(eMotorSpeed + motorAdjustment);
+		  cProp.set(cMotorSpeed + motorAdjustment);
+		  aProp.set(aMotorSpeed + motorAdjustment);
 	  }
 
 	  if (thisSecond != secondsElapsed) {
@@ -145,7 +172,7 @@ int main(void) {
 		  RecordFloatMetric(METRIC_PID_Y_ADJUSTMENT, loopReference, yAdjustment);
 		  RecordFloatMetric(METRIC_REMOTE_PID_PROPORTIONAL, loopReference, remotePidProportional);
 		  RecordFloatMetric(METRIC_REMOTE_PID_INTEGRAL, loopReference, remotePidIntegral);
-		  RecordFloatMetric(METRIC_REMOTE_THROTTLE, loopReference, currentThrottle);
+		  RecordFloatMetric(METRIC_REMOTE_THROTTLE, loopReference, thrust);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_X_POSITION, loopReference, accelerometerReading.x);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_Y_POSITION, loopReference, accelerometerReading.y);
 		  RecordFloatMetric(METRIC_ACCELEROMETER_Z_POSITION, loopReference, accelerometerReading.z);
@@ -154,8 +181,8 @@ int main(void) {
 		  RecordFloatMetric(METRIC_ANGULAR_Y_POSITION, loopReference, angularPosition.y);
 		  RecordFloatMetric(METRIC_ANGULAR_Z_POSITION, loopReference, angularPosition.z);
 		  RecordIntegerMetric(METRIC_METRICS_BUFFER_SIZE, loopReference, metricsRingBuffer.count);
-		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, throttle->dutyCycle);
-		  RecordFloatMetric(METRIC_DEBUG_VALUE_2, loopReference, throttle->frequency);
+		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, baseMotorSpeed);
+		  RecordFloatMetric(METRIC_DEBUG_VALUE_1, loopReference, motorAdjustment);
 
 		  loopsPerSecond = 0;
 		  accelerometerReading.readings = 0;
