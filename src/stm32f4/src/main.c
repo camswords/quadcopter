@@ -95,31 +95,15 @@ int main(void) {
 			} else if (armingSequenceStep == ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED_AGAIN && thrust == 0.0) {
 				armingSequenceStep = ARMING_SEQUENCE_ARMED;
 				armingSequenceTimeLastStepExecuted = secondsElapsed;
+
+				TurnOff(YELLOW_LED);
+				TurnOn(BLUE_LED);
 			}
 		}
 
-		WaitAFewMillis(100);
+		WaitAFewMillis(10);
 	}
 
-	/* arm motors! */
-	/* full throttle for two seconds */
-	bProp.set(2000);
-	eProp.set(2000);
-	cProp.set(2000);
-	aProp.set(2000);
-
-	WaitAFewMillis(2000);
-
-	/* low throttle for two seconds */
-	bProp.set(1000);
-	eProp.set(1000);
-	cProp.set(1000);
-	aProp.set(1000);
-
-	WaitAFewMillis(2000);
-
-	TurnOff(YELLOW_LED);
-	TurnOn(BLUE_LED);
 
 	/* go go go! */
 
@@ -130,67 +114,87 @@ int main(void) {
 		loopsPerSecond++;
 		ReadAngularPosition();
 
-		float thrust = 50.0;
+		float thrust = ReadRemoteThrottle();
 		float baseMotorSpeed = 0;
 		float motorAdjustment = 0;
 		float bMotorSpeed = 0.0;
 		float eMotorSpeed = 0.0;
 		float cMotorSpeed = 0.0;
 		float aMotorSpeed = 0.0;
+		float xAdjustment = 0.0;
+		float yAdjustment = 0.0;
 
-		float xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
-		float yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
+		if ((armingSequenceStep != ARMING_SEQUENCE_ARMED || ARMING_SEQUENCE_IS_DISABLED) && secondsElapsed > armingSequenceTimeLastStepExecuted) {
+			if (armingSequenceStep == ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED && thrust == 0.0) {
+				armingSequenceStep = ARMING_SEQUENCE_HIGH_THROTTLE_REQUIRED;
+				armingSequenceTimeLastStepExecuted = secondsElapsed;
 
-		if (xAdjustment < PID_MINIMUM_BOUND) { xAdjustment = PID_MINIMUM_BOUND; }
-		if (xAdjustment > PID_MAXIMUM_BOUND) { xAdjustment = PID_MAXIMUM_BOUND; }
-		if (yAdjustment < PID_MINIMUM_BOUND) { yAdjustment = PID_MINIMUM_BOUND; }
-		if (yAdjustment > PID_MAXIMUM_BOUND) { yAdjustment = PID_MAXIMUM_BOUND; }
+			} else if (armingSequenceStep == ARMING_SEQUENCE_HIGH_THROTTLE_REQUIRED && thrust == 100.0) {
+				armingSequenceStep = ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED_AGAIN;
+				armingSequenceTimeLastStepExecuted = secondsElapsed;
 
-		if (thrust == 0.0) {
-			/* always turn it off when the throttle is zero, independent of throttle constants */
-			bProp.set(1000);
-			eProp.set(1000);
-			cProp.set(1000);
-			aProp.set(1000);
-		} else {
-			/* throttle is converted to a range of -50 to +50 */
-			baseMotorSpeed = MOTOR_SPEED_REQUIRED_FOR_LIFT + (THROTTLE_SENSITIVITY * (thrust - 50.0));
+			} else if (armingSequenceStep == ARMING_SEQUENCE_LOW_THROTTLE_REQUIRED_AGAIN && thrust == 0.0) {
+				armingSequenceStep = ARMING_SEQUENCE_ARMED;
+				armingSequenceTimeLastStepExecuted = secondsElapsed;
 
-			bMotorSpeed = baseMotorSpeed + yAdjustment;
-			eMotorSpeed = baseMotorSpeed - yAdjustment;
-			cMotorSpeed = baseMotorSpeed + xAdjustment;
-			aMotorSpeed = baseMotorSpeed - xAdjustment;
-
-			/* adjust all motor speeds if one motor is outside motor speed bounds */
-			/* this is a deliberate choice to prioritise desired angular position over desired thrust */
-			float smallestMotorSpeed = MAXIMUM_MOTOR_SPEED;
-			float largestMotorSpeed = MINIMUM_MOTOR_SPEED;
-
-			if (bMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = bMotorSpeed; }
-			if (bMotorSpeed > largestMotorSpeed) { largestMotorSpeed = bMotorSpeed; }
-			if (eMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = eMotorSpeed; }
-			if (eMotorSpeed > largestMotorSpeed) { largestMotorSpeed = eMotorSpeed; }
-			if (cMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = cMotorSpeed; }
-			if (cMotorSpeed > largestMotorSpeed) { largestMotorSpeed = cMotorSpeed; }
-			if (aMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = aMotorSpeed; }
-			if (aMotorSpeed > largestMotorSpeed) { largestMotorSpeed = aMotorSpeed; }
-
-			if (smallestMotorSpeed < MINIMUM_MOTOR_SPEED) {
-				motorAdjustment = MINIMUM_MOTOR_SPEED - smallestMotorSpeed;
-			} else if (largestMotorSpeed > MAXIMUM_MOTOR_SPEED) {
-				motorAdjustment = MAXIMUM_MOTOR_SPEED - largestMotorSpeed;
+				TurnOff(YELLOW_LED);
+				TurnOn(BLUE_LED);
 			}
+		} else if (armingSequenceStep == ARMING_SEQUENCE_ARMED) {
+			xAdjustment = CalculatePidAdjustment(&xAxisPid, angularPosition.x, 0.0);
+			yAdjustment = CalculatePidAdjustment(&yAxisPid, angularPosition.y, 0.0);
 
-			/* apply adjusted motor speeds to the motors */
-			bMotorSpeed = bMotorSpeed + motorAdjustment;
-			eMotorSpeed = eMotorSpeed + motorAdjustment;
-			cMotorSpeed = cMotorSpeed + motorAdjustment;
-			aMotorSpeed = aMotorSpeed + motorAdjustment;
+			if (xAdjustment < PID_MINIMUM_BOUND) { xAdjustment = PID_MINIMUM_BOUND; }
+			if (xAdjustment > PID_MAXIMUM_BOUND) { xAdjustment = PID_MAXIMUM_BOUND; }
+			if (yAdjustment < PID_MINIMUM_BOUND) { yAdjustment = PID_MINIMUM_BOUND; }
+			if (yAdjustment > PID_MAXIMUM_BOUND) { yAdjustment = PID_MAXIMUM_BOUND; }
 
-			bProp.set(bMotorSpeed);
-			eProp.set(eMotorSpeed);
-			cProp.set(cMotorSpeed);
-			aProp.set(aMotorSpeed);
+			if (thrust == 0.0) {
+				/* always turn it off when the throttle is zero, independent of throttle constants */
+				bProp.set(1000);
+				eProp.set(1000);
+				cProp.set(1000);
+				aProp.set(1000);
+			} else {
+				/* throttle is converted to a range of -50 to +50 */
+				baseMotorSpeed = MOTOR_SPEED_REQUIRED_FOR_LIFT + (THROTTLE_SENSITIVITY * (thrust - 50.0));
+
+				bMotorSpeed = baseMotorSpeed + yAdjustment;
+				eMotorSpeed = baseMotorSpeed - yAdjustment;
+				cMotorSpeed = baseMotorSpeed + xAdjustment;
+				aMotorSpeed = baseMotorSpeed - xAdjustment;
+
+				/* adjust all motor speeds if one motor is outside motor speed bounds */
+				/* this is a deliberate choice to prioritise desired angular position over desired thrust */
+				float smallestMotorSpeed = MAXIMUM_MOTOR_SPEED;
+				float largestMotorSpeed = MINIMUM_MOTOR_SPEED;
+
+				if (bMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = bMotorSpeed; }
+				if (bMotorSpeed > largestMotorSpeed) { largestMotorSpeed = bMotorSpeed; }
+				if (eMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = eMotorSpeed; }
+				if (eMotorSpeed > largestMotorSpeed) { largestMotorSpeed = eMotorSpeed; }
+				if (cMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = cMotorSpeed; }
+				if (cMotorSpeed > largestMotorSpeed) { largestMotorSpeed = cMotorSpeed; }
+				if (aMotorSpeed < smallestMotorSpeed) { smallestMotorSpeed = aMotorSpeed; }
+				if (aMotorSpeed > largestMotorSpeed) { largestMotorSpeed = aMotorSpeed; }
+
+				if (smallestMotorSpeed < MINIMUM_MOTOR_SPEED) {
+					motorAdjustment = MINIMUM_MOTOR_SPEED - smallestMotorSpeed;
+				} else if (largestMotorSpeed > MAXIMUM_MOTOR_SPEED) {
+					motorAdjustment = MAXIMUM_MOTOR_SPEED - largestMotorSpeed;
+				}
+
+				/* apply adjusted motor speeds to the motors */
+				bMotorSpeed = bMotorSpeed + motorAdjustment;
+				eMotorSpeed = eMotorSpeed + motorAdjustment;
+				cMotorSpeed = cMotorSpeed + motorAdjustment;
+				aMotorSpeed = aMotorSpeed + motorAdjustment;
+
+				bProp.set(bMotorSpeed);
+				eProp.set(eMotorSpeed);
+				cProp.set(cMotorSpeed);
+				aProp.set(aMotorSpeed);
+			}
 		}
 
 		if (thisSecond != secondsElapsed) {
