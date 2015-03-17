@@ -3834,42 +3834,42 @@ Source: AVX .. aphvc.pdf</description>
 <part name="C3" library="rcl" deviceset="C-US" device="025-040X050" value="100nF"/>
 <part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
-<part name="PAD1" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD6" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD8" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD9" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD10" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD12" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD15" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD2" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD3" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD4" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD5" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD13" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD14" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD16" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD17" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD18" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD19" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD24" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD25" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD26" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD27" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD28" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD29" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD30" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD31" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD32" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD33" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD34" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD35" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD36" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD20" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD21" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD22" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD23" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD7" library="wirepad" deviceset="1,6/0,8" device=""/>
-<part name="PAD37" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="RST" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC0" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA8" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC9" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PB13" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T5-CH1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T5-CH2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T9-CH1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T9-CH2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="I2C-SDA" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="I2C-SCL" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T3-CH1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T3-CH2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T3-CH3" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T3-CH4" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="SWC" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="SWD" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC4" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PC5" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA15" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PB10" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PB11" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T4-CH2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T4-CH1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T12-CH2" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="T12-CH1" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="RX" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="TX" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA4" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA5" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA7" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PA6" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PB12" library="wirepad" deviceset="1,6/0,8" device=""/>
+<part name="PB3" library="wirepad" deviceset="1,6/0,8" device=""/>
 <part name="PAD11" library="wirepad" deviceset="1,6/0,8" device=""/>
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
 <part name="SUPPLY4" library="supply2" deviceset="GND" device=""/>
@@ -3896,14 +3896,6 @@ Source: AVX .. aphvc.pdf</description>
 <sheets>
 <sheet>
 <plain>
-<text x="30.48" y="63.5" size="1.778" layer="91">Tim5</text>
-<text x="25.4" y="55.88" size="1.778" layer="91">Tim9</text>
-<text x="93.98" y="22.86" size="1.778" layer="91">Tim12</text>
-<text x="93.98" y="27.94" size="1.778" layer="91">Tim4</text>
-<text x="30.48" y="20.32" size="1.778" layer="91">Tim3</text>
-<text x="33.02" y="30.48" size="1.778" layer="91">I2C</text>
-<text x="99.06" y="17.78" size="1.778" layer="91">UART</text>
-<text x="93.98" y="53.34" size="1.778" layer="91">SWC/SDO</text>
 </plain>
 <instances>
 <instance part="MINI-M4" gate="G$1" x="66.04" y="43.18"/>
@@ -3916,42 +3908,42 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="C3" gate="G$1" x="116.84" y="58.42"/>
 <instance part="SUPPLY3" gate="GND" x="132.08" y="45.72"/>
 <instance part="P+3" gate="VCC" x="154.94" y="71.12" rot="R270"/>
-<instance part="PAD1" gate="P" x="50.8" y="66.04"/>
-<instance part="PAD6" gate="P" x="50.8" y="53.34"/>
-<instance part="PAD8" gate="P" x="50.8" y="48.26"/>
-<instance part="PAD9" gate="P" x="50.8" y="45.72"/>
-<instance part="PAD10" gate="P" x="50.8" y="43.18"/>
-<instance part="PAD12" gate="P" x="50.8" y="30.48"/>
-<instance part="PAD15" gate="P" x="50.8" y="22.86"/>
-<instance part="PAD2" gate="P" x="38.1" y="63.5"/>
-<instance part="PAD3" gate="P" x="38.1" y="60.96"/>
-<instance part="PAD4" gate="P" x="33.02" y="58.42"/>
-<instance part="PAD5" gate="P" x="33.02" y="55.88"/>
-<instance part="PAD13" gate="P" x="38.1" y="33.02"/>
-<instance part="PAD14" gate="P" x="38.1" y="30.48"/>
-<instance part="PAD16" gate="P" x="38.1" y="25.4"/>
-<instance part="PAD17" gate="P" x="38.1" y="22.86"/>
-<instance part="PAD18" gate="P" x="38.1" y="20.32"/>
-<instance part="PAD19" gate="P" x="38.1" y="17.78"/>
-<instance part="PAD24" gate="P" x="91.44" y="55.88" rot="R180"/>
-<instance part="PAD25" gate="P" x="91.44" y="53.34" rot="R180"/>
-<instance part="PAD26" gate="P" x="81.28" y="50.8" rot="R180"/>
-<instance part="PAD27" gate="P" x="81.28" y="48.26" rot="R180"/>
-<instance part="PAD28" gate="P" x="81.28" y="40.64" rot="R180"/>
-<instance part="PAD29" gate="P" x="81.28" y="35.56" rot="R180"/>
-<instance part="PAD30" gate="P" x="81.28" y="33.02" rot="R180"/>
-<instance part="PAD31" gate="P" x="91.44" y="30.48" rot="R180"/>
-<instance part="PAD32" gate="P" x="91.44" y="27.94" rot="R180"/>
-<instance part="PAD33" gate="P" x="91.44" y="25.4" rot="R180"/>
-<instance part="PAD34" gate="P" x="91.44" y="22.86" rot="R180"/>
-<instance part="PAD35" gate="P" x="96.52" y="20.32" rot="R180"/>
-<instance part="PAD36" gate="P" x="96.52" y="17.78" rot="R180"/>
-<instance part="PAD20" gate="P" x="81.28" y="58.42" rot="R180"/>
-<instance part="PAD21" gate="P" x="81.28" y="60.96" rot="R180"/>
-<instance part="PAD22" gate="P" x="81.28" y="63.5" rot="R180"/>
-<instance part="PAD23" gate="P" x="81.28" y="66.04" rot="R180"/>
-<instance part="PAD7" gate="P" x="38.1" y="50.8"/>
-<instance part="PAD37" gate="P" x="81.28" y="38.1" rot="R180"/>
+<instance part="RST" gate="P" x="50.8" y="66.04"/>
+<instance part="PC0" gate="P" x="50.8" y="53.34"/>
+<instance part="PC1" gate="P" x="50.8" y="48.26"/>
+<instance part="PC2" gate="P" x="50.8" y="45.72"/>
+<instance part="PA8" gate="P" x="50.8" y="43.18"/>
+<instance part="PC9" gate="P" x="50.8" y="30.48"/>
+<instance part="PB13" gate="P" x="50.8" y="22.86"/>
+<instance part="T5-CH1" gate="P" x="38.1" y="63.5"/>
+<instance part="T5-CH2" gate="P" x="38.1" y="60.96"/>
+<instance part="T9-CH1" gate="P" x="33.02" y="58.42"/>
+<instance part="T9-CH2" gate="P" x="33.02" y="55.88"/>
+<instance part="I2C-SDA" gate="P" x="38.1" y="33.02"/>
+<instance part="I2C-SCL" gate="P" x="38.1" y="30.48"/>
+<instance part="T3-CH1" gate="P" x="38.1" y="25.4"/>
+<instance part="T3-CH2" gate="P" x="38.1" y="22.86"/>
+<instance part="T3-CH3" gate="P" x="38.1" y="20.32"/>
+<instance part="T3-CH4" gate="P" x="38.1" y="17.78"/>
+<instance part="SWC" gate="P" x="91.44" y="55.88" rot="R180"/>
+<instance part="SWD" gate="P" x="91.44" y="53.34" rot="R180"/>
+<instance part="PC4" gate="P" x="81.28" y="50.8" rot="R180"/>
+<instance part="PC5" gate="P" x="81.28" y="48.26" rot="R180"/>
+<instance part="PA15" gate="P" x="81.28" y="40.64" rot="R180"/>
+<instance part="PB10" gate="P" x="81.28" y="35.56" rot="R180"/>
+<instance part="PB11" gate="P" x="81.28" y="33.02" rot="R180"/>
+<instance part="T4-CH2" gate="P" x="91.44" y="30.48" rot="R180"/>
+<instance part="T4-CH1" gate="P" x="91.44" y="27.94" rot="R180"/>
+<instance part="T12-CH2" gate="P" x="91.44" y="25.4" rot="R180"/>
+<instance part="T12-CH1" gate="P" x="91.44" y="22.86" rot="R180"/>
+<instance part="RX" gate="P" x="96.52" y="20.32" rot="R180"/>
+<instance part="TX" gate="P" x="96.52" y="17.78" rot="R180"/>
+<instance part="PA4" gate="P" x="81.28" y="58.42" rot="R180"/>
+<instance part="PA5" gate="P" x="81.28" y="60.96" rot="R180"/>
+<instance part="PA7" gate="P" x="81.28" y="63.5" rot="R180"/>
+<instance part="PA6" gate="P" x="81.28" y="66.04" rot="R180"/>
+<instance part="PB12" gate="P" x="38.1" y="50.8"/>
+<instance part="PB3" gate="P" x="81.28" y="38.1" rot="R180"/>
 <instance part="PAD11" gate="P" x="88.9" y="71.12"/>
 <instance part="P+4" gate="VCC" x="152.4" y="25.4" rot="R270"/>
 <instance part="SUPPLY4" gate="GND" x="152.4" y="10.16" rot="R90"/>
@@ -3982,203 +3974,203 @@ Source: AVX .. aphvc.pdf</description>
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="1"/>
 <wire x1="53.34" y1="66.04" x2="58.42" y2="66.04" width="0.1524" layer="91"/>
-<pinref part="PAD1" gate="P" pin="P"/>
+<pinref part="RST" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="2"/>
 <wire x1="40.64" y1="63.5" x2="58.42" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="PAD2" gate="P" pin="P"/>
+<pinref part="T5-CH1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="3"/>
 <wire x1="58.42" y1="60.96" x2="40.64" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="PAD3" gate="P" pin="P"/>
+<pinref part="T5-CH2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="4"/>
 <wire x1="58.42" y1="58.42" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="PAD4" gate="P" pin="P"/>
+<pinref part="T9-CH1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$5" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="6"/>
 <wire x1="53.34" y1="53.34" x2="58.42" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="PAD6" gate="P" pin="P"/>
+<pinref part="PC0" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="5"/>
 <wire x1="58.42" y1="55.88" x2="35.56" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="PAD5" gate="P" pin="P"/>
+<pinref part="T9-CH2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$8" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="8"/>
 <wire x1="58.42" y1="48.26" x2="53.34" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="PAD8" gate="P" pin="P"/>
+<pinref part="PC1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="9"/>
 <wire x1="53.34" y1="45.72" x2="58.42" y2="45.72" width="0.1524" layer="91"/>
-<pinref part="PAD9" gate="P" pin="P"/>
+<pinref part="PC2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$10" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="10"/>
 <wire x1="58.42" y1="43.18" x2="53.34" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="PAD10" gate="P" pin="P"/>
+<pinref part="PA8" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$16" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="15"/>
 <wire x1="58.42" y1="30.48" x2="53.34" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="PAD12" gate="P" pin="P"/>
+<pinref part="PC9" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$18" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="18"/>
 <wire x1="53.34" y1="22.86" x2="58.42" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="PAD15" gate="P" pin="P"/>
+<pinref part="PB13" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$19" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="19"/>
 <wire x1="58.42" y1="20.32" x2="40.64" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="PAD18" gate="P" pin="P"/>
+<pinref part="T3-CH3" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$20" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="20"/>
 <wire x1="40.64" y1="17.78" x2="58.42" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="PAD19" gate="P" pin="P"/>
+<pinref part="T3-CH4" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$23" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="37"/>
 <wire x1="78.74" y1="58.42" x2="73.66" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="PAD20" gate="P" pin="P"/>
+<pinref part="PA4" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$24" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="38"/>
 <wire x1="73.66" y1="60.96" x2="78.74" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="PAD21" gate="P" pin="P"/>
+<pinref part="PA5" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$25" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="36"/>
 <wire x1="73.66" y1="55.88" x2="88.9" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="PAD24" gate="P" pin="P"/>
+<pinref part="SWC" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$26" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="35"/>
 <wire x1="73.66" y1="53.34" x2="88.9" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="PAD25" gate="P" pin="P"/>
+<pinref part="SWD" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$27" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="33"/>
 <wire x1="78.74" y1="48.26" x2="73.66" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="PAD27" gate="P" pin="P"/>
+<pinref part="PC5" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$28" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="34"/>
 <wire x1="73.66" y1="50.8" x2="78.74" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="PAD26" gate="P" pin="P"/>
+<pinref part="PC4" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$31" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="30"/>
 <wire x1="78.74" y1="40.64" x2="73.66" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="PAD28" gate="P" pin="P"/>
+<pinref part="PA15" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$32" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="29"/>
 <wire x1="78.74" y1="38.1" x2="73.66" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="PAD37" gate="P" pin="P"/>
+<pinref part="PB3" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$33" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="28"/>
 <wire x1="73.66" y1="35.56" x2="78.74" y2="35.56" width="0.1524" layer="91"/>
-<pinref part="PAD29" gate="P" pin="P"/>
+<pinref part="PB10" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$34" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="26"/>
 <wire x1="73.66" y1="30.48" x2="88.9" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="PAD31" gate="P" pin="P"/>
+<pinref part="T4-CH2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$35" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="27"/>
 <wire x1="73.66" y1="33.02" x2="78.74" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="PAD30" gate="P" pin="P"/>
+<pinref part="PB11" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$36" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="25"/>
 <wire x1="88.9" y1="27.94" x2="73.66" y2="27.94" width="0.1524" layer="91"/>
-<pinref part="PAD32" gate="P" pin="P"/>
+<pinref part="T4-CH1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$37" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="24"/>
 <wire x1="73.66" y1="25.4" x2="88.9" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="PAD33" gate="P" pin="P"/>
+<pinref part="T12-CH2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$38" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="22"/>
 <wire x1="73.66" y1="20.32" x2="93.98" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="PAD35" gate="P" pin="P"/>
+<pinref part="RX" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$39" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="23"/>
 <wire x1="73.66" y1="22.86" x2="88.9" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="PAD34" gate="P" pin="P"/>
+<pinref part="T12-CH1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$40" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="21"/>
 <wire x1="93.98" y1="17.78" x2="73.66" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="PAD36" gate="P" pin="P"/>
+<pinref part="TX" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -4277,7 +4269,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="58.42" y1="27.94" x2="48.26" y2="27.94" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="27.94" x2="45.72" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="25.4" x2="40.64" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="PAD16" gate="P" pin="P"/>
+<pinref part="T3-CH1" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$12" class="0">
@@ -4286,7 +4278,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="58.42" y1="25.4" x2="48.26" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="25.4" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="22.86" x2="40.64" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="PAD17" gate="P" pin="P"/>
+<pinref part="T3-CH2" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$13" class="0">
@@ -4295,7 +4287,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="58.42" y1="35.56" x2="48.26" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="35.56" x2="45.72" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="33.02" x2="40.64" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="PAD13" gate="P" pin="P"/>
+<pinref part="I2C-SDA" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -4304,7 +4296,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="58.42" y1="33.02" x2="48.26" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="33.02" x2="45.72" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="30.48" x2="40.64" y2="30.48" width="0.1524" layer="91"/>
-<pinref part="PAD14" gate="P" pin="P"/>
+<pinref part="I2C-SCL" gate="P" pin="P"/>
 </segment>
 </net>
 <net name="N$15" class="0">
@@ -4335,21 +4327,21 @@ Source: AVX .. aphvc.pdf</description>
 <net name="N$17" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="40"/>
-<pinref part="PAD23" gate="P" pin="P"/>
+<pinref part="PA6" gate="P" pin="P"/>
 <wire x1="73.66" y1="66.04" x2="78.74" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$21" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="39"/>
-<pinref part="PAD22" gate="P" pin="P"/>
+<pinref part="PA7" gate="P" pin="P"/>
 <wire x1="73.66" y1="63.5" x2="78.74" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="MINI-M4" gate="G$1" pin="7"/>
-<pinref part="PAD7" gate="P" pin="P"/>
+<pinref part="PB12" gate="P" pin="P"/>
 <wire x1="58.42" y1="50.8" x2="40.64" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>

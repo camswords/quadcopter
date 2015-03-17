@@ -4,3 +4,5 @@ build
 workspace.xml
 openocd.log
 .idea
+board/quadcopter.b#*
+board/quadcopter.s#*
