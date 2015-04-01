@@ -3830,8 +3830,8 @@ Source: AVX .. aphvc.pdf</description>
 <part name="P+1" library="supply1" deviceset="VCC" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
 <part name="IC1" library="linear" deviceset="*317" device="T" value="LD1117V33"/>
-<part name="C1" library="rcl" deviceset="C-US" device="025-040X050" value="10uF"/>
-<part name="C3" library="rcl" deviceset="C-US" device="025-040X050" value="100nF"/>
+<part name="C1" library="rcl" deviceset="C-US" device="025-040X050" value="10uF 106"/>
+<part name="C3" library="rcl" deviceset="C-US" device="025-040X050" value="100nF 104"/>
 <part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="RST" library="wirepad" deviceset="1,6/0,8" device=""/>
